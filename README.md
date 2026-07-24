@@ -12,11 +12,11 @@ The foundry produces:
 - an atomic matching Blender source;
 - a release manifest and checksums;
 - validation and Model Lab review evidence;
-- a machine-readable release manifest for Synmere Engine.
+- a machine-readable release manifest for Synmere's portable packages.
 
-Synmere Engine turns the release manifest into portable packages. Synmere
-consumes only those package releases and the released GLB; neither repository
-reads this checkout at runtime.
+Synmere's `packages/manifest` generator turns the release manifest into a
+portable workspace package. The product consumes only that generated contract
+and the released GLB; neither repository reads this checkout at runtime.
 
 ## Current release
 

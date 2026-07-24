@@ -2,10 +2,11 @@
 
 ## Result
 
-Asset production is isolated in `synmere-foundry`. `synmere-engine` owns the
-portable runtime and generates `@synmere/manifest` from released manifest
-artifacts. The Synmere application consumes immutable packages and releases;
-it does not import this repository, invoke Blender, or read candidate files.
+Asset production is isolated in `synmere-foundry`. Portable runtime packages
+live in Synmere's `packages/` workspace, which generates `@synmere/manifest`
+from released manifest artifacts. The Synmere application consumes those
+packages and immutable releases; it does not import this repository, invoke
+Blender, or read candidate files.
 
 The migration intentionally preserved the current renderer behavior and the
 released GLB bytes. The jaw/chin lower-edge notch remains an independent
@@ -17,22 +18,23 @@ geometry-quality task and is not part of release `1.1.1`.
 - `synmere-foundry` was created from the same Git history, preserving
   history for all extracted asset files before deleting product-only paths from
   its current tree.
-- The desktop parent folder contains the two independent repositories as
-  siblings. There is no shared runtime workspace or relative-path dependency.
+- The desktop parent folder contains the independent Synmere and Foundry
+  repositories as siblings. Portable runtime packages live inside Synmere, and
+  there is no cross-repository runtime dependency.
 
 ## Files transferred to the foundry
 
-| Previous Synmere path | Foundry path |
-| --- | --- |
-| `assets/source/avatar/**` | `assets/source/identity-shell/**` |
-| `assets/releases/avatar/**` | `assets/releases/identity-shell/**` and `assets/rollback/identity-shell/**` |
-| `scripts/avatar-assets/shell/**` | `scripts/shell/**` |
-| `scripts/avatar-assets/bootstrap/**` | `scripts/bootstrap/**` |
-| `scripts/avatar-assets/legacy/**` | `scripts/legacy/**` |
-| `scripts/blender/**` | `scripts/blender/**` |
-| `artifacts/avatar/candidates/**` | ignored `assets/candidates/**` |
-| `artifacts/avatar/{audit,checkpoints,rebase,rejected,review}/**` | ignored `reports/history/**` |
-| `docs/identity-shell-v1-asset-revision.md` | `docs/identity-shell-v1-asset-revision-history.md` |
+| Previous Synmere path                                            | Foundry path                                                                |
+| ---------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| `assets/source/avatar/**`                                        | `assets/source/identity-shell/**`                                           |
+| `assets/releases/avatar/**`                                      | `assets/releases/identity-shell/**` and `assets/rollback/identity-shell/**` |
+| `scripts/avatar-assets/shell/**`                                 | `scripts/shell/**`                                                          |
+| `scripts/avatar-assets/bootstrap/**`                             | `scripts/bootstrap/**`                                                      |
+| `scripts/avatar-assets/legacy/**`                                | `scripts/legacy/**`                                                         |
+| `scripts/blender/**`                                             | `scripts/blender/**`                                                        |
+| `artifacts/avatar/candidates/**`                                 | ignored `assets/candidates/**`                                              |
+| `artifacts/avatar/{audit,checkpoints,rebase,rejected,review}/**` | ignored `reports/history/**`                                                |
+| `docs/identity-shell-v1-asset-revision.md`                       | `docs/identity-shell-v1-asset-revision-history.md`                          |
 
 Historical scripts that reached into the product tree are quarantined under
 `scripts/legacy/` and are not used by any active package command.
@@ -70,10 +72,10 @@ The canonical release manifest and JSON Schema define:
 - validation status;
 - release timestamp, source revision, source checksum, candidate, and tag.
 
-Synmere Engine generates `@synmere/manifest` from the immutable release
+Synmere's manifest workspace package is generated from the immutable release
 manifest. Foundry contract tests compare the GLB directly with its release
-manifest, including exact morph order, material presence, checksum, and
-runtime compatibility.
+manifest, including exact morph order, material presence, checksum, and runtime
+compatibility.
 
 ## Release 1.1.1
 
@@ -127,8 +129,9 @@ release. It never copies older bytes over a released version.
 
 ## Remaining technical debt
 
-- Publish `@synmere/manifest` through Synmere Engine to the selected package registry and move
-  released GLBs from the local public path to immutable object storage/CDN.
+- Publish the `@synmere/manifest` workspace package to the selected registry
+  when a second consumer exists, and move released GLBs from the local public
+  path to immutable object storage/CDN.
 - Provision a Blender-capable CI runner for full source-open, export, silhouette,
   and 193-state morph validation on candidate changes.
 - Address the jaw/chin lower-edge notch through its own candidate, morph-safety

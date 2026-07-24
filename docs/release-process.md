@@ -78,5 +78,9 @@ After committing the release, create the Git tag:
 git tag -a identity-shell-v<version> -m "identity-shell <version>"
 ```
 
-Generating and publishing `@synmere/manifest` through Synmere Engine and
-updating Synmere are separate, auditable operations.
+Regenerating Synmere's `@synmere/manifest` workspace package from the promoted
+manifest is a separate, auditable operation:
+
+```sh
+pnpm manifest:sync -- --manifest <promoted-manifest.json>
+```

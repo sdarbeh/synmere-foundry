@@ -169,8 +169,8 @@ try {
         next: [
           "Commit the immutable release.",
           `Create annotated Git tag ${getReleaseTag(version)}.`,
-          "Hand the immutable manifest to Synmere Engine.",
-          "Update Synmere and run final runtime validation.",
+          "Regenerate Synmere's @synmere/manifest workspace package.",
+          "Commit Synmere and run final runtime validation.",
         ],
       },
       null,
