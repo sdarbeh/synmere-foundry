@@ -53,6 +53,11 @@ Preview, Trace, and Topology screenshots, and writes
 `assets/candidates/current/identity-shell-v1.review.json`. It never writes to
 Synmere's `public/` directory and never promotes a release.
 
+In an interactive terminal, a successful review keeps the candidate host and
+Model Lab running for manual inspection. Open the printed Model Lab URL, then
+press `Ctrl+C` to stop both servers. Use `--no-keep-open` for a one-shot run,
+or `--keep-open` when output is redirected but the server should remain live.
+
 The lifecycle commands have deliberately separate responsibilities:
 
 - **export** creates the review GLB and its export manifest from canonical

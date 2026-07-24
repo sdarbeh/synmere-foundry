@@ -9,10 +9,10 @@ import {
   CANDIDATE_MANIFEST_PATH,
   CANDIDATE_REVIEW_DIRECTORY,
   CANDIDATE_REVIEW_PATH,
-  CANDIDATE_REVIEW_PORT,
   CANDIDATE_VALIDATION_PATH,
   PRODUCTION_GLB_PATH,
   SHELL_ASSET_PIPELINE_VERSION,
+  SOURCE_BLEND_PATH,
 } from "../shell/asset-paths.mjs";
 import { sha256File } from "../shell/glb.mjs";
 import { startCandidateServer } from "./serve-candidate.mjs";
@@ -22,11 +22,29 @@ const PROJECT_ROOT = path.resolve(SCRIPT_DIRECTORY, "../..");
 const SYNMERE_ROOT =
   process.env.SYNMERE_PRODUCT_ROOT ?? path.resolve(PROJECT_ROOT, "../synmere");
 const REVIEW_ROUTE = "/dev/model-lab?asset=candidate";
+const EXPORT_SCRIPT = path.join(
+  PROJECT_ROOT,
+  "scripts/shell/export-candidate.mjs",
+);
+const VALIDATION_SCRIPT = path.join(
+  PROJECT_ROOT,
+  "scripts/shell/validate-all.mjs",
+);
+const NEXT_CLI = path.join(SYNMERE_ROOT, "node_modules/next/dist/bin/next");
+const PLAYWRIGHT_CLI = path.join(
+  SYNMERE_ROOT,
+  "node_modules/@playwright/test/cli.js",
+);
 const PRODUCT_DIST_DIRECTORY_NAME = ".next-shell-review";
 const PRODUCT_DIST_DIRECTORY = path.join(
   SYNMERE_ROOT,
   PRODUCT_DIST_DIRECTORY_NAME,
 );
+const KEEP_OPEN =
+  process.argv.includes("--keep-open") ||
+  (!process.argv.includes("--no-keep-open") &&
+    process.stdout.isTTY &&
+    !process.env.CI);
 
 const status = {
   export: "pending",
@@ -39,8 +57,10 @@ const errors = [];
 let candidateServer;
 let productServer;
 let candidateManifest;
+let validationReport;
 let reviewDirectory;
 let modelLabUrl;
+let screenshotPaths = [];
 
 const getCommandOutput = (command, args, options = {}) => {
   return new Promise((resolve) => {
@@ -65,8 +85,8 @@ const getCommandOutput = (command, args, options = {}) => {
   });
 };
 
-const runPhase = async (label, command, args, options) => {
-  process.stdout.write(`• ${label}... `);
+const runPhase = async (step, label, command, args, options) => {
+  process.stdout.write(`[${step}/5] ${label}... `);
   const result = await getCommandOutput(command, args, options);
   if (result.code !== 0) {
     console.log("FAILED");
@@ -125,19 +145,37 @@ const stopChildProcess = async (child) => {
   if (!child || child.exitCode !== null || child.pid === undefined) {
     return;
   }
-  try {
-    if (process.platform !== "win32") {
-      process.kill(-child.pid, "SIGTERM");
-    } else {
-      child.kill("SIGTERM");
-    }
-  } catch {
-    child.kill("SIGTERM");
-  }
+  child.kill("SIGTERM");
   await Promise.race([
     new Promise((resolve) => child.once("close", resolve)),
     new Promise((resolve) => setTimeout(resolve, 3_000)),
   ]);
+};
+
+const stopReviewServices = async () => {
+  await stopChildProcess(productServer);
+  await rm(PRODUCT_DIST_DIRECTORY, { recursive: true, force: true });
+  if (candidateServer) {
+    await candidateServer.close();
+  }
+};
+
+const waitForManualShutdown = () => {
+  return new Promise((resolve) => {
+    let settled = false;
+    const finish = (reason) => {
+      if (settled) {
+        return;
+      }
+      settled = true;
+      resolve(reason);
+    };
+    const handleInterrupt = () => finish("interrupt");
+    const handleTerminate = () => finish("terminate");
+    process.once("SIGINT", handleInterrupt);
+    process.once("SIGTERM", handleTerminate);
+    productServer.once("close", () => finish("server-exit"));
+  });
 };
 
 const recordFailure = (phase, error) => {
@@ -178,149 +216,166 @@ const getScreenshotPaths = async () => {
 
 const productionShaBefore = await sha256File(PRODUCTION_GLB_PATH);
 
-console.log("Synmere shell candidate review");
-console.log("Production promotion is disabled for this command.\n");
+console.log("╭─ Synmere Foundry · Identity Shell Candidate Review");
+console.log(`│ Source: ${path.relative(PROJECT_ROOT, SOURCE_BLEND_PATH)}`);
+console.log(`│ Candidate: ${path.relative(PROJECT_ROOT, CANDIDATE_GLB_PATH)}`);
+console.log("│ Safety: non-promoting · production GLB is checksum-guarded");
+console.log(
+  `╰─ Session: ${KEEP_OPEN ? "interactive (stays open for manual review)" : "automated (stops after checks)"}\n`,
+);
 
 try {
+  await runPhase(
+    1,
+    "Export canonical Blender source",
+    process.execPath,
+    [EXPORT_SCRIPT],
+    { cwd: PROJECT_ROOT },
+  );
+  status.export = "passed";
+  candidateManifest = JSON.parse(
+    await readFile(CANDIDATE_MANIFEST_PATH, "utf8"),
+  );
+  console.log(`      File: ${path.basename(CANDIDATE_GLB_PATH)}`);
+  console.log(`      SHA-256: ${candidateManifest.candidateSha256}`);
+  console.log(`      Blender: ${candidateManifest.blenderVersion}`);
+  console.log(`      Exported: ${candidateManifest.exportedAt}`);
+} catch (error) {
+  recordFailure("export", error);
+}
+
+const productionShaAfterExport = await sha256File(PRODUCTION_GLB_PATH);
+if (productionShaAfterExport !== productionShaBefore) {
+  recordFailure(
+    "productionGuard",
+    new Error("Production GLB changed during candidate export."),
+  );
+} else {
+  status.productionGuard = "passed";
+}
+
+if (status.export === "passed" && status.productionGuard === "passed") {
   try {
     await runPhase(
-      "Export canonical Blender source",
-      "pnpm",
-      ["asset:shell:export"],
+      2,
+      "Validate contract and global morph safety",
+      process.execPath,
+      [VALIDATION_SCRIPT],
       { cwd: PROJECT_ROOT },
     );
-    status.export = "passed";
-    candidateManifest = JSON.parse(
-      await readFile(CANDIDATE_MANIFEST_PATH, "utf8"),
+    validationReport = JSON.parse(
+      await readFile(CANDIDATE_VALIDATION_PATH, "utf8"),
+    );
+    status.validation = validationReport.localRegressionValidation?.passed
+      ? "passed"
+      : "failed";
+    status.morphValidation = validationReport.globalAssetSafetyValidation
+      ?.passed
+      ? "passed"
+      : "failed";
+    if (status.validation !== "passed" || status.morphValidation !== "passed") {
+      errors.push("Candidate validation report contains a failed gate.");
+    }
+    const morph = validationReport.globalAssetSafetyValidation;
+    console.log(
+      `      Morph states: ${morph.sampledStates} · inverted: ${morph.invertedStateCount} · degenerate: ${morph.degenerateStateCount}`,
+    );
+    console.log(
+      `      Maximum edge strain: ${morph.maximumMorphEdgeStrain} / ${morph.strainLimit}`,
     );
   } catch (error) {
-    recordFailure("export", error);
+    recordFailure("validation", error);
+    status.morphValidation = "failed";
   }
+} else {
+  status.validation = "skipped";
+  status.morphValidation = "skipped";
+}
 
-  const productionShaAfterExport = await sha256File(PRODUCTION_GLB_PATH);
-  if (productionShaAfterExport !== productionShaBefore) {
-    recordFailure(
-      "productionGuard",
-      new Error("Production GLB changed during candidate export."),
+if (status.validation === "passed" && status.morphValidation === "passed") {
+  try {
+    const runId = new Date().toISOString().replaceAll(/[:.]/gu, "-");
+    reviewDirectory = path.join(CANDIDATE_REVIEW_DIRECTORY, runId);
+    await mkdir(reviewDirectory, { recursive: true });
+    process.stdout.write("[3/5] Start isolated candidate review services... ");
+    candidateServer = await startCandidateServer({ port: 0 });
+    const productPort = await reservePort();
+    modelLabUrl = `http://127.0.0.1:${productPort}${REVIEW_ROUTE}`;
+    await rm(PRODUCT_DIST_DIRECTORY, { recursive: true, force: true });
+    productServer = spawn(
+      process.execPath,
+      [
+        NEXT_CLI,
+        "dev",
+        "--hostname",
+        "127.0.0.1",
+        "--port",
+        String(productPort),
+      ],
+      {
+        cwd: SYNMERE_ROOT,
+        detached: false,
+        env: {
+          ...process.env,
+          MODEL_LAB_ENABLED: "true",
+          SYNMERE_NEXT_DIST_DIR: PRODUCT_DIST_DIRECTORY_NAME,
+          SYNMERE_ASSET_REVIEW_ENABLED: "true",
+          SYNMERE_MODEL_LAB_CANDIDATE_URL: candidateServer.url,
+          SYNMERE_MODEL_LAB_CANDIDATE_SHA256: candidateManifest.candidateSha256,
+        },
+        stdio: ["ignore", "pipe", "pipe"],
+      },
     );
-  } else {
-    status.productionGuard = "passed";
-  }
+    let productLogs = "";
+    productServer.stdout.on("data", (chunk) => {
+      productLogs += chunk;
+    });
+    productServer.stderr.on("data", (chunk) => {
+      productLogs += chunk;
+    });
 
-  if (status.export === "passed" && status.productionGuard === "passed") {
     try {
-      await runPhase(
-        "Validate candidate contract and 193 morph states",
-        "pnpm",
-        ["asset:shell:validate"],
-        { cwd: PROJECT_ROOT },
-      );
-      const validation = JSON.parse(
-        await readFile(CANDIDATE_VALIDATION_PATH, "utf8"),
-      );
-      status.validation = validation.localRegressionValidation?.passed
-        ? "passed"
-        : "failed";
-      status.morphValidation = validation.globalAssetSafetyValidation?.passed
-        ? "passed"
-        : "failed";
-      if (
-        status.validation !== "passed" ||
-        status.morphValidation !== "passed"
-      ) {
-        errors.push("Candidate validation report contains a failed gate.");
-      }
+      await waitForUrl(modelLabUrl, productServer);
     } catch (error) {
-      recordFailure("validation", error);
-      status.morphValidation = "failed";
+      const logTail = productLogs.trim().slice(-4000);
+      throw new Error(`${error.message}${logTail ? `\n${logTail}` : ""}`);
     }
-  } else {
-    status.validation = "skipped";
-    status.morphValidation = "skipped";
-  }
+    console.log("ready");
+    console.log(`      Model Lab: ${modelLabUrl}`);
+    console.log(`      Candidate asset: ${candidateServer.url}`);
 
-  if (status.validation === "passed" && status.morphValidation === "passed") {
-    try {
-      const runId = new Date().toISOString().replaceAll(/[:.]/gu, "-");
-      reviewDirectory = path.join(CANDIDATE_REVIEW_DIRECTORY, runId);
-      await mkdir(reviewDirectory, { recursive: true });
-      candidateServer = await startCandidateServer({ port: 0 });
-      const productPort = await reservePort();
-      modelLabUrl = `http://127.0.0.1:${productPort}${REVIEW_ROUTE}`;
-      productServer = spawn(
-        "pnpm",
-        ["dev", "--hostname", "127.0.0.1", "--port", String(productPort)],
-        {
-          cwd: SYNMERE_ROOT,
-          detached: process.platform !== "win32",
-          env: {
-            ...process.env,
-            MODEL_LAB_ENABLED: "true",
-            SYNMERE_NEXT_DIST_DIR: PRODUCT_DIST_DIRECTORY_NAME,
-            SYNMERE_ASSET_REVIEW_ENABLED: "true",
-            SYNMERE_MODEL_LAB_CANDIDATE_URL: candidateServer.url,
-            SYNMERE_MODEL_LAB_CANDIDATE_SHA256:
-              candidateManifest.candidateSha256,
-          },
-          stdio: ["ignore", "pipe", "pipe"],
-        },
-      );
-      let productLogs = "";
-      productServer.stdout.on("data", (chunk) => {
-        productLogs += chunk;
-      });
-      productServer.stderr.on("data", (chunk) => {
-        productLogs += chunk;
-      });
-
-      process.stdout.write("• Launch Model Lab candidate route... ");
-      try {
-        await waitForUrl(modelLabUrl, productServer);
-      } catch (error) {
-        const logTail = productLogs.trim().slice(-4000);
-        throw new Error(`${error.message}${logTail ? `\n${logTail}` : ""}`);
-      }
-      console.log("ready");
-
-      const playwrightArguments = [
-        "exec",
-        "playwright",
-        "test",
-        "e2e/model-lab-candidate-review.spec.ts",
-        "--project=chromium",
-        "--workers=1",
-        "--reporter=line",
-      ];
-      if (process.env.SYNMERE_REVIEW_HEADED === "true") {
-        playwrightArguments.push("--headed");
-      }
-      await runPhase(
-        "Run candidate browser checks and capture evidence",
-        "pnpm",
-        playwrightArguments,
-        {
-          cwd: SYNMERE_ROOT,
-          env: {
-            ...process.env,
-            MODEL_LAB_ENABLED: "true",
-            PLAYWRIGHT_BASE_URL: `http://127.0.0.1:${productPort}`,
-            SYNMERE_REVIEW_EVIDENCE_DIR: reviewDirectory,
-          },
-        },
-      );
-      status.browserChecks = "passed";
-    } catch (error) {
-      recordFailure("browserChecks", error);
+    const playwrightArguments = [
+      PLAYWRIGHT_CLI,
+      "test",
+      "e2e/model-lab-candidate-review.spec.ts",
+      "--project=chromium",
+      "--workers=1",
+      "--reporter=line",
+    ];
+    if (process.env.SYNMERE_REVIEW_HEADED === "true") {
+      playwrightArguments.push("--headed");
     }
-  } else {
-    status.browserChecks = "skipped";
+    await runPhase(
+      4,
+      "Run browser checks and capture Model Lab evidence",
+      process.execPath,
+      playwrightArguments,
+      {
+        cwd: SYNMERE_ROOT,
+        env: {
+          ...process.env,
+          MODEL_LAB_ENABLED: "true",
+          PLAYWRIGHT_BASE_URL: `http://127.0.0.1:${productPort}`,
+          SYNMERE_REVIEW_EVIDENCE_DIR: reviewDirectory,
+        },
+      },
+    );
+    status.browserChecks = "passed";
+  } catch (error) {
+    recordFailure("browserChecks", error);
   }
-} finally {
-  await stopChildProcess(productServer);
-  await rm(PRODUCT_DIST_DIRECTORY, { recursive: true, force: true });
-  if (candidateServer) {
-    await candidateServer.close();
-  }
+} else {
+  status.browserChecks = "skipped";
 }
 
 const productionShaAfter = await sha256File(PRODUCTION_GLB_PATH);
@@ -332,7 +387,7 @@ if (productionShaAfter !== productionShaBefore) {
 let reviewManifestPath;
 let reviewPackagePassed = false;
 if (candidateManifest) {
-  const screenshotPaths = reviewDirectory ? await getScreenshotPaths() : [];
+  screenshotPaths = reviewDirectory ? await getScreenshotPaths() : [];
   const allPassed =
     status.export === "passed" &&
     status.validation === "passed" &&
@@ -369,6 +424,11 @@ if (candidateManifest) {
     `${JSON.stringify(reviewManifest, null, 2)}\n`,
   );
   reviewManifestPath = path.relative(PROJECT_ROOT, CANDIDATE_REVIEW_PATH);
+  console.log("[5/5] Write Foundry review package... passed");
+  console.log(`      Manifest: ${reviewManifestPath}`);
+  screenshotPaths.forEach((screenshotPath) => {
+    console.log(`      Evidence: ${screenshotPath}`);
+  });
 }
 
 const succeeded =
@@ -378,21 +438,44 @@ const succeeded =
   status.browserChecks === "passed" &&
   status.productionGuard === "passed" &&
   reviewPackagePassed;
-console.log("\nFoundry review summary");
-console.log(`Result: ${succeeded ? "SUCCESS" : "FAILURE"}`);
-console.log(`Export: ${status.export}`);
-console.log(`Contract validation: ${status.validation}`);
-console.log(`Morph safety: ${status.morphValidation}`);
-console.log(`Browser checks: ${status.browserChecks}`);
-console.log(`Production GLB: ${status.productionGuard}`);
-if (reviewManifestPath) {
-  console.log(`Review manifest: ${reviewManifestPath}`);
+console.log("\n╭─ Foundry Review Summary");
+console.log(
+  `│ Result: ${succeeded ? "SUCCESS · READY FOR HUMAN REVIEW" : "FAILURE"}`,
+);
+console.log(`│ Export: ${status.export}`);
+console.log(`│ Contract validation: ${status.validation}`);
+console.log(`│ Morph safety: ${status.morphValidation}`);
+console.log(`│ Browser checks: ${status.browserChecks}`);
+console.log(`│ Production guard: ${status.productionGuard}`);
+if (candidateManifest) {
+  console.log(`│ Candidate SHA: ${candidateManifest.candidateSha256}`);
 }
+console.log(`│ Evidence screenshots: ${screenshotPaths.length}`);
+console.log("│ Promotion performed: no");
 if (errors.length > 0) {
-  console.log(`Failure: ${getFailureSummary(errors[0])}`);
+  console.log(`│ Failure: ${getFailureSummary(errors[0])}`);
 }
-console.log("Promotion performed: no");
+console.log("╰─");
 
 if (!succeeded) {
+  await stopReviewServices();
   process.exitCode = 1;
+} else if (KEEP_OPEN && productServer?.exitCode === null) {
+  console.log("\nManual review server is live:");
+  console.log(`  ${modelLabUrl}`);
+  console.log(
+    "\nOpen that URL in your browser. Press Ctrl+C when review is complete.",
+  );
+  const shutdownReason = await waitForManualShutdown();
+  await stopReviewServices();
+  console.log(
+    shutdownReason === "server-exit"
+      ? "\nModel Lab stopped unexpectedly; review evidence remains saved."
+      : "\nReview servers stopped. Evidence and manifest remain saved.",
+  );
+} else {
+  await stopReviewServices();
+  console.log(
+    "\nAutomated session complete; temporary review servers stopped. Use --keep-open to retain the live Model Lab URL.",
+  );
 }
