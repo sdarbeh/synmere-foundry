@@ -1,0 +1,156 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "pass-g-g0",
+  "reference": {
+    "candidateSha256": "c1df1be17c1fb3ce0ab09674e44db37d21b9cdc37c9f23f151373eb32dbfc46e",
+    "sourceBlendSha256": "64588ebaf6e5371596feb9935202d935021c488bf8b22d289d16920481028506",
+    "productionSha256": "e26ae71bf468d3149c65dcea97e82b16be63b902e6635d1134c5654a1771bbd4"
+  },
+  "thresholds": {
+    "outsideEditRegionPositionEpsilon": 1e-7,
+    "maximumMorphEdgeStrain": 0.72,
+    "minimumTriangleAreaRatio": 0.35,
+    "maximumTriangleAreaRatio": 2.5,
+    "maximumSmoothRegionNormalAngleDegrees": 20,
+    "minimumNormalAngleIncreaseDegrees": 4,
+    "maximumEvaluatedNormalErrorDegrees": 8,
+    "minimumEvaluatedNormalErrorIncreaseDegrees": 4,
+    "maximumTriangleAspectRatio": 12,
+    "maximumSilhouetteDeviationPixels": {
+      "front": {
+        "approvedLocalCorrection": 1,
+        "outsideApprovedRegion": 1
+      },
+      "left-34": {
+        "approvedLocalCorrection": 2,
+        "outsideApprovedRegion": 1
+      },
+      "right-34": {
+        "approvedLocalCorrection": 2,
+        "outsideApprovedRegion": 1
+      },
+      "left-profile": {
+        "approvedLocalCorrection": 2,
+        "outsideApprovedRegion": 1
+      },
+      "right-profile": {
+        "approvedLocalCorrection": 2,
+        "outsideApprovedRegion": 1
+      }
+    },
+    "maximumInvertedTriangleCount": 0,
+    "maximumPerimeterSliverCount": 0
+  },
+  "review": {
+    "resolution": 640,
+    "visibilityRayResolution": 256,
+    "orthographicScale": 2.55,
+    "target": [0, -0.08, 0],
+    "cameras": {
+      "front": [0, -0.08, 4.2],
+      "left-34": [-2.2, -0.08, 3.65],
+      "right-34": [2.2, -0.08, 3.65],
+      "left-profile": [-3.7, -0.08, 1.7],
+      "right-profile": [3.7, -0.08, 1.7]
+    }
+  },
+  "productBaselineWeights": {
+    "identity_face_wide": 0.26087,
+    "identity_face_short": 0.28571,
+    "identity_forehead_wide": 0.20132,
+    "identity_upper_face_short": 0.24545,
+    "identity_cheekbones_wide": 0.315,
+    "identity_jaw_wide": 0.38182,
+    "identity_jaw_taper_square": 0.21789,
+    "presentation_structure_structured": 0.18
+  },
+  "morphSamples": [0, 0.25, 0.5, 0.75, 1],
+  "affectedMorphTargets": [
+    "identity_face_wide",
+    "identity_face_narrow",
+    "identity_cheekbones_wide",
+    "identity_cheekbones_narrow",
+    "identity_jaw_wide",
+    "identity_jaw_narrow",
+    "identity_jaw_taper_square",
+    "identity_jaw_taper_narrow",
+    "identity_chin_long",
+    "identity_chin_short",
+    "identity_head_depth_high",
+    "identity_head_depth_low",
+    "presentation_structure_structured",
+    "presentation_structure_soft"
+  ],
+  "morphPairs": {
+    "identity_face_wide": "identity_face_narrow",
+    "identity_face_narrow": "identity_face_wide",
+    "identity_cheekbones_wide": "identity_cheekbones_narrow",
+    "identity_cheekbones_narrow": "identity_cheekbones_wide",
+    "identity_jaw_wide": "identity_jaw_narrow",
+    "identity_jaw_narrow": "identity_jaw_wide",
+    "identity_jaw_taper_square": "identity_jaw_taper_narrow",
+    "identity_jaw_taper_narrow": "identity_jaw_taper_square",
+    "identity_chin_long": "identity_chin_short",
+    "identity_chin_short": "identity_chin_long",
+    "identity_head_depth_high": "identity_head_depth_low",
+    "identity_head_depth_low": "identity_head_depth_high",
+    "presentation_structure_structured": "presentation_structure_soft",
+    "presentation_structure_soft": "presentation_structure_structured"
+  },
+  "combinedStates": [
+    {
+      "id": "jaw-wide-chin-long",
+      "weights": {
+        "identity_jaw_wide": 1,
+        "identity_chin_long": 1,
+        "corrective_jaw_wide_chin_long": 0.55
+      }
+    },
+    {
+      "id": "jaw-wide-head-depth-high",
+      "weights": {
+        "identity_jaw_wide": 1,
+        "identity_head_depth_high": 1
+      }
+    },
+    {
+      "id": "jaw-wide-head-depth-low",
+      "weights": {
+        "identity_jaw_wide": 1,
+        "identity_head_depth_low": 1
+      }
+    },
+    {
+      "id": "jaw-square-chin-short",
+      "weights": {
+        "identity_jaw_taper_square": 1,
+        "identity_chin_short": 1
+      }
+    }
+  ],
+  "maximumEditScope": {
+    "visibleSurfaceVertexCount": 2939,
+    "centralFeatureProtection": {
+      "maximumAbsoluteX": 0.23,
+      "minimumY": -0.84
+    },
+    "lateralCheek": {
+      "minimumAbsoluteX": 0.24,
+      "maximumAbsoluteX": 0.62,
+      "minimumY": -0.78,
+      "maximumY": -0.2
+    },
+    "jawAndChin": {
+      "maximumY": -0.62,
+      "maximumAbsoluteX": 0.62
+    },
+    "lowerBackPerimeter": {
+      "maximumY": -0.56
+    },
+    "sideBackPerimeter": {
+      "minimumAbsoluteX": 0.52,
+      "maximumY": -0.25
+    },
+    "oneRingExpansion": 1
+  }
+}

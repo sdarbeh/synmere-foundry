@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "v1",
+  "asset": "identity-shell-v1",
+  "tasks": [
+    {
+      "id": "identity-shell-lower-edge-notch",
+      "title": "Resolve the lower-edge notch in combined jaw and chin states",
+      "status": "pending",
+      "scope": [
+        "identity_jaw_wide",
+        "identity_chin_long",
+        "corrective_jaw_wide_chin_long",
+        "lower jaw and chin perimeter"
+      ],
+      "constraints": [
+        "Use a separate geometry-quality candidate.",
+        "Establish an independent morph-safety and silhouette budget before editing.",
+        "Do not treat the condition as part of the morph-only safety repair."
+      ]
+    }
+  ]
+}

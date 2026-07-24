@@ -1,0 +1,98 @@
+{
+  "schemaVersion": "v1",
+  "asset": "identity-shell-v1",
+  "assetVersionTag": "identity-shell-v1-safety-20260724-2eb90bb7f08d",
+  "promotedAt": "2026-07-24T17:10:54.191Z",
+  "sourceBlendSha256": "026913c5c6732a06976f5e01abe320f30c5c1a08814c178366eaa979133e2247",
+  "productionGlbSha256": "2eb90bb7f08d528d7abd521a8cca9f90b00479c1c470d682d44d657f270716f7",
+  "rollback": {
+    "schemaVersion": "v1",
+    "asset": "identity-shell-v1",
+    "rollbackTag": "rollback-e26ae71bf468",
+    "capturedAt": "2026-07-24T17:10:54.191Z",
+    "sourceBlendSha256": "64a187482ade71e2783b4897f7c312db0c86f31801588170c69216b280d3121b",
+    "productionGlbSha256": "e26ae71bf468d3149c65dcea97e82b16be63b902e6635d1134c5654a1771bbd4",
+    "paths": {
+      "blend": "assets/releases/avatar/identity-shell-v1/rollback-e26ae71bf468/identity-shell-v1.blend",
+      "glb": "assets/releases/avatar/identity-shell-v1/rollback-e26ae71bf468/identity-shell-v1.glb",
+      "contract": "assets/releases/avatar/identity-shell-v1/rollback-e26ae71bf468/identity-shell-v1.contract.json"
+    }
+  },
+  "validation": {
+    "passed": true,
+    "productionSha256": "2eb90bb7f08d528d7abd521a8cca9f90b00479c1c470d682d44d657f270716f7",
+    "sourceBlendSha256": "026913c5c6732a06976f5e01abe320f30c5c1a08814c178366eaa979133e2247",
+    "contract": {
+      "meshName": "IdentityShell",
+      "materialName": "IdentityCeramic",
+      "vertexCount": 6052,
+      "indexCount": 36300,
+      "triangleCount": 12100,
+      "topologyHash": "da73385507a48e1bff2430b5ce03a94875aa28e53ce445142188e2e0d4d3d181",
+      "morphTargetNames": [
+        "identity_face_wide",
+        "identity_face_narrow",
+        "identity_face_long",
+        "identity_face_short",
+        "identity_cheekbones_wide",
+        "identity_cheekbones_narrow",
+        "identity_eye_spacing_wide",
+        "identity_eye_spacing_narrow",
+        "identity_eye_width_wide",
+        "identity_eye_width_narrow",
+        "identity_brow_arch_high",
+        "identity_brow_arch_low",
+        "identity_brow_prominence_high",
+        "identity_brow_prominence_low",
+        "identity_nose_wide",
+        "identity_nose_narrow",
+        "identity_nose_long",
+        "identity_nose_short",
+        "identity_nose_projection_high",
+        "identity_nose_projection_low",
+        "identity_mouth_wide",
+        "identity_mouth_narrow",
+        "identity_chin_long",
+        "identity_chin_short",
+        "identity_head_depth_high",
+        "identity_head_depth_low",
+        "identity_forehead_wide",
+        "identity_forehead_narrow",
+        "identity_upper_face_tall",
+        "identity_upper_face_short",
+        "identity_jaw_wide",
+        "identity_jaw_narrow",
+        "identity_jaw_taper_square",
+        "identity_jaw_taper_narrow",
+        "presentation_structure_structured",
+        "presentation_structure_soft",
+        "corrective_jaw_wide_chin_long"
+      ],
+      "morphTargetCount": 37,
+      "bounds": {
+        "minimum": [
+          -0.7069786190986633, -1.1671162843704224, -0.48494312167167664
+        ],
+        "maximum": [0.7069786190986633, 0.9781171083450317, 0.5206999778747559]
+      }
+    },
+    "localRegressionValidation": "passed",
+    "globalAssetSafetyValidation": {
+      "status": "passed",
+      "sampledStates": 193,
+      "invertedStates": 0,
+      "degenerateStates": 0
+    }
+  },
+  "visualReview": {
+    "status": "passed",
+    "reviewedAt": "2026-07-24"
+  },
+  "scope": "morph-only safety repair",
+  "excludedWork": [
+    "lower-edge notch geometry correction",
+    "renderer changes",
+    "normal changes",
+    "additional visual sculpting"
+  ]
+}

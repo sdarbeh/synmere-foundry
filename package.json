@@ -1,0 +1,26 @@
+{
+  "name": "synmere-foundry",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "asset:export": "node scripts/shell/export-candidate.mjs",
+    "asset:validate": "node scripts/shell/validate-all.mjs",
+    "asset:serve": "node scripts/review/serve-candidate.mjs",
+    "asset:review": "pnpm shell:review",
+    "asset:approve": "pnpm shell:approve",
+    "asset:promote": "node scripts/release/promote.mjs",
+    "asset:shell:export": "node scripts/shell/export-candidate.mjs",
+    "asset:shell:validate": "node scripts/shell/validate-all.mjs",
+    "asset:shell:validate:contract": "node scripts/shell/validate-candidate.mjs",
+    "asset:shell:validate:morph": "node scripts/shell/validate-morph-safety.mjs",
+    "asset:shell:review": "pnpm shell:review",
+    "asset:shell:approve": "pnpm shell:approve",
+    "asset:shell:promote": "node scripts/release/promote.mjs",
+    "shell:review": "node scripts/review/review-candidate.mjs",
+    "shell:approve": "node scripts/review/approve-review.mjs",
+    "asset:release:validate": "node scripts/release/validate-release.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "check": "node scripts/release/validate-release.mjs 1.1.1 && node --test tests/*.test.mjs"
+  }
+}

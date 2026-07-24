@@ -1,0 +1,5 @@
+# Canonical and rollback-critical Blender sources use Git LFS.
+*.blend filter=lfs diff=lfs merge=lfs -text
+
+# Released GLBs remain regular Git objects until external immutable storage is configured.
+*.glb -text

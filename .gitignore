@@ -1,0 +1,14 @@
+node_modules/
+.DS_Store
+*.blend1
+*.pyc
+__pycache__/
+
+# Candidate and diagnostic workspaces are local unless explicitly retained.
+/assets/candidates/*
+!/assets/candidates/.gitkeep
+/reports/history/
+/reports/tmp/
+
+# Release staging is disposable; immutable releases are tracked.
+/assets/release-staging/

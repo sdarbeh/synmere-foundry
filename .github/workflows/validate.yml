@@ -1,0 +1,37 @@
+name: Validate avatar foundry
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  release-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm check
+
+  blender-source:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+      - name: Install Blender
+        run: sudo snap install blender --classic
+      - name: Open canonical source
+        run: >-
+          blender --background
+          assets/source/identity-shell/identity-shell-v1.blend
+          --python-expr "import bpy; assert bpy.data.objects.get('IdentityShell')"

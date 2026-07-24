@@ -1,0 +1,13 @@
+{
+  "schemaVersion": "v1",
+  "assetId": "synmere-identity-shell-v1",
+  "version": "1.1.0",
+  "reason": "Production release immediately preceding the 1.1.1 safety repair.",
+  "glbSha256": "e26ae71bf468d3149c65dcea97e82b16be63b902e6635d1134c5654a1771bbd4",
+  "blendSha256": "64a187482ade71e2783b4897f7c312db0c86f31801588170c69216b280d3121b",
+  "restores": {
+    "glb": "identity-shell.glb",
+    "blend": "identity-shell.blend",
+    "contract": "identity-shell.contract.json"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "v1",
+  "operation": "apply-global-morph-safety-repair",
+  "candidate": "morph-safety-repair",
+  "sourceRevision": "6e6ef60",
+  "glbSha256": "2eb90bb7f08d528d7abd521a8cca9f90b00479c1c470d682d44d657f270716f7",
+  "blendSha256": "026913c5c6732a06976f5e01abe320f30c5c1a08814c178366eaa979133e2247",
+  "sourceBlend": "assets/candidates/seam-weld-corrected/identity-shell-v1-seam-weld-corrected.blend",
+  "sourceSha256": "44f76c13d57eda9df4486bfb686bdaf2018796ed0be814e844b873654c2fe3f1",
+  "candidateBlend": "assets/source/identity-shell/identity-shell-v1.blend",
+  "candidateSha256": "026913c5c6732a06976f5e01abe320f30c5c1a08814c178366eaa979133e2247",
+  "contract": {
+    "vertices": 6052,
+    "faces": 12100,
+    "morphs": 37,
+    "basisMaximumMovement": 0.0,
+    "unrelatedMorphMaximumMovement": 0.0,
+    "outsideScopeMaximumMovement": 0.0,
+    "topologyUnchanged": true,
+    "materialsUnchanged": true,
+    "morphOrderUnchanged": true
+  },
+  "targets": [
+    "identity_face_wide",
+    "identity_face_long",
+    "identity_cheekbones_narrow",
+    "identity_eye_width_narrow",
+    "identity_nose_projection_low",
+    "identity_chin_long",
+    "identity_forehead_narrow",
+    "identity_jaw_taper_square"
+  ],
+  "changedMorphVertexPairs": 1387,
+  "promotionApproved": false
+}
