@@ -21,7 +21,7 @@ const SCRIPT_DIRECTORY = path.dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = path.resolve(SCRIPT_DIRECTORY, "../..");
 const SYNMERE_ROOT =
   process.env.SYNMERE_PRODUCT_ROOT ?? path.resolve(PROJECT_ROOT, "../synmere");
-const REVIEW_ROUTE = "/dev/model-lab?asset=candidate";
+const REVIEW_ROUTE = "/labs/shell?asset=candidate";
 const EXPORT_SCRIPT = path.join(
   PROJECT_ROOT,
   "scripts/shell/export-candidate.mjs",
@@ -325,7 +325,6 @@ if (status.validation === "passed" && status.morphValidation === "passed") {
         detached: false,
         env: {
           ...process.env,
-          MODEL_LAB_ENABLED: "true",
           SYNMERE_NEXT_DIST_DIR: PRODUCT_DIST_DIRECTORY_NAME,
           SYNMERE_ASSET_REVIEW_ENABLED: "true",
           SYNMERE_MODEL_LAB_CANDIDATE_URL: candidateServer.url,
@@ -372,7 +371,6 @@ if (status.validation === "passed" && status.morphValidation === "passed") {
         cwd: SYNMERE_ROOT,
         env: {
           ...process.env,
-          MODEL_LAB_ENABLED: "true",
           PLAYWRIGHT_BASE_URL: `http://127.0.0.1:${productPort}`,
           SYNMERE_REVIEW_EVIDENCE_DIR: reviewDirectory,
         },

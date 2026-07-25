@@ -48,7 +48,7 @@ pnpm check
 `identity-shell-v1.glb` from the canonical Blender source, validates the
 contract and all 193 global morph states, serves the candidate from
 `assets/candidates/current/`, launches Synmere Model Lab at
-`/dev/model-lab?asset=candidate`, runs candidate browser checks, captures
+`/labs/shell?asset=candidate`, runs candidate browser checks, captures
 Preview, Trace, and Topology screenshots, and writes
 `assets/candidates/current/identity-shell-v1.review.json`. It never writes to
 Synmere's `public/` directory and never promotes a release.

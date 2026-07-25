@@ -43,7 +43,7 @@ pnpm shell:review
 
 The command exports `identity-shell-v1.glb`, validates its contract and 193
 global morph states, serves it directly from the candidate directory, opens
-`/dev/model-lab?asset=candidate` in an automated Chromium review session, runs
+`/labs/shell?asset=candidate` in an automated Chromium review session, runs
 candidate-specific browser checks, captures Preview, Trace, and Topology
 screenshots, and writes the review manifest. Synmere's `public/` directory and
 the production GLB remain unchanged.
