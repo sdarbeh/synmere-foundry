@@ -19,6 +19,7 @@ import {
   assertPromotableAssetPromotionRecord,
   buildIdentityShellPromotionRecord,
 } from "./asset-promotion-record.mjs";
+import { buildIdentityShellModuleManifest } from "./asset-module-manifest.mjs";
 import { writeAssetPromotionRegistry } from "./asset-promotion-registry.mjs";
 import {
   assertReleaseDoesNotExist,
@@ -141,6 +142,10 @@ try {
     glbSha256,
     blendSha256,
   });
+  await writeJson(
+    path.join(stagingDirectory, "module-manifest.json"),
+    buildIdentityShellModuleManifest(manifest),
+  );
 
   // Promotion permits exactly one validation against production-shaped paths.
   const productionValidation = await validateReleaseDirectory(

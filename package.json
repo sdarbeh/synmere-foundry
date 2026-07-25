@@ -20,6 +20,7 @@
     "shell:review": "node scripts/review/review-candidate.mjs",
     "shell:approve": "node scripts/review/approve-review.mjs",
     "asset:release:validate": "node scripts/release/validate-release.mjs",
+    "asset:module": "node scripts/release/asset-module-manifest.mjs",
     "asset:promotions": "node scripts/release/asset-promotion-registry.mjs",
     "test": "node --test tests/*.test.mjs",
     "check": "node scripts/release/validate-release.mjs 1.1.1 && node scripts/release/validate-release.mjs 1.1.2 && node --test tests/*.test.mjs"
