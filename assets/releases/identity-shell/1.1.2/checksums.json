@@ -1,0 +1,8 @@
+{
+  "schemaVersion": "v1",
+  "algorithm": "sha256",
+  "files": {
+    "identity-shell.glb": "2cd5c234565e9f5cf7ff5632f011d8273b94d6ea945124239a4f1d15cbd0cc99",
+    "source/identity-shell.blend": "a60e2ce05a1417b28a5d0749e9e65a48f2695e0da44822b54081090d793e7cd7"
+  }
+}

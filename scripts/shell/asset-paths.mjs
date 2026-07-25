@@ -1,7 +1,14 @@
+import { existsSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const SCRIPT_DIRECTORY = path.dirname(fileURLToPath(import.meta.url));
+const DEFAULT_BLENDER_EXECUTABLE =
+  [
+    "/opt/homebrew/bin/blender",
+    "/Applications/Blender.app/Contents/MacOS/Blender",
+    "/usr/local/bin/blender",
+  ].find((candidate) => existsSync(candidate)) ?? "blender";
 
 export const PROJECT_ROOT = path.resolve(SCRIPT_DIRECTORY, "../..");
 export const SOURCE_BLEND_PATH = path.join(
@@ -57,7 +64,7 @@ export const BLENDER_EXPORT_SCRIPT_PATH = path.join(
   "export-candidate.py",
 );
 export const BLENDER_EXECUTABLE =
-  process.env.SYNMERE_BLENDER_EXECUTABLE ?? "blender";
+  process.env.SYNMERE_BLENDER_EXECUTABLE ?? DEFAULT_BLENDER_EXECUTABLE;
 
 export const SHELL_ASSET_PIPELINE_VERSION = "1.0.0";
 export const EXPECTED_MESH_NAME = "IdentityShell";

@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "1.0.0",
+  "candidateFilename": "identity-shell-v1.glb",
+  "candidateSha256": "2cd5c234565e9f5cf7ff5632f011d8273b94d6ea945124239a4f1d15cbd0cc99",
+  "productionSha256": "2eb90bb7f08d528d7abd521a8cca9f90b00479c1c470d682d44d657f270716f7",
+  "candidateDiffersFromProduction": true,
+  "sourceBlendSha256": "a60e2ce05a1417b28a5d0749e9e65a48f2695e0da44822b54081090d793e7cd7",
+  "blenderVersion": "Blender 4.5.11 LTS",
+  "exportedAt": "2026-07-25T00:06:40.997Z",
+  "reviewedAt": "2026-07-25T00:07:00.173Z",
+  "validationStatus": "passed",
+  "morphValidationStatus": "passed",
+  "browserCheckStatus": "passed",
+  "productionGuardStatus": "passed",
+  "modelLabRoute": "/dev/model-lab?asset=candidate",
+  "modelLabUrl": "http://127.0.0.1:63669/dev/model-lab?asset=candidate",
+  "screenshotPaths": [
+    "assets/candidates/current/review/2026-07-25T00-06-41-743Z/model-lab-candidate-preview.png",
+    "assets/candidates/current/review/2026-07-25T00-06-41-743Z/model-lab-candidate-trace.png",
+    "assets/candidates/current/review/2026-07-25T00-06-41-743Z/model-lab-candidate-topology.png"
+  ],
+  "validationManifest": "assets/candidates/current/identity-shell-v1.validation.json",
+  "results": {
+    "passed": true,
+    "screenshotCount": 3
+  },
+  "errors": [],
+  "promotionApproved": true,
+  "approvedAt": "2026-07-25T00:14:25.571Z"
+}

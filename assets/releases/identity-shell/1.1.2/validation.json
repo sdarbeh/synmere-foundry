@@ -1,0 +1,90 @@
+{
+  "schemaVersion": "1.0.0",
+  "validatedAt": "2026-07-25T00:06:41.724Z",
+  "candidateSha256": "2cd5c234565e9f5cf7ff5632f011d8273b94d6ea945124239a4f1d15cbd0cc99",
+  "sourceBlendSha256": "a60e2ce05a1417b28a5d0749e9e65a48f2695e0da44822b54081090d793e7cd7",
+  "blenderVersion": "Blender 4.5.11 LTS",
+  "localRegressionValidation": {
+    "passed": true,
+    "contract": {
+      "meshName": "IdentityShell",
+      "materialName": "IdentityCeramic",
+      "vertexCount": 6052,
+      "indexCount": 36300,
+      "triangleCount": 12100,
+      "topologyHash": "da73385507a48e1bff2430b5ce03a94875aa28e53ce445142188e2e0d4d3d181",
+      "morphTargetNames": [
+        "identity_face_wide",
+        "identity_face_narrow",
+        "identity_face_long",
+        "identity_face_short",
+        "identity_cheekbones_wide",
+        "identity_cheekbones_narrow",
+        "identity_eye_spacing_wide",
+        "identity_eye_spacing_narrow",
+        "identity_eye_width_wide",
+        "identity_eye_width_narrow",
+        "identity_brow_arch_high",
+        "identity_brow_arch_low",
+        "identity_brow_prominence_high",
+        "identity_brow_prominence_low",
+        "identity_nose_wide",
+        "identity_nose_narrow",
+        "identity_nose_long",
+        "identity_nose_short",
+        "identity_nose_projection_high",
+        "identity_nose_projection_low",
+        "identity_mouth_wide",
+        "identity_mouth_narrow",
+        "identity_chin_long",
+        "identity_chin_short",
+        "identity_head_depth_high",
+        "identity_head_depth_low",
+        "identity_forehead_wide",
+        "identity_forehead_narrow",
+        "identity_upper_face_tall",
+        "identity_upper_face_short",
+        "identity_jaw_wide",
+        "identity_jaw_narrow",
+        "identity_jaw_taper_square",
+        "identity_jaw_taper_narrow",
+        "presentation_structure_structured",
+        "presentation_structure_soft",
+        "corrective_jaw_wide_chin_long"
+      ],
+      "morphTargetCount": 37,
+      "bounds": {
+        "minimum": [
+          -0.7069786190986633,
+          -1.1671162843704224,
+          -0.48494312167167664
+        ],
+        "maximum": [
+          0.7069786190986633,
+          0.9781171083450317,
+          0.5206999778747559
+        ]
+      }
+    },
+    "maximumMorphEdgeStrain": 0.72
+  },
+  "globalAssetSafetyValidation": {
+    "passed": true,
+    "candidateSha256": "2cd5c234565e9f5cf7ff5632f011d8273b94d6ea945124239a4f1d15cbd0cc99",
+    "sampledStates": 193,
+    "invertedStateCount": 0,
+    "maximumInvertedFaces": 0,
+    "degenerateStateCount": 0,
+    "maximumDegenerateFaces": 0,
+    "minimumAreaRatio": 0.074658503783657,
+    "maximumAreaRatio": 3.944614774395185,
+    "maximumMorphEdgeStrain": 0.72,
+    "strainLimit": 0.72,
+    "strainFailures": [],
+    "failures": []
+  },
+  "decision": {
+    "passed": true,
+    "promotionApproved": false
+  }
+}

@@ -238,6 +238,14 @@ try {
   );
   console.log(`      File: ${path.basename(CANDIDATE_GLB_PATH)}`);
   console.log(`      SHA-256: ${candidateManifest.candidateSha256}`);
+  console.log(`      Production SHA-256: ${productionShaBefore}`);
+  console.log(
+    `      Candidate vs production: ${
+      candidateManifest.candidateSha256 === productionShaBefore
+        ? "IDENTICAL"
+        : "DIFFERENT"
+    }`,
+  );
   console.log(`      Blender: ${candidateManifest.blenderVersion}`);
   console.log(`      Exported: ${candidateManifest.exportedAt}`);
 } catch (error) {
@@ -400,6 +408,9 @@ if (candidateManifest) {
     schemaVersion: SHELL_ASSET_PIPELINE_VERSION,
     candidateFilename: path.basename(CANDIDATE_GLB_PATH),
     candidateSha256: candidateManifest.candidateSha256,
+    productionSha256: productionShaBefore,
+    candidateDiffersFromProduction:
+      candidateManifest.candidateSha256 !== productionShaBefore,
     sourceBlendSha256: candidateManifest.sourceBlendSha256,
     blenderVersion: candidateManifest.blenderVersion,
     exportedAt: candidateManifest.exportedAt,
@@ -449,6 +460,14 @@ console.log(`│ Browser checks: ${status.browserChecks}`);
 console.log(`│ Production guard: ${status.productionGuard}`);
 if (candidateManifest) {
   console.log(`│ Candidate SHA: ${candidateManifest.candidateSha256}`);
+  console.log(`│ Production SHA: ${productionShaBefore}`);
+  console.log(
+    `│ Candidate vs production: ${
+      candidateManifest.candidateSha256 === productionShaBefore
+        ? "IDENTICAL"
+        : "DIFFERENT"
+    }`,
+  );
 }
 console.log(`│ Evidence screenshots: ${screenshotPaths.length}`);
 console.log("│ Promotion performed: no");
