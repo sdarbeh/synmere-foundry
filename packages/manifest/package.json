@@ -1,0 +1,32 @@
+{
+  "name": "@synmere/manifest",
+  "version": "1.1.2",
+  "description": "Generated immutable Synmere asset release manifest.",
+  "type": "module",
+  "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sdarbeh/synmere-foundry.git",
+    "directory": "packages/manifest"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js",
+      "default": "./index.js"
+    },
+    "./manifest.json": "./manifest.json",
+    "./asset-promotions.json": "./asset-promotions.json",
+    "./asset-module.json": "./asset-module.json"
+  },
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "manifest.json",
+    "asset-promotions.json",
+    "asset-module.json"
+  ]
+}

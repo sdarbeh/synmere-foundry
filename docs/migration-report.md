@@ -72,10 +72,10 @@ The canonical release manifest and JSON Schema define:
 - validation status;
 - release timestamp, source revision, source checksum, candidate, and tag.
 
-Synmere's manifest workspace package is generated from the immutable release
-manifest. Foundry contract tests compare the GLB directly with its release
-manifest, including exact morph order, material presence, checksum, and runtime
-compatibility.
+Foundry builds the `@synmere/*` package boundary from immutable release
+manifests and promotion metadata. Foundry contract tests compare the GLB
+directly with its release manifest, including exact morph order, material
+presence, checksum, and runtime compatibility.
 
 ## Release 1.1.1
 
@@ -129,9 +129,9 @@ release. It never copies older bytes over a released version.
 
 ## Remaining technical debt
 
-- Publish the `@synmere/manifest` workspace package to the selected registry
-  when a second consumer exists, and move released GLBs from the local public
-  path to immutable object storage/CDN.
+- Publish the Foundry-owned `@synmere/*` packages through GitHub Packages and
+  move released GLBs from the local public path to immutable object
+  storage/CDN.
 - Provision a Blender-capable CI runner for full source-open, export, silhouette,
   and 193-state morph validation on candidate changes.
 - Address the jaw/chin lower-edge notch through its own candidate, morph-safety

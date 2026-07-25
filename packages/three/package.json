@@ -1,0 +1,29 @@
+{
+  "name": "@synmere/three",
+  "version": "0.1.0",
+  "description": "Three.js adapter for Synmere released identity assets.",
+  "type": "module",
+  "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sdarbeh/synmere-foundry.git",
+    "directory": "packages/three"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js",
+      "default": "./index.js"
+    }
+  },
+  "files": [
+    "index.js",
+    "index.d.ts"
+  ],
+  "peerDependencies": {
+    "three": "^0.182.0"
+  }
+}

@@ -21,6 +21,7 @@ import {
 } from "./asset-promotion-record.mjs";
 import { buildIdentityShellModuleManifest } from "./asset-module-manifest.mjs";
 import { writeAssetPromotionRegistry } from "./asset-promotion-registry.mjs";
+import { writeManifestPackage } from "./build-manifest-package.mjs";
 import {
   assertReleaseDoesNotExist,
   assertSemanticVersion,
@@ -198,6 +199,7 @@ try {
     manifest,
   );
   await writeAssetPromotionRegistry();
+  const manifestPackage = await writeManifestPackage({ version });
 
   console.log(
     JSON.stringify(
@@ -214,10 +216,11 @@ try {
           path.join(releaseDirectory, "promotion-record.json"),
         ),
         productionValidationRuns: 1,
+        manifestPackage,
         next: [
           "Commit the immutable release.",
           `Create annotated Git tag ${getReleaseTag(version)}.`,
-          "Regenerate Synmere's @synmere/manifest workspace package.",
+          "Run pnpm install in Synmere if the local package link is stale.",
           "Commit Synmere and run final runtime validation.",
         ],
       },

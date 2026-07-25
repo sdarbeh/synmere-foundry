@@ -78,9 +78,10 @@ After committing the release, create the Git tag:
 git tag -a identity-shell-v<version> -m "identity-shell <version>"
 ```
 
-Regenerating Synmere's `@synmere/manifest` workspace package from the promoted
-manifest is a separate, auditable operation:
+Building and publishing the Foundry-owned `@synmere/*` packages from the
+promoted release is a separate, auditable operation:
 
 ```sh
-pnpm manifest:sync -- --manifest <promoted-manifest.json>
+pnpm packages:build
+pnpm packages:publish
 ```

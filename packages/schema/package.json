@@ -1,0 +1,28 @@
+{
+  "name": "@synmere/schema",
+  "version": "0.1.0",
+  "description": "Portable identity and released-asset contracts for Synmere.",
+  "type": "module",
+  "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sdarbeh/synmere-foundry.git",
+    "directory": "packages/schema"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js",
+      "default": "./index.js"
+    },
+    "./identity-release-manifest.schema.json": "./identity-release-manifest.schema.json"
+  },
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "identity-release-manifest.schema.json"
+  ]
+}
