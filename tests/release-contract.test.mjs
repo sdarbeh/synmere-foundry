@@ -107,6 +107,129 @@ test("the Foundry-owned manifest package exposes every loadable shell release", 
   assert.equal(ASSET_RELEASES.length, IDENTITY_SHELL_RELEASES.length);
 });
 
+test("the identity shell asset module cannot drift from its GLB contract", () => {
+  const morphTargets = new Set(identityShellModule.morphs.targetNames);
+  const parameterKeys = Object.keys(identityShellModule.parameters.neutral);
+  const calibratedIdentityParameters = new Set(
+    Object.keys(identityShellModule.morphs.calibration),
+  );
+
+  assert.deepEqual(
+    [...morphTargets].sort(),
+    [...identityShell.morphTargetNames].sort(),
+  );
+  assert.deepEqual(
+    Object.keys(identityShellModule.parameters.productBaseline).sort(),
+    parameterKeys.sort(),
+  );
+  assert.deepEqual(
+    Object.keys(identityShellModule.parameters.safeRanges).sort(),
+    parameterKeys.sort(),
+  );
+
+  identityShellModule.morphs.identityBindings.forEach((binding) => {
+    assert.equal(
+      calibratedIdentityParameters.has(binding.parameter),
+      true,
+      `Identity binding parameter ${binding.parameter} has no morph calibration.`,
+    );
+    [binding.positiveTarget, binding.negativeTarget]
+      .filter(Boolean)
+      .forEach((target) => {
+        assert.equal(
+          morphTargets.has(target),
+          true,
+          `Identity binding target ${target} is not in the GLB morph contract.`,
+        );
+      });
+  });
+
+  identityShellModule.morphs.corrective.forEach((binding) => {
+    assert.equal(
+      morphTargets.has(binding.target),
+      true,
+      `Corrective target ${binding.target} is not in the GLB morph contract.`,
+    );
+    binding.drivers.forEach((driver) => {
+      assert.equal(
+        calibratedIdentityParameters.has(driver.parameter),
+        true,
+        `Corrective driver ${driver.parameter} has no morph calibration.`,
+      );
+    });
+  });
+
+  identityShellModule.morphs.presentation.forEach((binding) => {
+    assert.equal(
+      morphTargets.has(binding.target),
+      true,
+      `Presentation target ${binding.target} is not in the GLB morph contract.`,
+    );
+  });
+
+  assert.deepEqual(
+    identityShellModule.morphs.identityBindings
+      .map((binding) => binding.parameter)
+      .sort(),
+    [...calibratedIdentityParameters].sort(),
+  );
+});
+
+test("identity shell presets are candidate-scoped module values", () => {
+  const parameterKeys = Object.keys(identityShellModule.parameters.neutral);
+  const morphTargets = new Set(identityShellModule.morphs.targetNames);
+  const shapePresetIds = identityShellModule.presets.shape.map(
+    (preset) => preset.id,
+  );
+  const structurePresetIds = identityShellModule.presets.structure.map(
+    (preset) => preset.id,
+  );
+
+  assert.equal(new Set(shapePresetIds).size, shapePresetIds.length);
+  assert.equal(new Set(structurePresetIds).size, structurePresetIds.length);
+  assert.equal(
+    structurePresetIds.includes("balanced"),
+    true,
+    "Structure presets must include the required balanced product anchor.",
+  );
+
+  identityShellModule.presets.shape.forEach((preset) => {
+    Object.entries(preset.parameters).forEach(([parameter, value]) => {
+      assert.equal(
+        parameterKeys.includes(parameter),
+        true,
+        `Shape preset ${preset.id} references unknown parameter ${parameter}.`,
+      );
+      const range = identityShellModule.parameters.safeRanges[parameter];
+      assert.equal(
+        value >= range.min && value <= range.max,
+        true,
+        `Shape preset ${preset.id}.${parameter} is outside its safe range.`,
+      );
+    });
+  });
+
+  identityShellModule.presets.structure.forEach((preset) => {
+    assert.equal(
+      Object.keys(preset.morphWeights).length > 0,
+      true,
+      `Structure preset ${preset.id} must define at least one morph weight.`,
+    );
+    Object.entries(preset.morphWeights).forEach(([target, value]) => {
+      assert.equal(
+        morphTargets.has(target),
+        true,
+        `Structure preset ${preset.id} references unknown morph target ${target}.`,
+      );
+      assert.equal(
+        Number.isFinite(value),
+        true,
+        `Structure preset ${preset.id}.${target} must be finite.`,
+      );
+    });
+  });
+});
+
 test("the Foundry owns the public package surfaces consumed by Synmere", async () => {
   const packageNames = ["manifest", "schema", "three"];
   const packageManifests = await Promise.all(

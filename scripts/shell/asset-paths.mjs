@@ -23,6 +23,10 @@ export const RELEASE_MANIFEST_PATH = path.join(
   PROJECT_ROOT,
   "manifests/identity-shell.current.json",
 );
+export const CURRENT_MODULE_MANIFEST_PATH = path.join(
+  PROJECT_ROOT,
+  "manifests/identity-shell.module.json",
+);
 export const CANDIDATE_DIRECTORY = path.join(
   PROJECT_ROOT,
   "assets/candidates/current",
@@ -38,6 +42,10 @@ export const CANDIDATE_BLEND_PATH = path.join(
 export const CANDIDATE_MANIFEST_PATH = path.join(
   CANDIDATE_DIRECTORY,
   "identity-shell-v1.manifest.json",
+);
+export const CANDIDATE_MODULE_MANIFEST_PATH = path.join(
+  CANDIDATE_DIRECTORY,
+  "identity-shell-v1.module.json",
 );
 export const CANDIDATE_REVIEW_PATH = path.join(
   CANDIDATE_DIRECTORY,

@@ -145,7 +145,7 @@ export type AssetReleaseManifest = {
   readonly sha256: string;
   readonly meshName: string;
   readonly materialNames: readonly string[];
-  readonly morphTargetNames: readonly IdentityMorphName[];
+  readonly morphTargetNames: readonly string[];
   readonly topologyVersion: string;
   readonly rendererCompatibilityVersion: string;
   readonly minimumApplicationVersion: string;
@@ -195,9 +195,9 @@ export type FaceShellParameters = {
 
 export type FaceShellParameterKey = keyof FaceShellParameters;
 
-export type IdentityShellShapePresetId = "neutral" | "oval" | "wide" | "long" | "soft" | "tapered" | "angular";
+export type IdentityShellShapePresetId = string;
 
-export type IdentityShellStructurePresetId = "balanced" | "structured" | "soft";
+export type IdentityShellStructurePresetId = string;
 
 export type AssetModuleManifest = {
   schemaVersion: "asset-module-v1";
@@ -218,11 +218,11 @@ export type AssetModuleManifest = {
     >;
   };
   morphs: {
-    targetNames: readonly IdentityMorphName[];
+    targetNames: readonly string[];
     identityBindings: readonly {
       parameter: string;
-      positiveTarget?: IdentityMorphName;
-      negativeTarget?: IdentityMorphName;
+      positiveTarget?: string;
+      negativeTarget?: string;
       strength: number;
     }[];
     calibration: Record<
@@ -234,7 +234,7 @@ export type AssetModuleManifest = {
       }
     >;
     corrective: readonly {
-      target: IdentityMorphName;
+      target: string;
       strength: number;
       drivers: readonly {
         parameter: string;
@@ -243,7 +243,7 @@ export type AssetModuleManifest = {
     }[];
     presentation: readonly {
       preset: IdentityShellStructurePresetId;
-      target: IdentityMorphName;
+      target: string;
     }[];
   };
   presets: {

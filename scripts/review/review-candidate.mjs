@@ -1,5 +1,12 @@
 import { spawn } from "node:child_process";
-import { mkdir, readFile, rm, stat, writeFile } from "node:fs/promises";
+import {
+  copyFile,
+  mkdir,
+  readFile,
+  rm,
+  stat,
+  writeFile,
+} from "node:fs/promises";
 import net from "node:net";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -7,9 +14,11 @@ import { fileURLToPath } from "node:url";
 import {
   CANDIDATE_GLB_PATH,
   CANDIDATE_MANIFEST_PATH,
+  CANDIDATE_MODULE_MANIFEST_PATH,
   CANDIDATE_REVIEW_DIRECTORY,
   CANDIDATE_REVIEW_PATH,
   CANDIDATE_VALIDATION_PATH,
+  CURRENT_MODULE_MANIFEST_PATH,
   PRODUCTION_GLB_PATH,
   SHELL_ASSET_PIPELINE_VERSION,
   SOURCE_BLEND_PATH,
@@ -57,6 +66,7 @@ const errors = [];
 let candidateServer;
 let productServer;
 let candidateManifest;
+let candidateModuleManifestSha256;
 let validationReport;
 let reviewDirectory;
 let modelLabUrl;
@@ -236,8 +246,16 @@ try {
   candidateManifest = JSON.parse(
     await readFile(CANDIDATE_MANIFEST_PATH, "utf8"),
   );
+  await copyFile(CURRENT_MODULE_MANIFEST_PATH, CANDIDATE_MODULE_MANIFEST_PATH);
+  candidateModuleManifestSha256 = await sha256File(
+    CANDIDATE_MODULE_MANIFEST_PATH,
+  );
   console.log(`      File: ${path.basename(CANDIDATE_GLB_PATH)}`);
   console.log(`      SHA-256: ${candidateManifest.candidateSha256}`);
+  console.log(
+    `      Module: ${path.relative(PROJECT_ROOT, CANDIDATE_MODULE_MANIFEST_PATH)}`,
+  );
+  console.log(`      Module SHA-256: ${candidateModuleManifestSha256}`);
   console.log(`      Production SHA-256: ${productionShaBefore}`);
   console.log(
     `      Candidate vs production: ${
@@ -328,7 +346,10 @@ if (status.validation === "passed" && status.morphValidation === "passed") {
           SYNMERE_NEXT_DIST_DIR: PRODUCT_DIST_DIRECTORY_NAME,
           SYNMERE_ASSET_REVIEW_ENABLED: "true",
           SYNMERE_MODEL_LAB_CANDIDATE_URL: candidateServer.url,
+          SYNMERE_MODEL_LAB_CANDIDATE_MODULE_URL: candidateServer.moduleUrl,
           SYNMERE_MODEL_LAB_CANDIDATE_SHA256: candidateManifest.candidateSha256,
+          SYNMERE_MODEL_LAB_CANDIDATE_MODULE_SHA256:
+            candidateModuleManifestSha256,
         },
         stdio: ["ignore", "pipe", "pipe"],
       },
@@ -350,6 +371,7 @@ if (status.validation === "passed" && status.morphValidation === "passed") {
     console.log("ready");
     console.log(`      Model Lab: ${modelLabUrl}`);
     console.log(`      Candidate asset: ${candidateServer.url}`);
+    console.log(`      Candidate module: ${candidateServer.moduleUrl}`);
 
     const playwrightArguments = [
       PLAYWRIGHT_CLI,
@@ -410,6 +432,11 @@ if (candidateManifest) {
     candidateDiffersFromProduction:
       candidateManifest.candidateSha256 !== productionShaBefore,
     sourceBlendSha256: candidateManifest.sourceBlendSha256,
+    assetModuleManifest: path.relative(
+      PROJECT_ROOT,
+      CANDIDATE_MODULE_MANIFEST_PATH,
+    ),
+    assetModuleManifestSha256: candidateModuleManifestSha256,
     blenderVersion: candidateManifest.blenderVersion,
     exportedAt: candidateManifest.exportedAt,
     reviewedAt: new Date().toISOString(),

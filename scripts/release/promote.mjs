@@ -13,13 +13,16 @@ import {
   CANDIDATE_BLEND_PATH,
   CANDIDATE_DIRECTORY,
   CANDIDATE_GLB_PATH,
+  CANDIDATE_MODULE_MANIFEST_PATH,
 } from "../shell/asset-paths.mjs";
 import { sha256File } from "../shell/glb.mjs";
 import {
   assertPromotableAssetPromotionRecord,
   buildIdentityShellPromotionRecord,
 } from "./asset-promotion-record.mjs";
-import { buildIdentityShellModuleManifest } from "./asset-module-manifest.mjs";
+import {
+  normalizeIdentityShellModuleManifest,
+} from "./asset-module-manifest.mjs";
 import { writeAssetPromotionRegistry } from "./asset-promotion-registry.mjs";
 import { writeManifestPackage } from "./build-manifest-package.mjs";
 import {
@@ -73,14 +76,24 @@ const reviewPath = path.join(
 );
 
 await assertReleaseDoesNotExist(releaseDirectory);
-const [manifest, validation, review, glbSha256, blendSha256] =
-  await Promise.all([
+const [
+  manifest,
+  validation,
+  review,
+  candidateModuleManifest,
+  glbSha256,
+  blendSha256,
+] = await Promise.all([
     readJson(candidateManifestPath),
     readJson(validationPath),
     readJson(reviewPath),
+    readJson(CANDIDATE_MODULE_MANIFEST_PATH),
     sha256File(CANDIDATE_GLB_PATH),
-    sha256File(CANDIDATE_BLEND_PATH),
-  ]);
+  sha256File(CANDIDATE_BLEND_PATH),
+]);
+const candidateModuleManifestSha256 = await sha256File(
+  CANDIDATE_MODULE_MANIFEST_PATH,
+);
 
 if (
   manifest.version !== version ||
@@ -103,10 +116,11 @@ if (
 if (
   !review.results?.passed ||
   review.candidateSha256 !== glbSha256 ||
+  review.assetModuleManifestSha256 !== candidateModuleManifestSha256 ||
   review.promotionApproved !== true
 ) {
   throw new Error(
-    "Model Lab evidence is missing, failed, stale, or not explicitly approved.",
+    "Model Lab evidence is missing, failed, stale, has stale module settings, or is not explicitly approved.",
   );
 }
 
@@ -145,7 +159,7 @@ try {
   });
   await writeJson(
     path.join(stagingDirectory, "module-manifest.json"),
-    buildIdentityShellModuleManifest(manifest),
+    normalizeIdentityShellModuleManifest(manifest, candidateModuleManifest),
   );
 
   // Promotion permits exactly one validation against production-shaped paths.

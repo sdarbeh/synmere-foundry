@@ -68,8 +68,11 @@ contract and all 193 global morph states, serves the candidate from
 `assets/candidates/current/`, launches Synmere Model Lab at
 `/labs/shell?asset=candidate`, runs candidate browser checks, captures
 Preview, Trace, and Topology screenshots, and writes
-`assets/candidates/current/identity-shell-v1.review.json`. It never writes to
-Synmere's `public/` directory and never promotes a release.
+`assets/candidates/current/identity-shell-v1.review.json`. The review package
+also snapshots the candidate asset-module settings at
+`assets/candidates/current/identity-shell-v1.module.json`, so candidate geometry
+and tuning values can be reviewed together. It never writes to Synmere's
+`public/` directory and never promotes a release.
 
 In an interactive terminal, a successful review keeps the candidate host and
 Model Lab running for manual inspection. Open the printed Model Lab URL, then
@@ -93,6 +96,18 @@ The lifecycle commands have deliberately separate responsibilities:
 
 Foundry owns asset meaning. Synmere Labs is the tuning interface. Package builds
 must stay deterministic outputs of Foundry-owned source files.
+
+Every promoted identity-shell GLB version owns its asset-module semantics in:
+
+```text
+assets/releases/identity-shell/<version>/module-manifest.json
+```
+
+That file carries the GLB-bound values for product baseline parameters, shape
+presets, structure weights, morph calibration, safe ranges, and validation
+limits. `manifests/identity-shell.module.json` and the `@synmere/manifest`
+package are generated outputs. Do not edit those generated files as the source
+of tuning truth.
 
 The preferred tuning loop is:
 
@@ -142,7 +157,7 @@ That command should verify the reviewed candidate SHA, verify the Blender source
 hash, reject values outside safe ranges, update the canonical asset-module
 source, and regenerate the package outputs. Until that command exists, the
 manual fallback is to copy the Labs settings into the canonical asset-module
-source, then run:
+manifest for the target GLB version, then run:
 
 ```sh
 pnpm asset:module
@@ -152,6 +167,15 @@ pnpm packages:build
 After changing tuning values, run `pnpm shell:review` again before approving or
 promoting. Promotion should only happen after the GLB, asset module, validation
 evidence, and package output all agree.
+
+Candidate mode is expected to review both:
+
+- the candidate GLB;
+- the candidate asset-module manifest.
+
+Foundry serves the module snapshot next to the candidate GLB during review, and
+Synmere exposes it through its dev-only candidate module route. Main may decide
+how to present those settings, but Foundry owns the values.
 
 TODO: add an interactive tuning apply wizard:
 

@@ -224,12 +224,6 @@ export const writeManifestPackage = async (options = {}) => {
       return `  readonly ${toConstantKey(target)}: ${JSON.stringify(target)};`;
     })
     .join("\n");
-  const shapePresetIds = moduleManifest.presets.shape
-    .map((preset) => JSON.stringify(preset.id))
-    .join(" | ");
-  const structurePresetIds = moduleManifest.presets.structure
-    .map((preset) => JSON.stringify(preset.id))
-    .join(" | ");
   const generated = `// Generated from an immutable Synmere Foundry release manifest.
 export const IDENTITY_MORPH_TARGET = Object.freeze({
 ${targetRows}
@@ -656,7 +650,7 @@ export type AssetReleaseManifest = {
   readonly sha256: string;
   readonly meshName: string;
   readonly materialNames: readonly string[];
-  readonly morphTargetNames: readonly IdentityMorphName[];
+  readonly morphTargetNames: readonly string[];
   readonly topologyVersion: string;
   readonly rendererCompatibilityVersion: string;
   readonly minimumApplicationVersion: string;
@@ -706,9 +700,9 @@ export type FaceShellParameters = {
 
 export type FaceShellParameterKey = keyof FaceShellParameters;
 
-export type IdentityShellShapePresetId = ${shapePresetIds};
+export type IdentityShellShapePresetId = string;
 
-export type IdentityShellStructurePresetId = ${structurePresetIds};
+export type IdentityShellStructurePresetId = string;
 
 export type AssetModuleManifest = {
   schemaVersion: "asset-module-v1";
@@ -729,11 +723,11 @@ export type AssetModuleManifest = {
     >;
   };
   morphs: {
-    targetNames: readonly IdentityMorphName[];
+    targetNames: readonly string[];
     identityBindings: readonly {
       parameter: string;
-      positiveTarget?: IdentityMorphName;
-      negativeTarget?: IdentityMorphName;
+      positiveTarget?: string;
+      negativeTarget?: string;
       strength: number;
     }[];
     calibration: Record<
@@ -745,7 +739,7 @@ export type AssetModuleManifest = {
       }
     >;
     corrective: readonly {
-      target: IdentityMorphName;
+      target: string;
       strength: number;
       drivers: readonly {
         parameter: string;
@@ -754,7 +748,7 @@ export type AssetModuleManifest = {
     }[];
     presentation: readonly {
       preset: IdentityShellStructurePresetId;
-      target: IdentityMorphName;
+      target: string;
     }[];
   };
   presets: {

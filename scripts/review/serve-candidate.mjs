@@ -6,9 +6,11 @@ import { pathToFileURL } from "node:url";
 import {
   CANDIDATE_ASSET_PORT,
   CANDIDATE_GLB_PATH,
+  CANDIDATE_MODULE_MANIFEST_PATH,
 } from "../shell/asset-paths.mjs";
 
 export const CANDIDATE_ASSET_ROUTE = "/identity-shell-v1.glb";
+export const CANDIDATE_MODULE_ROUTE = "/identity-shell-v1.module.json";
 
 const writeJson = (response, statusCode, value) => {
   response.writeHead(statusCode, {
@@ -23,6 +25,9 @@ export const startCandidateServer = async ({
   port = Number(CANDIDATE_ASSET_PORT),
 } = {}) => {
   const candidate = await stat(CANDIDATE_GLB_PATH);
+  const candidateModule = await stat(CANDIDATE_MODULE_MANIFEST_PATH).catch(
+    () => null,
+  );
   const server = http.createServer((request, response) => {
     const requestUrl = new URL(
       request.url ?? "/",
@@ -32,13 +37,39 @@ export const startCandidateServer = async ({
       writeJson(response, 200, {
         ready: true,
         candidate: "identity-shell-v1.glb",
+        module: candidateModule ? "identity-shell-v1.module.json" : null,
       });
       return;
     }
-    if (
-      requestUrl.pathname !== CANDIDATE_ASSET_ROUTE ||
-      (request.method !== "GET" && request.method !== "HEAD")
-    ) {
+    if (request.method !== "GET" && request.method !== "HEAD") {
+      writeJson(response, 404, { error: "Candidate asset not found." });
+      return;
+    }
+    if (requestUrl.pathname === CANDIDATE_MODULE_ROUTE) {
+      if (!candidateModule) {
+        writeJson(response, 404, {
+          error: "Candidate asset module not found.",
+        });
+        return;
+      }
+      response.writeHead(200, {
+        "Content-Type": "application/json; charset=utf-8",
+        "Content-Length": candidateModule.size,
+        "Cache-Control": "no-store",
+        "Access-Control-Allow-Origin": "*",
+      });
+      if (request.method === "HEAD") {
+        response.end();
+        return;
+      }
+      const stream = createReadStream(CANDIDATE_MODULE_MANIFEST_PATH);
+      stream.on("error", () => {
+        response.destroy();
+      });
+      stream.pipe(response);
+      return;
+    }
+    if (requestUrl.pathname !== CANDIDATE_ASSET_ROUTE) {
       writeJson(response, 404, { error: "Candidate asset not found." });
       return;
     }
@@ -72,6 +103,7 @@ export const startCandidateServer = async ({
   return {
     server,
     url: `http://${host}:${address.port}${CANDIDATE_ASSET_ROUTE}`,
+    moduleUrl: `http://${host}:${address.port}${CANDIDATE_MODULE_ROUTE}`,
     close: () => {
       return new Promise((resolve, reject) => {
         server.close((error) => (error ? reject(error) : resolve()));
