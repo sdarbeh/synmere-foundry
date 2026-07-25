@@ -16,6 +16,11 @@ import {
 } from "../shell/asset-paths.mjs";
 import { sha256File } from "../shell/glb.mjs";
 import {
+  assertPromotableAssetPromotionRecord,
+  buildIdentityShellPromotionRecord,
+} from "./asset-promotion-record.mjs";
+import { writeAssetPromotionRegistry } from "./asset-promotion-registry.mjs";
+import {
   assertReleaseDoesNotExist,
   assertSemanticVersion,
   getReleaseTag,
@@ -141,8 +146,22 @@ try {
   const productionValidation = await validateReleaseDirectory(
     stagingDirectory,
     version,
-    { requireProductionValidation: false },
+    {
+      requireProductionValidation: false,
+      requirePromotionRecord: false,
+    },
   );
+  const promotionRecord = buildIdentityShellPromotionRecord({
+    version,
+    manifest,
+    validation,
+    review,
+    productionValidation,
+    glbSha256,
+    blendSha256,
+    productionGlbSha256: glbSha256,
+  });
+  assertPromotableAssetPromotionRecord(promotionRecord);
   await writeJson(path.join(stagingDirectory, "production-validation.json"), {
     schemaVersion: "v1",
     operation: "production-path-validation",
@@ -151,10 +170,29 @@ try {
   });
   await mkdir(releaseRoot, { recursive: true });
   await rename(stagingDirectory, releaseDirectory);
+  const productionGlbSha256 = await sha256File(
+    path.join(releaseDirectory, "identity-shell.glb"),
+  );
+  if (productionGlbSha256 !== glbSha256) {
+    throw new Error("Production GLB hash does not match approved candidate.");
+  }
+  const finalPromotionRecord = {
+    ...promotionRecord,
+    files: {
+      ...promotionRecord.files,
+      productionGlbHash: productionGlbSha256,
+    },
+  };
+  assertPromotableAssetPromotionRecord(finalPromotionRecord);
+  await writeJson(
+    path.join(releaseDirectory, "promotion-record.json"),
+    finalPromotionRecord,
+  );
   await writeJson(
     path.join(PROJECT_ROOT, "manifests/identity-shell.current.json"),
     manifest,
   );
+  await writeAssetPromotionRegistry();
 
   console.log(
     JSON.stringify(
@@ -164,7 +202,12 @@ try {
         releaseTag: getReleaseTag(version),
         releaseDirectory: path.relative(PROJECT_ROOT, releaseDirectory),
         glbSha256,
+        productionGlbSha256,
         blendSha256,
+        promotionRecord: path.relative(
+          PROJECT_ROOT,
+          path.join(releaseDirectory, "promotion-record.json"),
+        ),
         productionValidationRuns: 1,
         next: [
           "Commit the immutable release.",
