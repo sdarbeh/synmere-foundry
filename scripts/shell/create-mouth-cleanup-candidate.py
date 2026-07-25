@@ -1,4 +1,4 @@
-"""Create the identity-shell-v1 mouth-cleanup revision from Baseline 1.1.1.
+"""Create the identity-shell-v1 mouth-cleanup revision from Baseline 1.0.0.
 
 The pass is intentionally local:
 - X coordinates never move, preserving width and silhouette.
@@ -131,7 +131,7 @@ def main():
     baseline_sha = sha256_file(blend_path)
     if baseline_sha != EXPECTED_BASELINE_SHA256:
         raise RuntimeError(
-            "Mouth cleanup must start from the promoted Baseline 1.1.1 source. "
+            "Mouth cleanup must start from the promoted Baseline 1.0.0 source. "
             f"Expected {EXPECTED_BASELINE_SHA256}, received {baseline_sha}."
         )
 
@@ -336,7 +336,7 @@ def main():
     changed_positions = [original_positions[index] for index in changed_indices]
     report = {
         "revision": "identity-shell-v1-mouth-cleanup",
-        "sourceBaseline": "1.1.1",
+        "sourceBaseline": "1.0.0",
         "sourceBlendSha256": baseline_sha,
         "changedVertexCount": len(changed_indices),
         "changedVertexIndices": changed_indices,
@@ -365,7 +365,7 @@ def main():
     }
     scene[REVISION_MARKER] = json.dumps(
         {
-            "sourceBaseline": "1.1.1",
+            "sourceBaseline": "1.0.0",
             "scope": "mouth-and-philtrum-only",
             "changedVertexCount": len(changed_indices),
             "maximumDisplacement": maximum_displacement,

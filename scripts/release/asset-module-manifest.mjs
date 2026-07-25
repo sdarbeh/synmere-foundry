@@ -10,6 +10,38 @@ import {
 export const ASSET_MODULE_SCHEMA_VERSION = "asset-module-v1";
 export const ASSET_MODULE_MANIFEST_FILENAME = "module-manifest.json";
 export const REQUIRED_DEFAULT_STRUCTURE_PRESET_ID = "balanced";
+export const REQUIRED_BASELINE_SHAPE_PRESET_ID = "baseline";
+export const ASSET_MODULE_PARAMETER_GROUP_IDS = [
+  "silhouette",
+  "facialGeometry",
+];
+export const REQUIRED_ASSET_MODULE_MATERIAL_ID = "ceramic";
+export const REQUIRED_ASSET_MODULE_DISPLAY_MODE_ID = "preview";
+export const ASSET_MODULE_MATERIAL_IDS = ["ceramic", "obsidian"];
+export const ASSET_MODULE_DISPLAY_MODE_IDS = ["preview", "trace", "topology"];
+export const SHAPE_PRESET_ARCHETYPES = [
+  "baseline",
+  "oval",
+  "broad",
+  "long",
+  "round",
+  "heart",
+  "diamond",
+];
+export const SHAPE_PRESET_STRENGTHS = ["subtle", "moderate", "strong"];
+export const SHAPE_PRESET_EMPHASIS = [
+  "width",
+  "length",
+  "forehead",
+  "cheeks",
+  "jaw",
+  "chin",
+  "eyes",
+  "brow",
+  "nose",
+  "mouth",
+  "depth",
+];
 
 const SCRIPT_DIRECTORY = path.dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = path.resolve(SCRIPT_DIRECTORY, "../..");
@@ -40,6 +72,18 @@ const assertRecord = (value, label) => {
 const assertArray = (value, label) => {
   if (!Array.isArray(value)) {
     throw new Error(`${label} must be an array.`);
+  }
+};
+
+const assertNonEmptyString = (value, label) => {
+  if (typeof value !== "string" || value.trim().length === 0) {
+    throw new Error(`${label} must be a non-empty string.`);
+  }
+};
+
+const assertNumber = (value, label) => {
+  if (!Number.isFinite(value)) {
+    throw new Error(`${label} must be finite.`);
   }
 };
 
@@ -78,6 +122,139 @@ export const assertIdentityShellModuleManifest = (
     "Product baseline parameters",
   );
   assertRecord(moduleManifest.parameters.safeRanges, "Safe parameter ranges");
+  assertRecord(
+    moduleManifest.parameters.authoringRanges,
+    "Authoring parameter ranges",
+  );
+  assertArray(moduleManifest.parameterGroups, "Parameter groups");
+
+  const parameterKeys = Object.keys(moduleManifest.parameters.neutral);
+  const parameterKeySet = new Set(parameterKeys);
+  [
+    ["productBaseline", moduleManifest.parameters.productBaseline],
+    ["safeRanges", moduleManifest.parameters.safeRanges],
+    ["authoringRanges", moduleManifest.parameters.authoringRanges],
+  ].forEach(([label, record]) => {
+    const recordKeys = Object.keys(record).sort();
+    if (
+      JSON.stringify(recordKeys) !== JSON.stringify([...parameterKeys].sort())
+    ) {
+      throw new Error(`${label} keys must match neutral parameter keys.`);
+    }
+  });
+
+  moduleManifest.parameterGroups.forEach((group) => {
+    assertRecord(group, "Parameter group");
+    assertNonEmptyString(group.id, "Parameter group id");
+    assertNonEmptyString(
+      group.labelKey,
+      `Parameter group ${group.id} labelKey`,
+    );
+    assertNonEmptyString(
+      group.defaultLabel,
+      `Parameter group ${group.id} defaultLabel`,
+    );
+    assertNonEmptyString(
+      group.descriptionKey,
+      `Parameter group ${group.id} descriptionKey`,
+    );
+    assertNonEmptyString(
+      group.defaultDescription,
+      `Parameter group ${group.id} defaultDescription`,
+    );
+    assertArray(group.parameterKeys, `Parameter group ${group.id} keys`);
+    group.parameterKeys.forEach((parameterKey) => {
+      if (!parameterKeySet.has(parameterKey)) {
+        throw new Error(
+          `Parameter group ${group.id} references unknown parameter ${parameterKey}.`,
+        );
+      }
+    });
+  });
+
+  const groupIds = moduleManifest.parameterGroups.map((group) => group.id);
+  ASSET_MODULE_PARAMETER_GROUP_IDS.forEach((groupId) => {
+    if (!groupIds.includes(groupId)) {
+      throw new Error(`Asset module manifest is missing group ${groupId}.`);
+    }
+  });
+
+  assertRecord(moduleManifest.capabilities, "Asset module capabilities");
+  assertArray(
+    moduleManifest.capabilities.materials,
+    "Asset module material capabilities",
+  );
+  assertArray(
+    moduleManifest.capabilities.displayModes,
+    "Asset module display mode capabilities",
+  );
+
+  const validateCapability = (capability, supportedIds, label) => {
+    assertRecord(capability, label);
+    assertNonEmptyString(capability.id, `${label} id`);
+    if (!supportedIds.includes(capability.id)) {
+      throw new Error(`${label} has unknown id ${capability.id}.`);
+    }
+    assertNonEmptyString(capability.labelKey, `${label} labelKey`);
+    assertNonEmptyString(capability.defaultLabel, `${label} defaultLabel`);
+    if (typeof capability.required !== "boolean") {
+      throw new Error(`${label} required must be boolean.`);
+    }
+  };
+
+  moduleManifest.capabilities.materials.forEach((capability) => {
+    validateCapability(
+      capability,
+      ASSET_MODULE_MATERIAL_IDS,
+      "Material capability",
+    );
+  });
+  moduleManifest.capabilities.displayModes.forEach((capability) => {
+    validateCapability(
+      capability,
+      ASSET_MODULE_DISPLAY_MODE_IDS,
+      "Display mode capability",
+    );
+  });
+
+  const materialIds = moduleManifest.capabilities.materials.map(
+    (capability) => capability.id,
+  );
+  const displayModeIds = moduleManifest.capabilities.displayModes.map(
+    (capability) => capability.id,
+  );
+  if (new Set(materialIds).size !== materialIds.length) {
+    throw new Error("Asset module material capability ids must be unique.");
+  }
+  if (new Set(displayModeIds).size !== displayModeIds.length) {
+    throw new Error("Asset module display mode capability ids must be unique.");
+  }
+  if (!materialIds.includes(REQUIRED_ASSET_MODULE_MATERIAL_ID)) {
+    throw new Error(
+      `Asset module manifest must support ${REQUIRED_ASSET_MODULE_MATERIAL_ID}.`,
+    );
+  }
+  if (!displayModeIds.includes(REQUIRED_ASSET_MODULE_DISPLAY_MODE_ID)) {
+    throw new Error(
+      `Asset module manifest must support ${REQUIRED_ASSET_MODULE_DISPLAY_MODE_ID}.`,
+    );
+  }
+  const requiredMaterial = moduleManifest.capabilities.materials.find(
+    (capability) => capability.id === REQUIRED_ASSET_MODULE_MATERIAL_ID,
+  );
+  const requiredDisplayMode = moduleManifest.capabilities.displayModes.find(
+    (capability) => capability.id === REQUIRED_ASSET_MODULE_DISPLAY_MODE_ID,
+  );
+  if (!requiredMaterial?.required) {
+    throw new Error(
+      `${REQUIRED_ASSET_MODULE_MATERIAL_ID} material capability must be required.`,
+    );
+  }
+  if (!requiredDisplayMode?.required) {
+    throw new Error(
+      `${REQUIRED_ASSET_MODULE_DISPLAY_MODE_ID} display mode capability must be required.`,
+    );
+  }
 
   assertRecord(moduleManifest.morphs, "Asset module morphs");
   assertArray(
@@ -90,6 +267,29 @@ export const assertIdentityShellModuleManifest = (
     moduleManifest.morphs.presentation,
     "Presentation morph bindings",
   );
+  moduleManifest.morphs.identityBindings.forEach((binding) => {
+    if (!parameterKeySet.has(binding.parameter)) {
+      throw new Error(
+        `Identity morph binding references unknown parameter ${binding.parameter}.`,
+      );
+    }
+  });
+  Object.keys(moduleManifest.morphs.calibration).forEach((parameterKey) => {
+    if (!parameterKeySet.has(parameterKey)) {
+      throw new Error(
+        `Morph calibration references unknown parameter ${parameterKey}.`,
+      );
+    }
+  });
+  moduleManifest.morphs.corrective.forEach((binding) => {
+    binding.drivers.forEach((driver) => {
+      if (!parameterKeySet.has(driver.parameter)) {
+        throw new Error(
+          `Corrective morph driver references unknown parameter ${driver.parameter}.`,
+        );
+      }
+    });
+  });
 
   assertRecord(moduleManifest.presets, "Asset module presets");
   assertArray(moduleManifest.presets.shape, "Shape presets");
@@ -97,6 +297,65 @@ export const assertIdentityShellModuleManifest = (
   if (moduleManifest.presets.shape.length === 0) {
     throw new Error("Asset module manifest must define shape presets.");
   }
+  if (
+    !moduleManifest.presets.shape.some((preset) => {
+      return preset.id === REQUIRED_BASELINE_SHAPE_PRESET_ID;
+    })
+  ) {
+    throw new Error(
+      `Asset module manifest must define the required ${REQUIRED_BASELINE_SHAPE_PRESET_ID} shape preset.`,
+    );
+  }
+  moduleManifest.presets.shape.forEach((preset) => {
+    assertRecord(preset, "Shape preset");
+    assertNonEmptyString(preset.id, "Shape preset id");
+    assertNonEmptyString(preset.labelKey, `Shape preset ${preset.id} labelKey`);
+    assertNonEmptyString(
+      preset.defaultLabel,
+      `Shape preset ${preset.id} defaultLabel`,
+    );
+    assertNonEmptyString(
+      preset.descriptionKey,
+      `Shape preset ${preset.id} descriptionKey`,
+    );
+    assertNonEmptyString(
+      preset.defaultDescription,
+      `Shape preset ${preset.id} defaultDescription`,
+    );
+    if (!["productBaseline", "neutral"].includes(preset.baseParameters)) {
+      throw new Error(`Shape preset ${preset.id} has invalid baseParameters.`);
+    }
+    assertRecord(preset.intent, `Shape preset ${preset.id} intent`);
+    if (!SHAPE_PRESET_ARCHETYPES.includes(preset.intent.archetype)) {
+      throw new Error(`Shape preset ${preset.id} has invalid archetype.`);
+    }
+    if (!SHAPE_PRESET_STRENGTHS.includes(preset.intent.strength)) {
+      throw new Error(`Shape preset ${preset.id} has invalid strength.`);
+    }
+    assertArray(preset.intent.emphasis, `Shape preset ${preset.id} emphasis`);
+    preset.intent.emphasis.forEach((emphasis) => {
+      if (!SHAPE_PRESET_EMPHASIS.includes(emphasis)) {
+        throw new Error(
+          `Shape preset ${preset.id} has invalid emphasis ${emphasis}.`,
+        );
+      }
+    });
+    assertRecord(preset.parameters, `Shape preset ${preset.id} parameters`);
+    Object.entries(preset.parameters).forEach(([parameterKey, value]) => {
+      if (!parameterKeySet.has(parameterKey)) {
+        throw new Error(
+          `Shape preset ${preset.id} references unknown parameter ${parameterKey}.`,
+        );
+      }
+      assertNumber(value, `Shape preset ${preset.id}.${parameterKey}`);
+      const range = moduleManifest.parameters.safeRanges[parameterKey];
+      if (value < range.min || value > range.max) {
+        throw new Error(
+          `Shape preset ${preset.id}.${parameterKey} is outside safeRanges.`,
+        );
+      }
+    });
+  });
   if (moduleManifest.presets.structure.length === 0) {
     throw new Error("Asset module manifest must define structure presets.");
   }
@@ -146,7 +405,10 @@ export const normalizeIdentityShellModuleManifest = (
       neutral: moduleManifest.parameters.neutral,
       productBaseline: moduleManifest.parameters.productBaseline,
       safeRanges: moduleManifest.parameters.safeRanges,
+      authoringRanges: moduleManifest.parameters.authoringRanges,
     },
+    parameterGroups: moduleManifest.parameterGroups,
+    capabilities: moduleManifest.capabilities,
     morphs: {
       targetNames: releaseManifest.morphTargetNames,
       identityBindings: moduleManifest.morphs.identityBindings,

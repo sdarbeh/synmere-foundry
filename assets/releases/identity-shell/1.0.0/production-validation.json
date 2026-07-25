@@ -3,8 +3,8 @@
   "operation": "production-path-validation",
   "runs": 1,
   "passed": true,
-  "version": "1.1.2",
-  "releaseTag": "identity-shell-v1.1.2",
+  "version": "1.0.0",
+  "releaseTag": "identity-shell-v1.0.0",
   "glbSha256": "2cd5c234565e9f5cf7ff5632f011d8273b94d6ea945124239a4f1d15cbd0cc99",
   "blendSha256": "a60e2ce05a1417b28a5d0749e9e65a48f2695e0da44822b54081090d793e7cd7",
   "contract": {
@@ -56,15 +56,9 @@
     "morphTargetCount": 37,
     "bounds": {
       "minimum": [
-        -0.7069786190986633,
-        -1.1671162843704224,
-        -0.48494312167167664
+        -0.7069786190986633, -1.1671162843704224, -0.48494312167167664
       ],
-      "maximum": [
-        0.7069786190986633,
-        0.9781171083450317,
-        0.5206999778747559
-      ]
+      "maximum": [0.7069786190986633, 0.9781171083450317, 0.5206999778747559]
     }
   },
   "localRegressionValidation": "passed",

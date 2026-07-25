@@ -704,6 +704,59 @@ export type IdentityShellShapePresetId = string;
 
 export type IdentityShellStructurePresetId = string;
 
+export type AssetModuleParameterGroupId = "silhouette" | "facialGeometry";
+
+export type AssetModuleMaterialId = "ceramic" | "obsidian";
+
+export type AssetModuleDisplayModeId = "preview" | "trace" | "topology";
+
+export type AssetModuleParameterRange = {
+  min: number;
+  max: number;
+  step: number;
+};
+
+export type AssetModuleParameterGroup = {
+  id: AssetModuleParameterGroupId;
+  labelKey: string;
+  defaultLabel: string;
+  descriptionKey: string;
+  defaultDescription: string;
+  parameterKeys: readonly FaceShellParameterKey[];
+};
+
+export type AssetModuleCapability<Id extends string> = {
+  id: Id;
+  labelKey: string;
+  defaultLabel: string;
+  required: boolean;
+};
+
+export type IdentityShellShapePresetIntent = {
+  archetype:
+    | "baseline"
+    | "oval"
+    | "broad"
+    | "long"
+    | "round"
+    | "heart"
+    | "diamond";
+  strength: "subtle" | "moderate" | "strong";
+  emphasis: readonly (
+    | "width"
+    | "length"
+    | "forehead"
+    | "cheeks"
+    | "jaw"
+    | "chin"
+    | "eyes"
+    | "brow"
+    | "nose"
+    | "mouth"
+    | "depth"
+  )[];
+};
+
 export type AssetModuleManifest = {
   schemaVersion: "asset-module-v1";
   asset: {
@@ -719,8 +772,14 @@ export type AssetModuleManifest = {
     productBaseline: FaceShellParameters;
     safeRanges: Record<
       FaceShellParameterKey,
-      { min: number; max: number; step: number }
+      AssetModuleParameterRange
     >;
+    authoringRanges: Record<FaceShellParameterKey, AssetModuleParameterRange>;
+  };
+  parameterGroups: readonly AssetModuleParameterGroup[];
+  capabilities: {
+    materials: readonly AssetModuleCapability<AssetModuleMaterialId>[];
+    displayModes: readonly AssetModuleCapability<AssetModuleDisplayModeId>[];
   };
   morphs: {
     targetNames: readonly string[];
@@ -754,8 +813,12 @@ export type AssetModuleManifest = {
   presets: {
     shape: readonly {
       id: IdentityShellShapePresetId;
-      label: string;
-      description: string;
+      labelKey: string;
+      defaultLabel: string;
+      descriptionKey: string;
+      defaultDescription: string;
+      baseParameters: "productBaseline" | "neutral";
+      intent: IdentityShellShapePresetIntent;
       parameters: Partial<FaceShellParameters>;
     }[];
     structure: readonly {

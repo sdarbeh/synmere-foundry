@@ -63,7 +63,7 @@ const createPromotionFixture = () => {
   };
 
   return {
-    version: "1.1.2",
+    version: "1.0.0",
     manifest,
     validation,
     review,
@@ -99,11 +99,11 @@ test("refuses promotion records without release notes", () => {
 test("orders asset promotion history newest first", () => {
   const olderRecord = buildIdentityShellPromotionRecord({
     ...createPromotionFixture(),
-    version: "1.1.1",
+    version: "0.9.0",
   });
   const newerRecord = buildIdentityShellPromotionRecord({
     ...createPromotionFixture(),
-    version: "1.1.2",
+    version: "1.0.0",
     manifest: {
       ...createPromotionFixture().manifest,
       releasedAt: "2026-07-25T00:14:03.122Z",
@@ -115,7 +115,7 @@ test("orders asset promotion history newest first", () => {
 
   assert.deepEqual(
     history.map((promotion) => promotion.version.version),
-    ["1.1.2", "1.1.1"],
+    ["1.0.0", "0.9.0"],
   );
   assert.equal(
     getLatestProductionAssetPromotion(promotions, "identity-shell"),

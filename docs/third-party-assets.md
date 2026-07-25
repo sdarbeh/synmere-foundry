@@ -11,8 +11,8 @@ canonical authored source is now
 - Source revision: `a8bc2d54ff0ac92e78ff71431b1023eda42bf482`
 - Source files: `makehuman/data/3dobjs/base.obj` and `makehuman/data/targets`
 - License: CC0
-- Current release: `assets/releases/identity-shell/1.1.1/identity-shell.glb`
-- Current release SHA-256: `2eb90bb7f08d528d7abd521a8cca9f90b00479c1c470d682d44d657f270716f7`
+- Current release: `assets/releases/identity-shell/1.0.0/identity-shell.glb`
+- Current release SHA-256: `2cd5c234565e9f5cf7ff5632f011d8273b94d6ea945124239a4f1d15cbd0cc99`
 
 The released shell contains no body, hair, ears, neck, teeth, eyeballs, or
 texture data. Its presentation topology uses partially closed neutral eyelids

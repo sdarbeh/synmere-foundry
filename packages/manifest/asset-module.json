@@ -4,8 +4,8 @@
     "name": "identity-shell",
     "displayName": "Identity Shell",
     "module": "identity-shell",
-    "version": "1.1.2",
-    "releaseTag": "identity-shell-v1.1.2"
+    "version": "1.0.0",
+    "releaseTag": "identity-shell-v1.0.0"
   },
   "parameters": {
     "version": "1.0.0",
@@ -48,6 +48,93 @@
       "chinLength": 0.25
     },
     "safeRanges": {
+      "faceWidth": {
+        "min": 0.88,
+        "max": 1.08,
+        "step": 0.01
+      },
+      "faceLength": {
+        "min": 1.02,
+        "max": 1.24,
+        "step": 0.01
+      },
+      "headDepth": {
+        "min": 0.8,
+        "max": 0.94,
+        "step": 0.01
+      },
+      "foreheadWidth": {
+        "min": 0.84,
+        "max": 1.08,
+        "step": 0.01
+      },
+      "upperFaceHeight": {
+        "min": 0.27,
+        "max": 0.36,
+        "step": 0.01
+      },
+      "cheekWidth": {
+        "min": 0.92,
+        "max": 1.1,
+        "step": 0.01
+      },
+      "jawWidth": {
+        "min": 0.7,
+        "max": 0.94,
+        "step": 0.01
+      },
+      "jawTaper": {
+        "min": 0.66,
+        "max": 0.9,
+        "step": 0.01
+      },
+      "chinLength": {
+        "min": 0.2,
+        "max": 0.31,
+        "step": 0.01
+      },
+      "eyeSpacing": {
+        "min": 0.3,
+        "max": 0.38,
+        "step": 0.005
+      },
+      "eyeWidth": {
+        "min": 0.1,
+        "max": 0.13,
+        "step": 0.005
+      },
+      "browArch": {
+        "min": 0.04,
+        "max": 0.08,
+        "step": 0.005
+      },
+      "browProminence": {
+        "min": 0.38,
+        "max": 0.62,
+        "step": 0.01
+      },
+      "noseWidth": {
+        "min": 0.2,
+        "max": 0.28,
+        "step": 0.005
+      },
+      "noseLength": {
+        "min": 0.26,
+        "max": 0.34,
+        "step": 0.005
+      },
+      "noseProjection": {
+        "min": 0.38,
+        "max": 0.62,
+        "step": 0.01
+      },
+      "mouthWidth": {
+        "min": 0.36,
+        "max": 0.48,
+        "step": 0.005
+      }
+    },
+    "authoringRanges": {
       "faceWidth": {
         "min": 0.72,
         "max": 1.15,
@@ -135,6 +222,79 @@
       }
     }
   },
+  "parameterGroups": [
+    {
+      "id": "silhouette",
+      "labelKey": "shell.groups.silhouette",
+      "defaultLabel": "Silhouette",
+      "descriptionKey": "shell.groups.silhouette.description",
+      "defaultDescription": "Head and face outline, proportions, jaw, cheeks, chin, and depth.",
+      "parameterKeys": [
+        "faceWidth",
+        "faceLength",
+        "headDepth",
+        "foreheadWidth",
+        "upperFaceHeight",
+        "cheekWidth",
+        "jawWidth",
+        "jawTaper",
+        "chinLength"
+      ]
+    },
+    {
+      "id": "facialGeometry",
+      "labelKey": "shell.groups.geometry",
+      "defaultLabel": "Geometry",
+      "descriptionKey": "shell.groups.geometry.description",
+      "defaultDescription": "Feature spacing and primary facial proportions.",
+      "parameterKeys": [
+        "eyeSpacing",
+        "eyeWidth",
+        "browArch",
+        "browProminence",
+        "noseWidth",
+        "noseLength",
+        "noseProjection",
+        "mouthWidth"
+      ]
+    }
+  ],
+  "capabilities": {
+    "materials": [
+      {
+        "id": "ceramic",
+        "labelKey": "shell.materials.ceramic",
+        "defaultLabel": "Ceramic",
+        "required": true
+      },
+      {
+        "id": "obsidian",
+        "labelKey": "shell.materials.obsidian",
+        "defaultLabel": "Obsidian",
+        "required": false
+      }
+    ],
+    "displayModes": [
+      {
+        "id": "preview",
+        "labelKey": "shell.displayModes.preview",
+        "defaultLabel": "Preview",
+        "required": true
+      },
+      {
+        "id": "trace",
+        "labelKey": "shell.displayModes.trace",
+        "defaultLabel": "Trace",
+        "required": false
+      },
+      {
+        "id": "topology",
+        "labelKey": "shell.displayModes.topology",
+        "defaultLabel": "Topology",
+        "required": false
+      }
+    ]
+  },
   "morphs": {
     "targetNames": [
       "identity_face_wide",
@@ -201,7 +361,7 @@
         "strength": 0.9
       },
       {
-        "parameter": "cheekboneWidth",
+        "parameter": "cheekWidth",
         "positiveTarget": "identity_cheekbones_wide",
         "negativeTarget": "identity_cheekbones_narrow",
         "strength": 0.9
@@ -300,11 +460,6 @@
         "negativeGain": 1,
         "maximumWeight": 1
       },
-      "cheekboneWidth": {
-        "positiveGain": 1,
-        "negativeGain": 1,
-        "maximumWeight": 1
-      },
       "jawWidth": {
         "positiveGain": 1.4,
         "negativeGain": 1.4,
@@ -364,6 +519,11 @@
         "positiveGain": 1.1,
         "negativeGain": 1.1,
         "maximumWeight": 0.95
+      },
+      "cheekWidth": {
+        "positiveGain": 1,
+        "negativeGain": 1,
+        "maximumWeight": 1
       }
     },
     "corrective": [
@@ -396,99 +556,205 @@
   "presets": {
     "shape": [
       {
-        "id": "neutral",
-        "label": "Neutral",
-        "description": "The tuned product baseline.",
+        "id": "baseline",
+        "labelKey": "shell.presets.shape.baseline",
+        "defaultLabel": "Baseline",
+        "descriptionKey": "shell.presets.shape.baseline.description",
+        "defaultDescription": "default authored/product shell reference",
+        "baseParameters": "productBaseline",
+        "intent": {
+          "archetype": "baseline",
+          "strength": "subtle",
+          "emphasis": []
+        },
         "parameters": {}
       },
       {
         "id": "oval",
-        "label": "Oval",
-        "description": "Longer centerline with a softly tapered jaw.",
+        "labelKey": "shell.presets.shape.oval",
+        "defaultLabel": "Oval",
+        "descriptionKey": "shell.presets.shape.oval.description",
+        "defaultDescription": "longer, softly tapered face",
+        "baseParameters": "productBaseline",
+        "intent": {
+          "archetype": "oval",
+          "strength": "moderate",
+          "emphasis": [
+            "length",
+            "jaw",
+            "chin"
+          ]
+        },
         "parameters": {
-          "faceWidth": 0.86,
-          "faceLength": 1.24,
-          "foreheadWidth": 0.88,
-          "upperFaceHeight": 0.33,
-          "cheekWidth": 0.96,
-          "jawWidth": 0.72,
-          "jawTaper": 0.7,
-          "chinLength": 0.27
+          "faceWidth": 0.92,
+          "faceLength": 1.1,
+          "foreheadWidth": 0.94,
+          "upperFaceHeight": 0.36,
+          "cheekWidth": 0.98,
+          "jawWidth": 0.78,
+          "jawTaper": 0.72,
+          "chinLength": 0.28,
+          "noseWidth": 0.23,
+          "mouthWidth": 0.4
         }
       },
       {
         "id": "wide",
-        "label": "Wide",
-        "description": "Broad forehead, cheek, and jaw proportions.",
+        "labelKey": "shell.presets.shape.broad",
+        "defaultLabel": "Broad",
+        "descriptionKey": "shell.presets.shape.broad.description",
+        "defaultDescription": "broad forehead, cheeks, and jaw mass",
+        "baseParameters": "productBaseline",
+        "intent": {
+          "archetype": "broad",
+          "strength": "moderate",
+          "emphasis": [
+            "width",
+            "forehead",
+            "cheeks",
+            "jaw",
+            "eyes",
+            "nose",
+            "mouth",
+            "depth"
+          ]
+        },
         "parameters": {
           "faceWidth": 1.07,
-          "faceLength": 1.08,
-          "foreheadWidth": 1.02,
-          "upperFaceHeight": 0.31,
-          "cheekWidth": 1.09,
+          "faceLength": 1.1,
+          "headDepth": 0.9,
+          "foreheadWidth": 1.04,
+          "upperFaceHeight": 0.3,
+          "cheekWidth": 1.05,
           "jawWidth": 0.94,
-          "jawTaper": 0.92,
-          "chinLength": 0.22
+          "jawTaper": 0.9,
+          "chinLength": 0.25,
+          "eyeSpacing": 0.36,
+          "eyeWidth": 0.1,
+          "noseWidth": 0.26,
+          "mouthWidth": 0.46
         }
       },
       {
         "id": "long",
-        "label": "Long",
-        "description": "Narrower width with an extended face centerline.",
+        "labelKey": "shell.presets.shape.long",
+        "defaultLabel": "Long",
+        "descriptionKey": "shell.presets.shape.long.description",
+        "defaultDescription": "taller, narrower face",
+        "baseParameters": "productBaseline",
+        "intent": {
+          "archetype": "long",
+          "strength": "moderate",
+          "emphasis": [
+            "length",
+            "chin",
+            "depth"
+          ]
+        },
         "parameters": {
-          "faceWidth": 0.82,
-          "faceLength": 1.34,
+          "faceWidth": 0.9,
+          "faceLength": 1.23,
+          "headDepth": 0.88,
           "foreheadWidth": 0.84,
-          "upperFaceHeight": 0.4,
-          "cheekWidth": 0.9,
-          "jawWidth": 0.7,
+          "upperFaceHeight": 0.35,
+          "cheekWidth": 0.96,
+          "jawWidth": 0.76,
           "jawTaper": 0.72,
-          "chinLength": 0.32
+          "chinLength": 0.24,
+          "eyeSpacing": 0.32,
+          "noseLength": 0.33,
+          "mouthWidth": 0.39
         }
       },
       {
         "id": "soft",
-        "label": "Soft",
-        "description": "Shorter centerline with fuller cheeks and a soft chin.",
+        "labelKey": "shell.presets.shape.round",
+        "defaultLabel": "Round",
+        "descriptionKey": "shell.presets.shape.round.description",
+        "defaultDescription": "shorter, fuller, softer cheek structure",
+        "baseParameters": "productBaseline",
+        "intent": {
+          "archetype": "round",
+          "strength": "moderate",
+          "emphasis": [
+            "cheeks",
+            "chin",
+            "width"
+          ]
+        },
         "parameters": {
-          "faceWidth": 1.03,
+          "faceWidth": 1.02,
           "faceLength": 1.04,
-          "foreheadWidth": 1,
+          "foreheadWidth": 0.99,
           "upperFaceHeight": 0.29,
-          "cheekWidth": 1.12,
-          "jawWidth": 0.84,
-          "jawTaper": 0.84,
-          "chinLength": 0.18
+          "cheekWidth": 1.08,
+          "jawWidth": 0.83,
+          "jawTaper": 0.82,
+          "chinLength": 0.21,
+          "eyeWidth": 0.12,
+          "noseProjection": 0.44,
+          "mouthWidth": 0.41
         }
       },
       {
         "id": "tapered",
-        "label": "Tapered",
-        "description": "Wider upper face with a more defined chin taper.",
+        "labelKey": "shell.presets.shape.heart",
+        "defaultLabel": "Heart",
+        "descriptionKey": "shell.presets.shape.heart.description",
+        "defaultDescription": "wider upper face with narrower jaw and chin",
+        "baseParameters": "productBaseline",
+        "intent": {
+          "archetype": "heart",
+          "strength": "moderate",
+          "emphasis": [
+            "forehead",
+            "cheeks",
+            "jaw",
+            "chin"
+          ]
+        },
         "parameters": {
-          "faceWidth": 0.96,
-          "faceLength": 1.17,
-          "foreheadWidth": 1.08,
-          "upperFaceHeight": 0.35,
-          "cheekWidth": 1.03,
-          "jawWidth": 0.65,
-          "jawTaper": 0.6,
-          "chinLength": 0.3
+          "faceWidth": 0.97,
+          "faceLength": 1.13,
+          "foreheadWidth": 1.07,
+          "upperFaceHeight": 0.27,
+          "cheekWidth": 1.06,
+          "jawWidth": 0.7,
+          "jawTaper": 0.67,
+          "chinLength": 0.27,
+          "eyeSpacing": 0.35,
+          "noseWidth": 0.23,
+          "mouthWidth": 0.39
         }
       },
       {
         "id": "angular",
-        "label": "Angular",
-        "description": "Pronounced cheek width with a narrower forehead and jaw.",
+        "labelKey": "shell.presets.shape.diamond",
+        "defaultLabel": "Diamond",
+        "descriptionKey": "shell.presets.shape.diamond.description",
+        "defaultDescription": "pronounced cheek width with narrower forehead and jaw",
+        "baseParameters": "productBaseline",
+        "intent": {
+          "archetype": "diamond",
+          "strength": "moderate",
+          "emphasis": [
+            "cheeks",
+            "forehead",
+            "jaw"
+          ]
+        },
         "parameters": {
-          "faceWidth": 0.94,
-          "faceLength": 1.19,
-          "foreheadWidth": 0.83,
-          "upperFaceHeight": 0.34,
-          "cheekWidth": 1.13,
-          "jawWidth": 0.69,
-          "jawTaper": 0.66,
-          "chinLength": 0.28
+          "faceWidth": 0.96,
+          "faceLength": 1.15,
+          "foreheadWidth": 0.84,
+          "upperFaceHeight": 0.33,
+          "cheekWidth": 1.1,
+          "jawWidth": 0.74,
+          "jawTaper": 0.7,
+          "chinLength": 0.27,
+          "eyeSpacing": 0.34,
+          "noseWidth": 0.24,
+          "mouthWidth": 0.4
         }
       }
     ],

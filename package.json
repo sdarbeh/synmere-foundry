@@ -28,6 +28,6 @@
     "packages:publish": "node scripts/release/publish-packages.mjs",
     "asset:promotions": "node scripts/release/asset-promotion-registry.mjs",
     "test": "node --test tests/*.test.mjs",
-    "check": "node scripts/release/validate-release.mjs 1.1.1 && node scripts/release/validate-release.mjs 1.1.2 && node --test tests/*.test.mjs"
+    "check": "node scripts/release/validate-release.mjs 1.0.0 && node --test tests/*.test.mjs"
   }
 }

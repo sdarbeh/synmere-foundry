@@ -30,7 +30,7 @@ modify asset records, manifests, schemas, or Three.js asset adapters.
 
 ## Current release
 
-`identity-shell@1.1.2` is the current final mouth-refinement patch:
+`identity-shell@1.0.0` is the current pre-live production baseline:
 
 - GLB SHA-256:
   `2cd5c234565e9f5cf7ff5632f011d8273b94d6ea945124239a4f1d15cbd0cc99`
@@ -52,13 +52,13 @@ pnpm asset:serve
 pnpm shell:review
 pnpm shell:tuning:apply -- --patch assets/candidates/current/tuning-patch.json
 pnpm shell:approve -- --confirm
-pnpm asset:promote -- --version 1.1.2 --confirm
+pnpm asset:promote -- --version 1.0.0 --confirm
 pnpm schema:build
 pnpm three:build
 pnpm manifest:build
 pnpm packages:build
 pnpm packages:publish
-pnpm asset:release:validate -- 1.1.2
+pnpm asset:release:validate -- 1.0.0
 pnpm check
 ```
 
@@ -136,7 +136,7 @@ against, plus the intended asset-module changes:
 ```json
 {
   "asset": "identity-shell",
-  "basedOnVersion": "1.1.2",
+  "basedOnVersion": "1.0.0",
   "candidateSha": "...",
   "sourceBlendHash": "...",
   "productBaseline": {},
@@ -154,10 +154,11 @@ pnpm shell:tuning:apply -- --patch assets/candidates/current/tuning-patch.json
 ```
 
 That command should verify the reviewed candidate SHA, verify the Blender source
-hash, reject values outside safe ranges, update the canonical asset-module
-source, and regenerate the package outputs. Until that command exists, the
-manual fallback is to copy the Labs settings into the canonical asset-module
-manifest for the target GLB version, then run:
+hash, reject product-facing values outside conservative `safeRanges`, keep
+Foundry-only authoring experiments inside wider `authoringRanges`, update the
+canonical asset-module source, and regenerate the package outputs. Until that
+command exists, the manual fallback is to copy the Labs settings into the
+canonical asset-module manifest for the target GLB version, then run:
 
 ```sh
 pnpm asset:module

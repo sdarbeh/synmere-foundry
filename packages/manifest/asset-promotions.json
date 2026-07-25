@@ -1,6 +1,6 @@
 [
   {
-    "id": "identity-shell-v1.1.2-production",
+    "id": "identity-shell-v1.0.0-production",
     "asset": {
       "name": "identity-shell",
       "displayName": "Identity Shell",
@@ -9,14 +9,14 @@
       "module": "identity-shell"
     },
     "version": {
-      "version": "1.1.2",
+      "version": "1.0.0",
       "releaseChannel": "production",
       "promotedAt": "2026-07-25T00:14:03.122Z",
       "promotedBy": "Synmere Foundry"
     },
     "files": {
-      "sourceBlendPath": "assets/releases/identity-shell/1.1.2/source/identity-shell.blend",
-      "productionGlbPath": "assets/releases/identity-shell/1.1.2/identity-shell.glb",
+      "sourceBlendPath": "assets/releases/identity-shell/1.0.0/source/identity-shell.blend",
+      "productionGlbPath": "assets/releases/identity-shell/1.0.0/identity-shell.glb",
       "candidateGlbPath": "assets/candidates/final-pre-promotion-mouth",
       "sourceBlendHash": "a60e2ce05a1417b28a5d0749e9e65a48f2695e0da44822b54081090d793e7cd7",
       "candidateGlbHash": "2cd5c234565e9f5cf7ff5632f011d8273b94d6ea945124239a4f1d15cbd0cc99",
@@ -76,8 +76,8 @@
       "maxAllowedMorphEdgeStrain": 0.72,
       "testsPassed": 197,
       "testsFailed": 0,
-      "validationReportPath": "assets/releases/identity-shell/1.1.2/validation.json",
-      "reviewManifestPath": "assets/releases/identity-shell/1.1.2/model-lab-review.json"
+      "validationReportPath": "assets/releases/identity-shell/1.0.0/validation.json",
+      "reviewManifestPath": "assets/releases/identity-shell/1.0.0/model-lab-review.json"
     },
     "releaseNotes": {
       "summary": "Final mouth refinement: soften the labiomental fold, mouth seam, and corners while preserving lip volume, mouth width, and approved shell silhouette.",
@@ -101,114 +101,6 @@
         "preview",
         "trace",
         "topology"
-      ]
-    },
-    "compatibility": {
-      "faceShellParameterVersion": "1.0.0",
-      "rendererVersion": "1.0.0",
-      "schemaVersion": "asset-promotion-v1"
-    }
-  },
-  {
-    "id": "identity-shell-v1.1.1-production",
-    "asset": {
-      "name": "identity-shell",
-      "displayName": "Identity Shell",
-      "type": "glb",
-      "domain": "shell",
-      "module": "identity-shell"
-    },
-    "version": {
-      "version": "1.1.1",
-      "releaseChannel": "production",
-      "promotedAt": "2026-07-24T17:10:54.191Z",
-      "promotedBy": "Synmere Foundry"
-    },
-    "files": {
-      "sourceBlendPath": "assets/releases/identity-shell/1.1.1/source/identity-shell.blend",
-      "productionGlbPath": "assets/releases/identity-shell/1.1.1/identity-shell.glb",
-      "candidateGlbPath": "assets/candidates/morph-safety-repair",
-      "sourceBlendHash": "026913c5c6732a06976f5e01abe320f30c5c1a08814c178366eaa979133e2247",
-      "candidateGlbHash": "2eb90bb7f08d528d7abd521a8cca9f90b00479c1c470d682d44d657f270716f7",
-      "productionGlbHash": "2eb90bb7f08d528d7abd521a8cca9f90b00479c1c470d682d44d657f270716f7"
-    },
-    "contract": {
-      "meshName": "IdentityShell",
-      "materialSlot": "IdentityCeramic",
-      "vertexCount": 6052,
-      "indexCount": 36300,
-      "topologyHash": "da73385507a48e1bff2430b5ce03a94875aa28e53ce445142188e2e0d4d3d181",
-      "morphTargetCount": 37,
-      "morphTargetNames": [
-        "identity_face_wide",
-        "identity_face_narrow",
-        "identity_face_long",
-        "identity_face_short",
-        "identity_cheekbones_wide",
-        "identity_cheekbones_narrow",
-        "identity_eye_spacing_wide",
-        "identity_eye_spacing_narrow",
-        "identity_eye_width_wide",
-        "identity_eye_width_narrow",
-        "identity_brow_arch_high",
-        "identity_brow_arch_low",
-        "identity_brow_prominence_high",
-        "identity_brow_prominence_low",
-        "identity_nose_wide",
-        "identity_nose_narrow",
-        "identity_nose_long",
-        "identity_nose_short",
-        "identity_nose_projection_high",
-        "identity_nose_projection_low",
-        "identity_mouth_wide",
-        "identity_mouth_narrow",
-        "identity_chin_long",
-        "identity_chin_short",
-        "identity_head_depth_high",
-        "identity_head_depth_low",
-        "identity_forehead_wide",
-        "identity_forehead_narrow",
-        "identity_upper_face_tall",
-        "identity_upper_face_short",
-        "identity_jaw_wide",
-        "identity_jaw_narrow",
-        "identity_jaw_taper_square",
-        "identity_jaw_taper_narrow",
-        "presentation_structure_structured",
-        "presentation_structure_soft",
-        "corrective_jaw_wide_chin_long"
-      ]
-    },
-    "validation": {
-      "contractPassed": true,
-      "morphValidationPassed": true,
-      "maxMorphEdgeStrain": 0,
-      "maxAllowedMorphEdgeStrain": 0,
-      "testsPassed": 194,
-      "testsFailed": 0,
-      "validationReportPath": "assets/releases/identity-shell/1.1.1/validation.json",
-      "reviewManifestPath": "assets/releases/identity-shell/1.1.1/model-lab-review.json"
-    },
-    "releaseNotes": {
-      "summary": "Morph-only safety repair with no intended visual change.",
-      "changes": [
-        "Morph-only safety repair with no intended visual change.",
-        "Release classification: patch."
-      ],
-      "knownIssues": [
-        "Excluded from this release: lower-edge notch geometry correction."
-      ],
-      "approvedViews": [
-        "Preview",
-        "Trace",
-        "Topology",
-        "IdentityCeramic",
-        "Obsidian",
-        "front",
-        "left-three-quarter",
-        "right-three-quarter",
-        "left-shallow-profile",
-        "right-shallow-profile"
       ]
     },
     "compatibility": {

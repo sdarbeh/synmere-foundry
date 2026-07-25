@@ -1,5 +1,5 @@
 {
-  "id": "identity-shell-v1.1.2-production",
+  "id": "identity-shell-v1.0.0-production",
   "asset": {
     "name": "identity-shell",
     "displayName": "Identity Shell",
@@ -8,14 +8,14 @@
     "module": "identity-shell"
   },
   "version": {
-    "version": "1.1.2",
+    "version": "1.0.0",
     "releaseChannel": "production",
     "promotedAt": "2026-07-25T00:14:03.122Z",
     "promotedBy": "Synmere Foundry"
   },
   "files": {
-    "sourceBlendPath": "assets/releases/identity-shell/1.1.2/source/identity-shell.blend",
-    "productionGlbPath": "assets/releases/identity-shell/1.1.2/identity-shell.glb",
+    "sourceBlendPath": "assets/releases/identity-shell/1.0.0/source/identity-shell.blend",
+    "productionGlbPath": "assets/releases/identity-shell/1.0.0/identity-shell.glb",
     "candidateGlbPath": "assets/candidates/final-pre-promotion-mouth",
     "sourceBlendHash": "a60e2ce05a1417b28a5d0749e9e65a48f2695e0da44822b54081090d793e7cd7",
     "candidateGlbHash": "2cd5c234565e9f5cf7ff5632f011d8273b94d6ea945124239a4f1d15cbd0cc99",
@@ -75,8 +75,8 @@
     "maxAllowedMorphEdgeStrain": 0.72,
     "testsPassed": 197,
     "testsFailed": 0,
-    "validationReportPath": "assets/releases/identity-shell/1.1.2/validation.json",
-    "reviewManifestPath": "assets/releases/identity-shell/1.1.2/model-lab-review.json"
+    "validationReportPath": "assets/releases/identity-shell/1.0.0/validation.json",
+    "reviewManifestPath": "assets/releases/identity-shell/1.0.0/model-lab-review.json"
   },
   "releaseNotes": {
     "summary": "Final mouth refinement: soften the labiomental fold, mouth seam, and corners while preserving lip volume, mouth width, and approved shell silhouette.",

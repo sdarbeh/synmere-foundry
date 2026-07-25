@@ -2,9 +2,9 @@
   "schemaVersion": "1.0.0",
   "assetSchemaVersion": "1.0.0",
   "assetId": "synmere-identity-shell-v1",
-  "version": "1.1.2",
-  "releaseTag": "identity-shell-v1.1.2",
-  "url": "/models/shell/identity-shell/1.1.2/identity-shell.glb",
+  "version": "1.0.0",
+  "releaseTag": "identity-shell-v1.0.0",
+  "url": "/models/shell/identity-shell/1.0.0/identity-shell.glb",
   "sha256": "2cd5c234565e9f5cf7ff5632f011d8273b94d6ea945124239a4f1d15cbd0cc99",
   "meshName": "IdentityShell",
   "materialNames": ["IdentityCeramic"],
@@ -80,5 +80,6 @@
       "renderer",
       "lower-edge notch geometry correction"
     ]
-  }
+  },
+  "promotionRecordId": "identity-shell-v1.0.0-production"
 }

@@ -26,8 +26,8 @@ const PROJECT_ROOT = process.cwd();
 
 test("the current immutable release is internally consistent", async () => {
   const result = await validateReleaseDirectory(
-    path.join(PROJECT_ROOT, "assets/releases/identity-shell/1.1.1"),
-    "1.1.1",
+    path.join(PROJECT_ROOT, "assets/releases/identity-shell/1.0.0"),
+    "1.0.0",
   );
 
   assert.equal(result.passed, true);
@@ -35,12 +35,12 @@ test("the current immutable release is internally consistent", async () => {
 });
 
 test("release policy requires semantic versions and refuses overwrite", async () => {
-  assert.doesNotThrow(() => assertSemanticVersion("1.1.2"));
-  assert.equal(getReleaseTag("1.1.2"), "identity-shell-v1.1.2");
+  assert.doesNotThrow(() => assertSemanticVersion("1.0.0"));
+  assert.equal(getReleaseTag("1.0.0"), "identity-shell-v1.0.0");
   assert.throws(() => assertSemanticVersion("safety-latest"));
   await assert.rejects(
     assertReleaseDoesNotExist(
-      path.join(PROJECT_ROOT, "assets/releases/identity-shell/1.1.1"),
+      path.join(PROJECT_ROOT, "assets/releases/identity-shell/1.0.0"),
     ),
     /already exists/u,
   );
@@ -86,22 +86,22 @@ test("the Foundry-owned manifest package matches the current release", async () 
 test("the Foundry-owned manifest package exposes every loadable shell release", () => {
   assert.deepEqual(
     IDENTITY_SHELL_RELEASES.map((release) => release.version),
-    ["1.1.2", "1.1.1"],
+    ["1.0.0"],
   );
   assert.deepEqual(
     getAssetReleaseHistory("identity-shell").map((release) => release.version),
-    ["1.1.2", "1.1.1"],
+    ["1.0.0"],
   );
   assert.equal(
     getLatestProductionAssetRelease("identity-shell").version,
     identityShell.version,
   );
   assert.equal(
-    getAssetRelease("identity-shell", "1.1.1").url,
-    "/models/shell/identity-shell/1.1.1/identity-shell.glb",
+    getAssetRelease("identity-shell", "1.0.0").url,
+    "/models/shell/identity-shell/1.0.0/identity-shell.glb",
   );
   assert.equal(
-    getAssetRelease("identity-shell", "1.1.2").sha256,
+    getAssetRelease("identity-shell", "1.0.0").sha256,
     identityShell.sha256,
   );
   assert.equal(ASSET_RELEASES.length, IDENTITY_SHELL_RELEASES.length);
@@ -126,8 +126,57 @@ test("the identity shell asset module cannot drift from its GLB contract", () =>
     Object.keys(identityShellModule.parameters.safeRanges).sort(),
     parameterKeys.sort(),
   );
+  assert.deepEqual(
+    Object.keys(identityShellModule.parameters.authoringRanges).sort(),
+    parameterKeys.sort(),
+  );
+  assert.deepEqual(
+    identityShellModule.parameterGroups.map((group) => group.id),
+    ["silhouette", "facialGeometry"],
+  );
+  identityShellModule.parameterGroups.forEach((group) => {
+    assert.equal(typeof group.labelKey, "string");
+    assert.equal(typeof group.defaultLabel, "string");
+    assert.equal(typeof group.descriptionKey, "string");
+    assert.equal(typeof group.defaultDescription, "string");
+    group.parameterKeys.forEach((parameterKey) => {
+      assert.equal(
+        parameterKeys.includes(parameterKey),
+        true,
+        `Parameter group ${group.id} references unknown parameter ${parameterKey}.`,
+      );
+    });
+  });
+  assert.deepEqual(
+    identityShellModule.capabilities.materials.map((capability) => ({
+      id: capability.id,
+      required: capability.required,
+      defaultLabel: capability.defaultLabel,
+    })),
+    [
+      { id: "ceramic", required: true, defaultLabel: "Ceramic" },
+      { id: "obsidian", required: false, defaultLabel: "Obsidian" },
+    ],
+  );
+  assert.deepEqual(
+    identityShellModule.capabilities.displayModes.map((capability) => ({
+      id: capability.id,
+      required: capability.required,
+      defaultLabel: capability.defaultLabel,
+    })),
+    [
+      { id: "preview", required: true, defaultLabel: "Preview" },
+      { id: "trace", required: false, defaultLabel: "Trace" },
+      { id: "topology", required: false, defaultLabel: "Topology" },
+    ],
+  );
 
   identityShellModule.morphs.identityBindings.forEach((binding) => {
+    assert.equal(
+      parameterKeys.includes(binding.parameter),
+      true,
+      `Identity binding parameter ${binding.parameter} is not a FaceShellParameter.`,
+    );
     assert.equal(
       calibratedIdentityParameters.has(binding.parameter),
       true,
@@ -152,6 +201,11 @@ test("the identity shell asset module cannot drift from its GLB contract", () =>
     );
     binding.drivers.forEach((driver) => {
       assert.equal(
+        parameterKeys.includes(driver.parameter),
+        true,
+        `Corrective driver ${driver.parameter} is not a FaceShellParameter.`,
+      );
+      assert.equal(
         calibratedIdentityParameters.has(driver.parameter),
         true,
         `Corrective driver ${driver.parameter} has no morph calibration.`,
@@ -173,11 +227,129 @@ test("the identity shell asset module cannot drift from its GLB contract", () =>
       .sort(),
     [...calibratedIdentityParameters].sort(),
   );
+  assert.deepEqual(
+    [...calibratedIdentityParameters].sort(),
+    parameterKeys.sort(),
+    "Every morph calibration key must match FaceShellParameters.",
+  );
 });
 
 test("identity shell presets are candidate-scoped module values", () => {
   const parameterKeys = Object.keys(identityShellModule.parameters.neutral);
   const morphTargets = new Set(identityShellModule.morphs.targetNames);
+  const expectedShapePresetCopy = new Map([
+    [
+      "baseline",
+      {
+        labelKey: "shell.presets.shape.baseline",
+        defaultLabel: "Baseline",
+        descriptionKey: "shell.presets.shape.baseline.description",
+        defaultDescription: "default authored/product shell reference",
+        baseParameters: "productBaseline",
+        intent: { archetype: "baseline", strength: "subtle", emphasis: [] },
+      },
+    ],
+    [
+      "oval",
+      {
+        labelKey: "shell.presets.shape.oval",
+        defaultLabel: "Oval",
+        descriptionKey: "shell.presets.shape.oval.description",
+        defaultDescription: "longer, softly tapered face",
+        baseParameters: "productBaseline",
+        intent: {
+          archetype: "oval",
+          strength: "moderate",
+          emphasis: ["length", "jaw", "chin"],
+        },
+      },
+    ],
+    [
+      "wide",
+      {
+        labelKey: "shell.presets.shape.broad",
+        defaultLabel: "Broad",
+        descriptionKey: "shell.presets.shape.broad.description",
+        defaultDescription: "broad forehead, cheeks, and jaw mass",
+        baseParameters: "productBaseline",
+        intent: {
+          archetype: "broad",
+          strength: "moderate",
+          emphasis: [
+            "width",
+            "forehead",
+            "cheeks",
+            "jaw",
+            "eyes",
+            "nose",
+            "mouth",
+            "depth",
+          ],
+        },
+      },
+    ],
+    [
+      "long",
+      {
+        labelKey: "shell.presets.shape.long",
+        defaultLabel: "Long",
+        descriptionKey: "shell.presets.shape.long.description",
+        defaultDescription: "taller, narrower face",
+        baseParameters: "productBaseline",
+        intent: {
+          archetype: "long",
+          strength: "moderate",
+          emphasis: ["length", "chin", "depth"],
+        },
+      },
+    ],
+    [
+      "soft",
+      {
+        labelKey: "shell.presets.shape.round",
+        defaultLabel: "Round",
+        descriptionKey: "shell.presets.shape.round.description",
+        defaultDescription: "shorter, fuller, softer cheek structure",
+        baseParameters: "productBaseline",
+        intent: {
+          archetype: "round",
+          strength: "moderate",
+          emphasis: ["cheeks", "chin", "width"],
+        },
+      },
+    ],
+    [
+      "tapered",
+      {
+        labelKey: "shell.presets.shape.heart",
+        defaultLabel: "Heart",
+        descriptionKey: "shell.presets.shape.heart.description",
+        defaultDescription: "wider upper face with narrower jaw and chin",
+        baseParameters: "productBaseline",
+        intent: {
+          archetype: "heart",
+          strength: "moderate",
+          emphasis: ["forehead", "cheeks", "jaw", "chin"],
+        },
+      },
+    ],
+    [
+      "angular",
+      {
+        labelKey: "shell.presets.shape.diamond",
+        defaultLabel: "Diamond",
+        descriptionKey: "shell.presets.shape.diamond.description",
+        defaultDescription:
+          "pronounced cheek width with narrower forehead and jaw",
+        baseParameters: "productBaseline",
+        intent: {
+          archetype: "diamond",
+          strength: "moderate",
+          emphasis: ["cheeks", "forehead", "jaw"],
+        },
+      },
+    ],
+  ]);
   const shapePresetIds = identityShellModule.presets.shape.map(
     (preset) => preset.id,
   );
@@ -186,6 +358,7 @@ test("identity shell presets are candidate-scoped module values", () => {
   );
 
   assert.equal(new Set(shapePresetIds).size, shapePresetIds.length);
+  assert.deepEqual(shapePresetIds, [...expectedShapePresetCopy.keys()]);
   assert.equal(new Set(structurePresetIds).size, structurePresetIds.length);
   assert.equal(
     structurePresetIds.includes("balanced"),
@@ -194,6 +367,20 @@ test("identity shell presets are candidate-scoped module values", () => {
   );
 
   identityShellModule.presets.shape.forEach((preset) => {
+    const expectedCopy = expectedShapePresetCopy.get(preset.id);
+    assert.deepEqual(
+      {
+        labelKey: preset.labelKey,
+        defaultLabel: preset.defaultLabel,
+        descriptionKey: preset.descriptionKey,
+        defaultDescription: preset.defaultDescription,
+        baseParameters: preset.baseParameters,
+        intent: preset.intent,
+      },
+      expectedCopy,
+      `Shape preset ${preset.id} copy must come from the asset module manifest.`,
+    );
+
     Object.entries(preset.parameters).forEach(([parameter, value]) => {
       assert.equal(
         parameterKeys.includes(parameter),

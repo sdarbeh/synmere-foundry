@@ -65,7 +65,7 @@ export const CANDIDATE_ASSET_PORT =
   process.env.SYNMERE_FOUNDRY_ASSET_PORT ?? "4100";
 export const PRODUCTION_GLB_PATH = path.join(
   PROJECT_ROOT,
-  "assets/releases/identity-shell/1.1.1/identity-shell.glb",
+  "assets/releases/identity-shell/1.0.0/identity-shell.glb",
 );
 export const BLENDER_EXPORT_SCRIPT_PATH = path.join(
   SCRIPT_DIRECTORY,
