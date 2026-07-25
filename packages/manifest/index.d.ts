@@ -129,6 +129,50 @@ export declare const getLatestProductionAssetPromotion: (
   assetName: string,
 ) => AssetPromotionRecord | undefined;
 
+export type AssetReleaseManifest = {
+  readonly assetName: string;
+  readonly displayName: string;
+  readonly type: "glb";
+  readonly domain: "shell" | "avatar" | "body" | "clothing";
+  readonly module: string;
+  readonly schemaVersion: string;
+  readonly assetSchemaVersion: string;
+  readonly id: string;
+  readonly version: string;
+  readonly releaseChannel: AssetPromotionReleaseChannel;
+  readonly releaseTag: string;
+  readonly url: string;
+  readonly sha256: string;
+  readonly meshName: string;
+  readonly materialNames: readonly string[];
+  readonly morphTargetNames: readonly IdentityMorphName[];
+  readonly topologyVersion: string;
+  readonly rendererCompatibilityVersion: string;
+  readonly minimumApplicationVersion: string;
+  readonly validationStatus: string;
+  readonly releasedAt: string;
+  readonly sourceRevision: string;
+  readonly sourceBlendSha256: string;
+  readonly promotionRecordId: string;
+};
+
+export declare const ASSET_RELEASES: readonly AssetReleaseManifest[];
+
+export declare const IDENTITY_SHELL_RELEASES: readonly AssetReleaseManifest[];
+
+export declare const getAssetReleaseHistory: (
+  assetName: string,
+) => AssetReleaseManifest[];
+
+export declare const getLatestProductionAssetRelease: (
+  assetName: string,
+) => AssetReleaseManifest | undefined;
+
+export declare const getAssetRelease: (
+  assetName: string,
+  version: string,
+) => AssetReleaseManifest | undefined;
+
 export type FaceShellParameters = {
   faceWidth: number;
   faceLength: number;
@@ -224,26 +268,8 @@ export type AssetModuleManifest = {
 
 export declare const identityShellModule: AssetModuleManifest;
 
-export declare const identityShell: {
-  readonly schemaVersion: "1.0.0";
-  readonly assetSchemaVersion: "1.0.0";
-  readonly id: "synmere-identity-shell-v1";
-  readonly version: "1.1.2";
-  readonly releaseTag: "identity-shell-v1.1.2";
-  readonly url: "/models/shell/identity-shell/1.1.2/identity-shell.glb";
-  readonly sha256: string;
-  readonly meshName: "IdentityShell";
-  readonly materialNames: readonly ["IdentityCeramic"];
-  readonly morphTargetNames: readonly IdentityMorphName[];
-  readonly topologyVersion: "synmere-authored-shell-v2";
-  readonly rendererCompatibilityVersion: "1.0.0";
-  readonly minimumApplicationVersion: "0.1.0";
-  readonly validationStatus: "passed";
-  readonly releasedAt: string;
-  readonly sourceRevision: string;
-  readonly sourceBlendSha256: string;
-};
+export declare const identityShell: AssetReleaseManifest;
 
 export type IdentityMorphName =
   (typeof IDENTITY_MORPH_TARGET)[keyof typeof IDENTITY_MORPH_TARGET];
-export type IdentityShellRelease = typeof identityShell;
+export type IdentityShellRelease = AssetReleaseManifest;

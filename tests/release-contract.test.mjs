@@ -10,7 +10,12 @@ import {
 } from "../scripts/release/release-policy.mjs";
 import { validateReleaseDirectory } from "../scripts/release/validate-release.mjs";
 import {
+  ASSET_RELEASES,
   ASSET_PROMOTIONS,
+  IDENTITY_SHELL_RELEASES,
+  getAssetRelease,
+  getAssetReleaseHistory,
+  getLatestProductionAssetRelease,
   identityShell,
   identityShellModule,
 } from "../packages/manifest/index.js";
@@ -76,6 +81,30 @@ test("the Foundry-owned manifest package matches the current release", async () 
     currentModuleManifest.asset.version,
   );
   assert.equal(ASSET_PROMOTIONS.length, promotionRegistry.length);
+});
+
+test("the Foundry-owned manifest package exposes every loadable shell release", () => {
+  assert.deepEqual(
+    IDENTITY_SHELL_RELEASES.map((release) => release.version),
+    ["1.1.2", "1.1.1"],
+  );
+  assert.deepEqual(
+    getAssetReleaseHistory("identity-shell").map((release) => release.version),
+    ["1.1.2", "1.1.1"],
+  );
+  assert.equal(
+    getLatestProductionAssetRelease("identity-shell").version,
+    identityShell.version,
+  );
+  assert.equal(
+    getAssetRelease("identity-shell", "1.1.1").url,
+    "/models/shell/identity-shell/1.1.1/identity-shell.glb",
+  );
+  assert.equal(
+    getAssetRelease("identity-shell", "1.1.2").sha256,
+    identityShell.sha256,
+  );
+  assert.equal(ASSET_RELEASES.length, IDENTITY_SHELL_RELEASES.length);
 });
 
 test("the Foundry owns the public package surfaces consumed by Synmere", async () => {

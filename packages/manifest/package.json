@@ -20,6 +20,7 @@
     },
     "./manifest.json": "./manifest.json",
     "./asset-promotions.json": "./asset-promotions.json",
+    "./asset-releases.json": "./asset-releases.json",
     "./asset-module.json": "./asset-module.json"
   },
   "files": [
@@ -27,6 +28,7 @@
     "index.d.ts",
     "manifest.json",
     "asset-promotions.json",
+    "asset-releases.json",
     "asset-module.json"
   ]
 }

@@ -20,6 +20,11 @@ Foundry builds and publishes the portable package boundary:
 - `@synmere/schema`
 - `@synmere/three`
 
+`@synmere/manifest` exposes two related but separate records:
+
+- asset promotions: who promoted a version, when, with what evidence;
+- asset releases: every immutable, browser-loadable GLB version and URL.
+
 The product consumes those packages from `node_modules`; it does not create or
 modify asset records, manifests, schemas, or Three.js asset adapters.
 
@@ -45,6 +50,7 @@ pnpm asset:export
 pnpm asset:validate
 pnpm asset:serve
 pnpm shell:review
+pnpm shell:tuning:apply -- --patch assets/candidates/current/tuning-patch.json
 pnpm shell:approve -- --confirm
 pnpm asset:promote -- --version 1.1.2 --confirm
 pnpm schema:build
@@ -82,6 +88,83 @@ The lifecycle commands have deliberately separate responsibilities:
   with `pnpm shell:approve -- --confirm`; it does not copy any asset;
 - **promote** requires passed, approved evidence and creates a new immutable
   versioned release. It refuses to overwrite an existing release.
+
+## Candidate tuning workflow
+
+Foundry owns asset meaning. Synmere Labs is the tuning interface. Package builds
+must stay deterministic outputs of Foundry-owned source files.
+
+The preferred tuning loop is:
+
+```text
+review GLB → tune in Labs → export tuning patch → apply in Foundry →
+rebuild packages → re-review → approve → promote
+```
+
+Run a candidate review first:
+
+```sh
+pnpm shell:review
+```
+
+Tune the candidate in Synmere Labs. Labs may let you copy settings for quick
+inspection, but clipboard text is not the source of truth. The durable handoff
+should be a tuning patch file, normally:
+
+```text
+assets/candidates/current/tuning-patch.json
+```
+
+The tuning patch should include the candidate and source hashes it was authored
+against, plus the intended asset-module changes:
+
+```json
+{
+  "asset": "identity-shell",
+  "basedOnVersion": "1.1.2",
+  "candidateSha": "...",
+  "sourceBlendHash": "...",
+  "productBaseline": {},
+  "shapePresets": [],
+  "structurePresets": [],
+  "morphCalibration": {},
+  "notes": "why these settings changed"
+}
+```
+
+Apply the patch in Foundry:
+
+```sh
+pnpm shell:tuning:apply -- --patch assets/candidates/current/tuning-patch.json
+```
+
+That command should verify the reviewed candidate SHA, verify the Blender source
+hash, reject values outside safe ranges, update the canonical asset-module
+source, and regenerate the package outputs. Until that command exists, the
+manual fallback is to copy the Labs settings into the canonical asset-module
+source, then run:
+
+```sh
+pnpm asset:module
+pnpm packages:build
+```
+
+After changing tuning values, run `pnpm shell:review` again before approving or
+promoting. Promotion should only happen after the GLB, asset module, validation
+evidence, and package output all agree.
+
+TODO: add an interactive tuning apply wizard:
+
+```sh
+pnpm shell:tuning
+```
+
+The wizard should accept pasted Labs tuning JSON, ask for the candidate name,
+target version, release notes, and intended changed sections, then validate the
+candidate SHA, Blender source hash, and safe ranges before writing canonical
+asset-module source. It should rebuild package outputs and print the next review,
+approve, and promote commands. Until this exists, applying Labs tuning remains a
+manual edit followed by `pnpm asset:module` and `pnpm packages:build`.
 
 The package build commands expose each Foundry-owned package boundary:
 

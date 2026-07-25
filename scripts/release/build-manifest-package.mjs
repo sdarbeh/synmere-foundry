@@ -100,6 +100,20 @@ export const writeManifestPackage = async (options = {}) => {
   const assetPromotions = Array.isArray(promotionRegistry)
     ? promotionRegistry
     : promotionRegistry.records;
+  const releaseManifests = await Promise.all(
+    (await readReleaseVersions()).map(async (releaseVersion) => {
+      return JSON.parse(
+        await readFile(
+          path.join(
+            IDENTITY_SHELL_RELEASE_ROOT,
+            releaseVersion,
+            "manifest.json",
+          ),
+          "utf8",
+        ),
+      );
+    }),
+  );
   if (
     !manifest.version ||
     !manifest.sha256 ||
@@ -122,6 +136,9 @@ export const writeManifestPackage = async (options = {}) => {
   if (!Array.isArray(assetPromotions) || assetPromotions.length === 0) {
     throw new Error("The supplied Foundry promotion registry is incomplete.");
   }
+  if (!Array.isArray(releaseManifests) || releaseManifests.length === 0) {
+    throw new Error("The Foundry release catalog is incomplete.");
+  }
   if (
     !assetPromotions.some((record) => {
       return (
@@ -135,6 +152,57 @@ export const writeManifestPackage = async (options = {}) => {
       "Foundry promotion records do not include the synced identity shell release.",
     );
   }
+
+  const compareSemanticVersionsDescending = (left, right) => {
+    return right.version.localeCompare(left.version, undefined, {
+      numeric: true,
+    });
+  };
+  const assetReleases = releaseManifests
+    .map((releaseManifest) => {
+      const promotionRecord = assetPromotions.find((record) => {
+        return (
+          record.asset?.name === "identity-shell" &&
+          record.version?.version === releaseManifest.version &&
+          record.files?.productionGlbHash === releaseManifest.sha256
+        );
+      });
+
+      if (!promotionRecord) {
+        throw new Error(
+          `Release ${releaseManifest.releaseTag} has no matching production promotion record.`,
+        );
+      }
+
+      return {
+        assetName: "identity-shell",
+        displayName: "Identity Shell",
+        type: "glb",
+        domain: "shell",
+        module: "identity-shell",
+        schemaVersion: releaseManifest.schemaVersion,
+        assetSchemaVersion: releaseManifest.assetSchemaVersion,
+        id: releaseManifest.assetId,
+        version: releaseManifest.version,
+        releaseChannel: promotionRecord.version.releaseChannel,
+        releaseTag: releaseManifest.releaseTag,
+        url: releaseManifest.url,
+        sha256: releaseManifest.sha256,
+        meshName: releaseManifest.meshName,
+        materialNames: releaseManifest.materialNames,
+        morphTargetNames: releaseManifest.morphTargetNames,
+        topologyVersion: releaseManifest.topologyVersion,
+        rendererCompatibilityVersion:
+          releaseManifest.rendererCompatibilityVersion,
+        minimumApplicationVersion: releaseManifest.minimumApplicationVersion,
+        validationStatus: releaseManifest.validation.status,
+        releasedAt: releaseManifest.releasedAt,
+        sourceRevision: releaseManifest.source.revision,
+        sourceBlendSha256: releaseManifest.source.blendSha256,
+        promotionRecordId: promotionRecord.id,
+      };
+    })
+    .sort(compareSemanticVersionsDescending);
 
   const toConstantKey = (target) => {
     if (target.startsWith("corrective_")) {
@@ -156,7 +224,6 @@ export const writeManifestPackage = async (options = {}) => {
       return `  readonly ${toConstantKey(target)}: ${JSON.stringify(target)};`;
     })
     .join("\n");
-  const materialTuple = manifest.materialNames.map(JSON.stringify).join(", ");
   const shapePresetIds = moduleManifest.presets.shape
     .map((preset) => JSON.stringify(preset.id))
     .join(" | ");
@@ -435,24 +502,47 @@ export const getLatestProductionAssetPromotion = (assetName) => {
   });
 };
 
+export const ASSET_RELEASES = deepFreeze(${JSON.stringify(assetReleases)});
+
+const compareReleaseVersionsDescending = (left, right) => {
+  return right.version.localeCompare(left.version, undefined, {
+    numeric: true,
+  });
+};
+
+export const getAssetReleaseHistory = (assetName) => {
+  return ASSET_RELEASES.filter((release) => {
+    return release.assetName === assetName;
+  }).sort(compareReleaseVersionsDescending);
+};
+
+export const getLatestProductionAssetRelease = (assetName) => {
+  return getAssetReleaseHistory(assetName).find((release) => {
+    return release.releaseChannel === "production";
+  });
+};
+
+export const getAssetRelease = (assetName, version) => {
+  return getAssetReleaseHistory(assetName).find((release) => {
+    return release.version === version;
+  });
+};
+
+export const IDENTITY_SHELL_RELEASES = Object.freeze(
+  getAssetReleaseHistory("identity-shell"),
+);
+
+const latestIdentityShellRelease =
+  getLatestProductionAssetRelease("identity-shell");
+
+assert(
+  latestIdentityShellRelease,
+  "The identity shell release catalog requires a production release.",
+);
+
 export const identityShell = Object.freeze({
-  schemaVersion: ${JSON.stringify(manifest.schemaVersion)},
-  assetSchemaVersion: ${JSON.stringify(manifest.assetSchemaVersion)},
-  id: ${JSON.stringify(manifest.assetId)},
-  version: ${JSON.stringify(manifest.version)},
-  releaseTag: ${JSON.stringify(manifest.releaseTag)},
-  url: ${JSON.stringify(manifest.url)},
-  sha256: ${JSON.stringify(manifest.sha256)},
-  meshName: ${JSON.stringify(manifest.meshName)},
-  materialNames: ${JSON.stringify(manifest.materialNames)},
+  ...latestIdentityShellRelease,
   morphTargetNames: Object.values(IDENTITY_MORPH_TARGET),
-  topologyVersion: ${JSON.stringify(manifest.topologyVersion)},
-  rendererCompatibilityVersion: ${JSON.stringify(manifest.rendererCompatibilityVersion)},
-  minimumApplicationVersion: ${JSON.stringify(manifest.minimumApplicationVersion)},
-  validationStatus: ${JSON.stringify(manifest.validation.status)},
-  releasedAt: ${JSON.stringify(manifest.releasedAt)},
-  sourceRevision: ${JSON.stringify(manifest.source.revision)},
-  sourceBlendSha256: ${JSON.stringify(manifest.source.blendSha256)},
 });
 `;
   const declarations = `export declare const IDENTITY_MORPH_TARGET: {
@@ -550,6 +640,50 @@ export declare const getLatestProductionAssetPromotion: (
   assetName: string,
 ) => AssetPromotionRecord | undefined;
 
+export type AssetReleaseManifest = {
+  readonly assetName: string;
+  readonly displayName: string;
+  readonly type: "glb";
+  readonly domain: "shell" | "avatar" | "body" | "clothing";
+  readonly module: string;
+  readonly schemaVersion: string;
+  readonly assetSchemaVersion: string;
+  readonly id: string;
+  readonly version: string;
+  readonly releaseChannel: AssetPromotionReleaseChannel;
+  readonly releaseTag: string;
+  readonly url: string;
+  readonly sha256: string;
+  readonly meshName: string;
+  readonly materialNames: readonly string[];
+  readonly morphTargetNames: readonly IdentityMorphName[];
+  readonly topologyVersion: string;
+  readonly rendererCompatibilityVersion: string;
+  readonly minimumApplicationVersion: string;
+  readonly validationStatus: string;
+  readonly releasedAt: string;
+  readonly sourceRevision: string;
+  readonly sourceBlendSha256: string;
+  readonly promotionRecordId: string;
+};
+
+export declare const ASSET_RELEASES: readonly AssetReleaseManifest[];
+
+export declare const IDENTITY_SHELL_RELEASES: readonly AssetReleaseManifest[];
+
+export declare const getAssetReleaseHistory: (
+  assetName: string,
+) => AssetReleaseManifest[];
+
+export declare const getLatestProductionAssetRelease: (
+  assetName: string,
+) => AssetReleaseManifest | undefined;
+
+export declare const getAssetRelease: (
+  assetName: string,
+  version: string,
+) => AssetReleaseManifest | undefined;
+
 export type FaceShellParameters = {
   faceWidth: number;
   faceLength: number;
@@ -645,29 +779,11 @@ export type AssetModuleManifest = {
 
 export declare const identityShellModule: AssetModuleManifest;
 
-export declare const identityShell: {
-  readonly schemaVersion: ${JSON.stringify(manifest.schemaVersion)};
-  readonly assetSchemaVersion: ${JSON.stringify(manifest.assetSchemaVersion)};
-  readonly id: ${JSON.stringify(manifest.assetId)};
-  readonly version: ${JSON.stringify(manifest.version)};
-  readonly releaseTag: ${JSON.stringify(manifest.releaseTag)};
-  readonly url: ${JSON.stringify(manifest.url)};
-  readonly sha256: string;
-  readonly meshName: ${JSON.stringify(manifest.meshName)};
-  readonly materialNames: readonly [${materialTuple}];
-  readonly morphTargetNames: readonly IdentityMorphName[];
-  readonly topologyVersion: ${JSON.stringify(manifest.topologyVersion)};
-  readonly rendererCompatibilityVersion: ${JSON.stringify(manifest.rendererCompatibilityVersion)};
-  readonly minimumApplicationVersion: ${JSON.stringify(manifest.minimumApplicationVersion)};
-  readonly validationStatus: ${JSON.stringify(manifest.validation.status)};
-  readonly releasedAt: string;
-  readonly sourceRevision: string;
-  readonly sourceBlendSha256: string;
-};
+export declare const identityShell: AssetReleaseManifest;
 
 export type IdentityMorphName =
   (typeof IDENTITY_MORPH_TARGET)[keyof typeof IDENTITY_MORPH_TARGET];
-export type IdentityShellRelease = typeof identityShell;
+export type IdentityShellRelease = AssetReleaseManifest;
 `;
   const packageManifestPath = path.join(PACKAGE_ROOT, "package.json");
   const packageManifest = JSON.parse(
@@ -682,6 +798,7 @@ export type IdentityShellRelease = typeof identityShell;
     formattedPackageManifest,
     formattedPromotions,
     formattedAssetModule,
+    formattedAssetReleases,
   ] = await Promise.all([
     formatSource(`${JSON.stringify(manifest, null, 2)}\n`, {
       parser: "json",
@@ -697,6 +814,9 @@ export type IdentityShellRelease = typeof identityShell;
     formatSource(`${JSON.stringify(moduleManifest, null, 2)}\n`, {
       parser: "json",
     }),
+    formatSource(`${JSON.stringify(assetReleases, null, 2)}\n`, {
+      parser: "json",
+    }),
   ]);
 
   await mkdir(PACKAGE_ROOT, { recursive: true });
@@ -709,6 +829,10 @@ export type IdentityShellRelease = typeof identityShell;
     writeFile(
       path.join(PACKAGE_ROOT, "asset-module.json"),
       formattedAssetModule,
+    ),
+    writeFile(
+      path.join(PACKAGE_ROOT, "asset-releases.json"),
+      formattedAssetReleases,
     ),
     writeFile(path.join(PACKAGE_ROOT, "index.js"), formattedModule),
     writeFile(path.join(PACKAGE_ROOT, "index.d.ts"), formattedDeclarations),
@@ -733,6 +857,7 @@ export type IdentityShellRelease = typeof identityShell;
     version: manifest.version,
     morphTargetCount: manifest.morphTargetNames.length,
     promotionRecords: assetPromotions.length,
+    assetReleases: assetReleases.length,
   };
 };
 
