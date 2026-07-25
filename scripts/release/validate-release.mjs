@@ -124,10 +124,10 @@ export const validateReleaseDirectory = async (
     "Ordered morph names",
   );
   assertEqual(contract.topologyHash.length, 64, "Topology checksum length");
-  assert(
-    manifest.url.includes(`/${version}/`) &&
-      manifest.url.endsWith("/identity-shell.glb"),
-    "Manifest URL must be immutable and versioned.",
+  assertEqual(
+    manifest.url,
+    `/models/shell/identity-shell/${version}/identity-shell.glb`,
+    "Manifest public GLB URL",
   );
   assert(
     validation.localRegressionValidation.passed,

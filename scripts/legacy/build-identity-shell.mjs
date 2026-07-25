@@ -1414,7 +1414,7 @@ if (!sourceRoot || !outputPath) {
 
 const retiredProductionPath = path.resolve(
   process.cwd(),
-  "public/models/avatar/identity-shell-v1.glb",
+  "public/models/shell/identity-shell/1.1.2/identity-shell.glb",
 );
 if (path.resolve(outputPath) === retiredProductionPath) {
   throw new Error(

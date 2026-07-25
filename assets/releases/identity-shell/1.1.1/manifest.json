@@ -4,7 +4,7 @@
   "assetId": "synmere-identity-shell-v1",
   "version": "1.1.1",
   "releaseTag": "identity-shell-v1.1.1",
-  "url": "/models/avatar/identity-shell/1.1.1/identity-shell.glb",
+  "url": "/models/shell/identity-shell/1.1.1/identity-shell.glb",
   "sha256": "2eb90bb7f08d528d7abd521a8cca9f90b00479c1c470d682d44d657f270716f7",
   "meshName": "IdentityShell",
   "materialNames": ["IdentityCeramic"],

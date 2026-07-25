@@ -184,7 +184,7 @@ const productionContract = getGlbContract(
 const productionExtras = getNodeExtras(productionDocument, EXPECTED_MESH_NAME);
 const nextContract = {
   schemaVersion: SHELL_ASSET_PIPELINE_VERSION,
-  capturedFrom: "public/models/avatar/identity-shell-v1.glb",
+  capturedFrom: "public/models/shell/identity-shell/1.1.2/identity-shell.glb",
   productionSha256: candidateGlbSha256,
   contract: productionContract,
   preservedMetadata: {
