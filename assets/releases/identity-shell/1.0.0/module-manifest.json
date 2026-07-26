@@ -627,8 +627,10 @@
           "chinLength": 0.25,
           "eyeSpacing": 0.36,
           "eyeWidth": 0.1,
-          "noseWidth": 0.26,
-          "mouthWidth": 0.46
+          "noseWidth": 0.28,
+          "noseLength": 0.29,
+          "noseProjection": 0.41,
+          "mouthWidth": 0.43
         }
       },
       {
@@ -678,10 +680,10 @@
           "cheekWidth": 1.08,
           "jawWidth": 0.83,
           "jawTaper": 0.82,
-          "chinLength": 0.21,
+          "chinLength": 0.23,
           "eyeWidth": 0.12,
-          "noseProjection": 0.44,
-          "mouthWidth": 0.41
+          "noseProjection": 0.38,
+          "mouthWidth": 0.36
         }
       },
       {
