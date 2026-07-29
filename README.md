@@ -1,6 +1,6 @@
 # Synmere Foundry
 
-The foundry owns Synmere's authored avatar assets from canonical Blender source
+The foundry owns Synmere's authored identity-shell assets from canonical Blender source
 through immutable, validated GLB releases. It does not contain or import the
 Synmere product application.
 

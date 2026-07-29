@@ -1,7 +1,7 @@
 # Identity Shell v1 base-asset revision
 
 This pass improves the neutral sculpt baked into
-`public/models/avatar/identity-shell-v1.glb`. It does not tune
+`assets/releases/identity-shell/1.0.0/identity-shell.glb`. It does not tune
 `FaceShellParameters`, presets, ranges, identity morph strength, fitting, or
 runtime geometry.
 
@@ -39,21 +39,21 @@ belong in this asset-quality pass.
 The authoritative source is:
 
 ```text
-assets/source/avatar/identity-shell-v1.blend
+assets/source/identity-shell/identity-shell-v1.blend
 ```
 
 The previous MakeHuman generator is retained only under
-`scripts/avatar-assets/legacy/` as topology provenance. It is not registered as
+`scripts/legacy/` as topology provenance. It is not registered as
 an active package command and refuses to overwrite the production GLB.
 
 The supported asset path is:
 
 ```text
 identity-shell-v1.blend
-  -> artifacts/avatar/candidates/identity-shell-v1.glb
+  -> assets/candidates/current/identity-shell-v1.glb
   -> contract validation
   -> visual review approval
-  -> public/models/avatar/identity-shell-v1.glb
+  -> assets/releases/identity-shell/1.0.0/identity-shell.glb
 ```
 
 Only `pnpm asset:shell:promote -- --confirm` may replace the production asset.
@@ -71,7 +71,7 @@ Generated candidates and review approvals stay outside `public/`.
 5. Apply neutral Basis changes consistently to every shape key. Propagate the
    same selected-vertex delta to the identity, corrective, and presentation
    keys so their relative deformation does not inherit the inverse Basis edit.
-   Use `scripts/avatar-assets/shell/rebase-shape-keys.py` to snapshot the
+   Use `scripts/shell/rebase-shape-keys.py` to snapshot the
    pre-sculpt coordinates and apply the exact `K₁ = K₀ + (B₁ - B₀)` rebase.
 6. Revisit each shape key after the Basis pass and correct only damaged
    anatomy. Do not tune the presets or runtime gains during this stage.

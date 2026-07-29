@@ -1,4 +1,4 @@
-# Avatar asset versioning
+# Identity shell asset versioning
 
 - **Patch**: safety, inversion, degeneracy, or validation repair with no
   intended visual or runtime-contract change.

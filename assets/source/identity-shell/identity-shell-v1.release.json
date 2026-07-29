@@ -13,9 +13,9 @@
     "sourceBlendSha256": "64a187482ade71e2783b4897f7c312db0c86f31801588170c69216b280d3121b",
     "productionGlbSha256": "e26ae71bf468d3149c65dcea97e82b16be63b902e6635d1134c5654a1771bbd4",
     "paths": {
-      "blend": "assets/releases/avatar/identity-shell-v1/rollback-e26ae71bf468/identity-shell-v1.blend",
-      "glb": "assets/releases/avatar/identity-shell-v1/rollback-e26ae71bf468/identity-shell-v1.glb",
-      "contract": "assets/releases/avatar/identity-shell-v1/rollback-e26ae71bf468/identity-shell-v1.contract.json"
+      "blend": "assets/rollback/identity-shell/1.1.0/identity-shell.blend",
+      "glb": "assets/rollback/identity-shell/1.1.0/identity-shell.glb",
+      "contract": "assets/rollback/identity-shell/1.1.0/identity-shell.contract.json"
     }
   },
   "validation": {
