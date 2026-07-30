@@ -1,0 +1,49 @@
+{
+  "conversionTool": "three-fbx-loader-gltf-exporter",
+  "sourcePath": "/Users/sdarbeh/Documents/synmere/synmere-foundry/assets/candidates/avatar/test/original/test-head-female.fbx",
+  "outputPath": "/Users/sdarbeh/Documents/synmere/synmere-foundry/assets/candidates/avatar/test/glb/test-head-female.glb",
+  "inspection": {
+    "armatureNames": [],
+    "bounds": {
+      "maximum": [
+        0.7520434856414795,
+        -2.5530154705047607,
+        0.8734591007232666
+      ],
+      "minimum": [
+        -0.7225031852722168,
+        -5.010668754577637,
+        -0.9863856434822083
+      ],
+      "size": [
+        1.4745466709136963,
+        2.457653284072876,
+        1.8598447442054749
+      ]
+    },
+    "materialNames": [
+      "Female_Base",
+      "Female_beanie",
+      "Female_eyeplacement",
+      "Female_hair_2"
+    ],
+    "materialSlotCount": 4,
+    "meshCount": 4,
+    "meshNames": [
+      "Female_Base",
+      "Female_beanie",
+      "Female_eyeplacement",
+      "Female_hair_2"
+    ],
+    "objectNames": [
+      "",
+      "Female_Base",
+      "Female_beanie",
+      "Female_eyeplacement",
+      "Female_hair_2"
+    ],
+    "shapeKeyObjectNames": []
+  },
+  "renderError": "Review renders require Blender; local Blender conversion/rendering is currently blocked.",
+  "renders": []
+}

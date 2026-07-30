@@ -124,6 +124,11 @@ if (
   );
 }
 
+const productionManifest = {
+  ...manifest,
+  stage: "production",
+};
+
 await mkdir(path.join(stagingDirectory, "source"), { recursive: true });
 try {
   await Promise.all([
@@ -135,13 +140,10 @@ try {
       CANDIDATE_BLEND_PATH,
       path.join(stagingDirectory, "source/identity-shell.blend"),
     ),
-    copyFile(
-      candidateManifestPath,
-      path.join(stagingDirectory, "manifest.json"),
-    ),
     copyFile(validationPath, path.join(stagingDirectory, "validation.json")),
     copyFile(reviewPath, path.join(stagingDirectory, "model-lab-review.json")),
   ]);
+  await writeJson(path.join(stagingDirectory, "manifest.json"), productionManifest);
   await writeJson(path.join(stagingDirectory, "checksums.json"), {
     schemaVersion: "v1",
     algorithm: "sha256",
@@ -159,7 +161,10 @@ try {
   });
   await writeJson(
     path.join(stagingDirectory, "module-manifest.json"),
-    normalizeIdentityShellModuleManifest(manifest, candidateModuleManifest),
+    normalizeIdentityShellModuleManifest(
+      productionManifest,
+      candidateModuleManifest,
+    ),
   );
 
   // Promotion permits exactly one validation against production-shaped paths.
@@ -173,7 +178,7 @@ try {
   );
   const promotionRecord = buildIdentityShellPromotionRecord({
     version,
-    manifest,
+    manifest: productionManifest,
     validation,
     review,
     productionValidation,
@@ -210,7 +215,7 @@ try {
   );
   await writeJson(
     path.join(PROJECT_ROOT, "manifests/identity-shell.current.json"),
-    manifest,
+    productionManifest,
   );
   await writeAssetPromotionRegistry();
   const manifestPackage = await writeManifestPackage({ version });

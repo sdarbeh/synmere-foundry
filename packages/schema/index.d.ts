@@ -9,6 +9,8 @@ export declare const SYNMERE_STRUCTURE_PRESET: {
 export type SynmereStructurePreset =
   (typeof SYNMERE_STRUCTURE_PRESET)[keyof typeof SYNMERE_STRUCTURE_PRESET];
 
+export type FoundryAssetStage = "dev" | "candidate" | "production";
+
 export type FaceShellParameters = {
   faceWidth: number;
   faceLength: number;
@@ -105,6 +107,7 @@ export type ReleasedAssetManifest = {
   assetSchemaVersion: string;
   id: string;
   version: string;
+  stage: FoundryAssetStage;
   uri: string;
   sha256: string;
   topologyVersion: string;

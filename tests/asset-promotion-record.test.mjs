@@ -6,6 +6,11 @@ import {
   buildIdentityShellPromotionRecord,
 } from "../scripts/release/asset-promotion-record.mjs";
 import {
+  assertFoundryAssetStage,
+  assertFoundryAssetValidationStatus,
+  assertKnownFoundryAssetMetadata,
+} from "../scripts/release/asset-stage.mjs";
+import {
   getAssetPromotionHistory,
   getLatestProductionAssetPromotion,
   upsertAssetPromotionRecord,
@@ -78,7 +83,7 @@ test("builds a promotable identity shell asset promotion record", () => {
   const record = buildIdentityShellPromotionRecord(createPromotionFixture());
 
   assert.equal(record.asset.name, "identity-shell");
-  assert.equal(record.version.releaseChannel, "production");
+  assert.equal(record.version.stage, "production");
   assert.equal(record.files.candidateGlbHash, "candidate-hash");
   assert.equal(record.files.productionGlbHash, "production-hash");
   assert.equal(
@@ -86,6 +91,66 @@ test("builds a promotable identity shell asset promotion record", () => {
     "Tighten shell morphology for promotion.",
   );
   assert.doesNotThrow(() => assertPromotableAssetPromotionRecord(record));
+});
+
+test("refuses promotion records with an invalid asset stage", () => {
+  const record = buildIdentityShellPromotionRecord(createPromotionFixture());
+  record.version.stage = "preview";
+
+  assert.throws(
+    () => assertPromotableAssetPromotionRecord(record),
+    /Foundry asset stage is invalid/u,
+  );
+});
+
+test("refuses promotion records outside the production stage", () => {
+  const record = buildIdentityShellPromotionRecord(createPromotionFixture());
+  record.version.stage = "candidate";
+
+  assert.throws(
+    () => assertPromotableAssetPromotionRecord(record),
+    /production stage/u,
+  );
+});
+
+test("defines the shared Foundry asset stages", () => {
+  assert.doesNotThrow(() => assertFoundryAssetStage("production"));
+  assert.doesNotThrow(() => assertFoundryAssetStage("candidate"));
+  assert.doesNotThrow(() => assertFoundryAssetStage("dev"));
+  assert.throws(() => assertFoundryAssetStage("live"));
+});
+
+test("defines the shared Foundry validation statuses", () => {
+  assert.doesNotThrow(() => assertFoundryAssetValidationStatus("passed"));
+  assert.doesNotThrow(() => assertFoundryAssetValidationStatus("needs-review"));
+  assert.doesNotThrow(() => assertFoundryAssetValidationStatus("blocked"));
+  assert.throws(() => assertFoundryAssetValidationStatus("test-only"));
+});
+
+test("allows unknown metadata for dev assets only", () => {
+  const metadata = {
+    authorVendor: "unknown",
+    license: "unknown",
+    source: "unknown",
+  };
+
+  assert.doesNotThrow(() =>
+    assertKnownFoundryAssetMetadata({ metadata, stage: "dev" }),
+  );
+  assert.throws(() =>
+    assertKnownFoundryAssetMetadata({ metadata, stage: "candidate" }),
+  );
+  assert.throws(() =>
+    assertKnownFoundryAssetMetadata({ metadata, stage: "production" }),
+  );
+  assert.throws(
+    () =>
+      assertKnownFoundryAssetMetadata({
+        metadata: { ...metadata, license: "" },
+        stage: "dev",
+      }),
+    /license is required/u,
+  );
 });
 
 test("refuses promotion records without release notes", () => {

@@ -112,6 +112,7 @@ const candidateContract = getGlbContract(
 );
 const manifest = {
   schemaVersion: SHELL_ASSET_PIPELINE_VERSION,
+  stage: "candidate",
   source: path.relative(process.cwd(), SOURCE_BLEND_PATH),
   candidate: path.relative(process.cwd(), CANDIDATE_GLB_PATH),
   blenderVersion,

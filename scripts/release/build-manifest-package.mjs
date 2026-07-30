@@ -3,6 +3,10 @@ import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 import { SEMANTIC_VERSION_PATTERN } from "./release-policy.mjs";
+import {
+  FOUNDRY_ASSET_STAGES,
+  assertFoundryAssetStage,
+} from "./asset-stage.mjs";
 
 const readArgument = (name) => {
   const index = process.argv.indexOf(name);
@@ -58,6 +62,17 @@ const getLatestReleaseVersion = async () => {
   }
 
   return latest;
+};
+
+const assertReleaseManifestStage = (releaseManifest, promotionRecord) => {
+  assertFoundryAssetStage(releaseManifest.stage);
+  assertFoundryAssetStage(promotionRecord.version?.stage);
+
+  if (releaseManifest.stage !== promotionRecord.version.stage) {
+    throw new Error(
+      `Release ${releaseManifest.releaseTag} stage must match its promotion stage.`,
+    );
+  }
 };
 
 export const writeManifestPackage = async (options = {}) => {
@@ -174,17 +189,19 @@ export const writeManifestPackage = async (options = {}) => {
         );
       }
 
+      assertReleaseManifestStage(releaseManifest, promotionRecord);
+
       return {
         assetName: "identity-shell",
         displayName: "Identity Shell",
         type: "glb",
         domain: "shell",
         module: "identity-shell",
+        stage: releaseManifest.stage,
         schemaVersion: releaseManifest.schemaVersion,
         assetSchemaVersion: releaseManifest.assetSchemaVersion,
         id: releaseManifest.assetId,
         version: releaseManifest.version,
-        releaseChannel: promotionRecord.version.releaseChannel,
         releaseTag: releaseManifest.releaseTag,
         url: releaseManifest.url,
         sha256: releaseManifest.sha256,
@@ -231,11 +248,7 @@ ${targetRows}
 
 export const ASSET_PROMOTION_SCHEMA_VERSION = "asset-promotion-v1";
 
-export const ASSET_PROMOTION_RELEASE_CHANNELS = Object.freeze([
-  "dev",
-  "candidate",
-  "production",
-]);
+export const FOUNDRY_ASSET_STAGES = Object.freeze(${JSON.stringify(FOUNDRY_ASSET_STAGES)});
 
 const deepFreeze = (value) => {
   if (!value || typeof value !== "object" || Object.isFrozen(value)) {
@@ -291,8 +304,8 @@ export const assertValidAssetPromotionRecord = (record) => {
   assert(isRecord(record.version), "Promotion version metadata is required.");
   assert(isNonEmptyString(record.version.version), "Version is required.");
   assert(
-    ASSET_PROMOTION_RELEASE_CHANNELS.includes(record.version.releaseChannel),
-    "Release channel is invalid.",
+    FOUNDRY_ASSET_STAGES.includes(record.version.stage),
+    "Foundry asset stage is invalid.",
   );
   assert(
     isNonEmptyString(record.version.promotedAt),
@@ -433,7 +446,7 @@ export const assertValidAssetPromotionRecord = (record) => {
 export const assertPromotableAssetPromotionRecord = (record) => {
   assertValidAssetPromotionRecord(record);
   assert(
-    record.version.releaseChannel === "production",
+    record.version.stage === "production",
     "Only production promotion records can complete promotion.",
   );
   assert(record.validation.contractPassed, "Contract validation did not pass.");
@@ -492,7 +505,7 @@ export const getAssetPromotionHistory = (assetName) => {
 
 export const getLatestProductionAssetPromotion = (assetName) => {
   return getAssetPromotionHistory(assetName).find((promotion) => {
-    return promotion.version.releaseChannel === "production";
+    return promotion.version.stage === "production";
   });
 };
 
@@ -512,7 +525,7 @@ export const getAssetReleaseHistory = (assetName) => {
 
 export const getLatestProductionAssetRelease = (assetName) => {
   return getAssetReleaseHistory(assetName).find((release) => {
-    return release.releaseChannel === "production";
+    return release.stage === "production";
   });
 };
 
@@ -545,14 +558,13 @@ ${declarationTargetRows}
 
 export declare const ASSET_PROMOTION_SCHEMA_VERSION: "asset-promotion-v1";
 
-export declare const ASSET_PROMOTION_RELEASE_CHANNELS: readonly [
+export declare const FOUNDRY_ASSET_STAGES: readonly [
   "dev",
   "candidate",
   "production",
 ];
 
-export type AssetPromotionReleaseChannel =
-  (typeof ASSET_PROMOTION_RELEASE_CHANNELS)[number];
+export type FoundryAssetStage = (typeof FOUNDRY_ASSET_STAGES)[number];
 
 export type AssetPromotionRecord = {
   id: string;
@@ -567,7 +579,7 @@ export type AssetPromotionRecord = {
 
   version: {
     version: string;
-    releaseChannel: AssetPromotionReleaseChannel;
+    stage: FoundryAssetStage;
     promotedAt: string;
     promotedBy: string;
   };
@@ -640,11 +652,11 @@ export type AssetReleaseManifest = {
   readonly type: "glb";
   readonly domain: "shell" | "avatar" | "body" | "clothing";
   readonly module: string;
+  readonly stage: FoundryAssetStage;
   readonly schemaVersion: string;
   readonly assetSchemaVersion: string;
   readonly id: string;
   readonly version: string;
-  readonly releaseChannel: AssetPromotionReleaseChannel;
   readonly releaseTag: string;
   readonly url: string;
   readonly sha256: string;

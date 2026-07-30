@@ -25,6 +25,15 @@ Foundry builds and publishes the portable package boundary:
 - asset promotions: who promoted a version, when, with what evidence;
 - asset releases: every immutable, browser-loadable GLB version and URL.
 
+Every app-facing asset record also exposes a Foundry stage:
+
+- `production` for live verified assets;
+- `candidate` for beta, pre-promoted assets;
+- `dev` for work-in-progress, unverified, or provisional assets.
+
+Stage is separate from validation status. See
+[asset-stages.md](docs/asset-stages.md).
+
 The product consumes those packages from `node_modules`; it does not create or
 modify asset records, manifests, schemas, or Three.js asset adapters.
 
@@ -178,7 +187,7 @@ Foundry serves the module snapshot next to the candidate GLB during review, and
 Synmere exposes it through its dev-only candidate module route. Main may decide
 how to present those settings, but Foundry owns the values.
 
-TODO: add an interactive tuning apply wizard:
+Future tuning apply wizard:
 
 ```sh
 pnpm shell:tuning
@@ -210,6 +219,8 @@ It can be run manually or from a published GitHub Release.
 `assets/candidates/current/identity-shell-v1.glb` at
 `http://127.0.0.1:4100/identity-shell-v1.glb`.
 
-See [release-process.md](docs/release-process.md),
+See [foundry-workflow.md](docs/foundry-workflow.md),
+[asset-stages.md](docs/asset-stages.md),
+[release-process.md](docs/release-process.md),
 [rollback-process.md](docs/rollback-process.md), and
 [retention-policy.md](docs/retention-policy.md).

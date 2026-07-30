@@ -9,6 +9,7 @@
     "assetSchemaVersion",
     "assetId",
     "version",
+    "stage",
     "releaseTag",
     "url",
     "sha256",
@@ -37,6 +38,9 @@
     "version": {
       "type": "string",
       "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "stage": {
+      "enum": ["dev", "candidate", "production"]
     },
     "releaseTag": {
       "type": "string",

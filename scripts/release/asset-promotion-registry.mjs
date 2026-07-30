@@ -47,7 +47,7 @@ export const getAssetPromotionHistory = (promotions, assetName) => {
 
 export const getLatestProductionAssetPromotion = (promotions, assetName) => {
   return getAssetPromotionHistory(promotions, assetName).find((promotion) => {
-    return promotion.version.releaseChannel === "production";
+    return promotion.version.stage === "production";
   });
 };
 

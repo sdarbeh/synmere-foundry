@@ -9,7 +9,7 @@
   },
   "version": {
     "version": "1.0.0",
-    "releaseChannel": "production",
+    "stage": "production",
     "promotedAt": "2026-07-25T00:14:03.122Z",
     "promotedBy": "Synmere Foundry"
   },

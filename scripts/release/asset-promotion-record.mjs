@@ -1,3 +1,5 @@
+import { assertFoundryAssetStage } from "./asset-stage.mjs";
+
 export const ASSET_PROMOTION_SCHEMA_VERSION = "asset-promotion-v1";
 
 const assert = (condition, message) => {
@@ -122,7 +124,7 @@ export const buildIdentityShellPromotionRecord = ({
     },
     version: {
       version,
-      releaseChannel: "production",
+      stage: "production",
       promotedAt: manifest.releasedAt,
       promotedBy,
     },
@@ -166,9 +168,10 @@ export const buildIdentityShellPromotionRecord = ({
 
 export const assertPromotableAssetPromotionRecord = (record) => {
   assert(isNonEmptyString(record.id), "Promotion record id is required.");
+  assertFoundryAssetStage(record.version?.stage);
   assert(
-    record.version?.releaseChannel === "production",
-    "Promotion record must target the production release channel.",
+    record.version?.stage === "production",
+    "Promotion record must target the production stage.",
   );
   assert(
     isNonEmptyString(record.version?.promotedAt),

@@ -27,6 +27,7 @@
     "packages:build": "node scripts/release/build-packages.mjs",
     "packages:publish": "node scripts/release/publish-packages.mjs",
     "asset:promotions": "node scripts/release/asset-promotion-registry.mjs",
+    "avatar:test:build": "node scripts/avatar/build-test-candidates.mjs",
     "test": "node --test tests/*.test.mjs",
     "check": "node scripts/release/validate-release.mjs 1.0.0 && node --test tests/*.test.mjs"
   }

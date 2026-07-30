@@ -12,6 +12,7 @@ import { validateReleaseDirectory } from "../scripts/release/validate-release.mj
 import {
   ASSET_RELEASES,
   ASSET_PROMOTIONS,
+  FOUNDRY_ASSET_STAGES,
   IDENTITY_SHELL_RELEASES,
   getAssetRelease,
   getAssetReleaseHistory,
@@ -75,12 +76,18 @@ test("the Foundry-owned manifest package matches the current release", async () 
   );
 
   assert.equal(identityShell.version, currentManifest.version);
+  assert.equal(identityShell.stage, currentManifest.stage);
   assert.equal(identityShell.sha256, currentManifest.sha256);
   assert.equal(
     identityShellModule.asset.version,
     currentModuleManifest.asset.version,
   );
   assert.equal(ASSET_PROMOTIONS.length, promotionRegistry.length);
+  assert.deepEqual([...FOUNDRY_ASSET_STAGES], [
+    "dev",
+    "candidate",
+    "production",
+  ]);
 });
 
 test("the Foundry-owned manifest package exposes every loadable shell release", () => {
@@ -104,7 +111,35 @@ test("the Foundry-owned manifest package exposes every loadable shell release", 
     getAssetRelease("identity-shell", "1.0.0").sha256,
     identityShell.sha256,
   );
+  assert.equal(
+    getAssetRelease("identity-shell", "1.0.0").stage,
+    "production",
+  );
+  assert.deepEqual(
+    ASSET_PROMOTIONS.map((promotion) => promotion.version.stage),
+    ["production"],
+  );
   assert.equal(ASSET_RELEASES.length, IDENTITY_SHELL_RELEASES.length);
+});
+
+test("avatar test candidates expose a debug-only asset stage", async () => {
+  const avatarCandidateManifest = JSON.parse(
+    await readFile(
+      path.join(
+        PROJECT_ROOT,
+        "assets/candidates/avatar/test/avatar-candidates.manifest.json",
+      ),
+      "utf8",
+    ),
+  );
+
+  assert.equal(avatarCandidateManifest.stage, "dev");
+  assert.equal("status" in avatarCandidateManifest, false);
+  avatarCandidateManifest.candidates.forEach((candidate) => {
+    assert.equal(candidate.stage, "dev");
+    assert.equal("status" in candidate, false);
+    assert.equal(candidate.validation.status, "needs-review");
+  });
 });
 
 test("the identity shell asset module cannot drift from its GLB contract", () => {

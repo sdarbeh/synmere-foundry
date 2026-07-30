@@ -85,3 +85,7 @@ promoted release is a separate, auditable operation:
 pnpm packages:build
 pnpm packages:publish
 ```
+
+Promoted production releases must expose `stage: "production"` in their release
+manifest and promotion record. Asset lifecycle should be driven by the
+canonical Foundry asset stage in [asset-stages.md](asset-stages.md).

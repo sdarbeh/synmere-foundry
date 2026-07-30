@@ -3,6 +3,11 @@ import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 import { assertPromotableAssetPromotionRecord } from "./asset-promotion-record.mjs";
+import {
+  assertFoundryAssetStage,
+  assertFoundryAssetValidationStatus,
+  assertKnownFoundryAssetMetadata,
+} from "./asset-stage.mjs";
 import { getGlbContract, readGlb, sha256File } from "../shell/glb.mjs";
 import { assertSemanticVersion, getReleaseTag } from "./release-policy.mjs";
 
@@ -96,6 +101,18 @@ export const validateReleaseDirectory = async (
 
   assertEqual(manifest.version, version, "Manifest release version");
   assertEqual(manifest.releaseTag, getReleaseTag(version), "Release tag");
+  assertFoundryAssetStage(manifest.stage);
+  assertEqual(manifest.stage, "production", "Manifest asset stage");
+  assertFoundryAssetValidationStatus(manifest.validation?.status);
+  assertKnownFoundryAssetMetadata({
+    stage: manifest.stage,
+    label: "Release manifest source",
+    metadata: {
+      blendSha256: manifest.source?.blendSha256,
+      candidate: manifest.source?.candidate,
+      revision: manifest.source?.revision,
+    },
+  });
   assertEqual(manifest.sha256, glbSha256, "Manifest GLB checksum");
   assertEqual(
     manifest.source.blendSha256,
@@ -179,6 +196,11 @@ export const validateReleaseDirectory = async (
   }
   if (promotionRecord) {
     assertPromotableAssetPromotionRecord(promotionRecord);
+    assertEqual(
+      promotionRecord.version.stage,
+      manifest.stage,
+      "Promotion record asset stage",
+    );
     assertEqual(
       promotionRecord.files.productionGlbHash,
       glbSha256,

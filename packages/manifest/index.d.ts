@@ -40,14 +40,13 @@ export declare const IDENTITY_MORPH_TARGET: {
 
 export declare const ASSET_PROMOTION_SCHEMA_VERSION: "asset-promotion-v1";
 
-export declare const ASSET_PROMOTION_RELEASE_CHANNELS: readonly [
+export declare const FOUNDRY_ASSET_STAGES: readonly [
   "dev",
   "candidate",
   "production",
 ];
 
-export type AssetPromotionReleaseChannel =
-  (typeof ASSET_PROMOTION_RELEASE_CHANNELS)[number];
+export type FoundryAssetStage = (typeof FOUNDRY_ASSET_STAGES)[number];
 
 export type AssetPromotionRecord = {
   id: string;
@@ -62,7 +61,7 @@ export type AssetPromotionRecord = {
 
   version: {
     version: string;
-    releaseChannel: AssetPromotionReleaseChannel;
+    stage: FoundryAssetStage;
     promotedAt: string;
     promotedBy: string;
   };
@@ -135,11 +134,11 @@ export type AssetReleaseManifest = {
   readonly type: "glb";
   readonly domain: "shell" | "avatar" | "body" | "clothing";
   readonly module: string;
+  readonly stage: FoundryAssetStage;
   readonly schemaVersion: string;
   readonly assetSchemaVersion: string;
   readonly id: string;
   readonly version: string;
-  readonly releaseChannel: AssetPromotionReleaseChannel;
   readonly releaseTag: string;
   readonly url: string;
   readonly sha256: string;
