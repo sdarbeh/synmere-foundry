@@ -17,6 +17,7 @@ const CANDIDATE_ROOT = path.join(
 const ORIGINAL_DIRECTORY = path.join(CANDIDATE_ROOT, "original");
 const GLB_DIRECTORY = path.join(CANDIDATE_ROOT, "glb");
 const REVIEW_DIRECTORY = path.join(CANDIDATE_ROOT, "review");
+const THUMBNAIL_DIRECTORY = path.join(REVIEW_DIRECTORY, "thumbnails");
 const MANIFEST_PATH = path.join(CANDIDATE_ROOT, "avatar-candidates.manifest.json");
 const BLENDER_SCRIPT_PATH = path.join(
   PROJECT_ROOT,
@@ -31,18 +32,36 @@ const AVATAR_TEST_VALIDATION_STATUS = "needs-review";
 assertFoundryAssetStage(AVATAR_TEST_STAGE);
 assertFoundryAssetValidationStatus(AVATAR_TEST_VALIDATION_STATUS);
 
-const TEST_CANDIDATES = [
+const TEST_AVATAR_ASSETS = [
   {
-    id: "synmere.avatar.test-head-male",
-    label: "Male",
-    sourceFileName: "test-head-male.fbx",
-    glbFileName: "test-head-male.glb",
-  },
-  {
-    id: "synmere.avatar.test-head-female",
-    label: "Female",
-    sourceFileName: "test-head-female.fbx",
-    glbFileName: "test-head-female.glb",
+    id: "synmere.avatar.test-head",
+    label: "Test Head",
+    description:
+      "Authored avatar head family for static rendering and adapter readiness checks.",
+    stage: AVATAR_TEST_STAGE,
+    source: {
+      license: "unknown",
+      source: "unknown",
+      authorVendor: "unknown",
+    },
+    variants: [
+      {
+        id: "male",
+        label: "Male",
+        description:
+          "Masculine authored headform used to inspect avatar rendering and adapter readiness.",
+        sourceFileName: "test-head-male.fbx",
+        glbFileName: "test-head-male.glb",
+      },
+      {
+        id: "female",
+        label: "Female",
+        description:
+          "Feminine authored headform used to inspect avatar rendering and adapter readiness.",
+        sourceFileName: "test-head-female.fbx",
+        glbFileName: "test-head-female.glb",
+      },
+    ],
   },
 ];
 
@@ -51,6 +70,57 @@ const sha256File = async (filePath) => {
   hash.update(await readFile(filePath));
 
   return hash.digest("hex");
+};
+
+const escapeXml = (value) => {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;");
+};
+
+const writePlaceholderThumbnail = async ({
+  description,
+  fileName,
+  id,
+  label,
+  title,
+}) => {
+  const thumbnailPath = path.join(THUMBNAIL_DIRECTORY, fileName);
+  const palette =
+    id === "female"
+      ? { background: "#f4f1ed", foreground: "#8b8eec" }
+      : id === "male"
+        ? { background: "#f0f1ef", foreground: "#6f72e8" }
+        : { background: "#f3f2ef", foreground: "#4d4fa2" };
+
+  await mkdir(path.dirname(thumbnailPath), { recursive: true });
+  await writeFile(
+    thumbnailPath,
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="${escapeXml(title)}">
+  <rect width="512" height="512" rx="96" fill="${palette.background}"/>
+  <circle cx="256" cy="214" r="112" fill="${palette.foreground}" opacity="0.16"/>
+  <path d="M166 331c20-48 52-72 90-72s70 24 90 72" fill="none" stroke="${palette.foreground}" stroke-width="32" stroke-linecap="round"/>
+  <path d="M182 206c18-60 55-92 110-92 44 0 80 19 108 56" fill="none" stroke="${palette.foreground}" stroke-width="26" stroke-linecap="round"/>
+  <text x="256" y="414" text-anchor="middle" fill="#1b1d23" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="32" font-weight="700">${escapeXml(label)}</text>
+</svg>
+`,
+  );
+
+  return {
+    id: "preview-placeholder",
+    label: "Preview placeholder",
+    kind: "preview",
+    source: "placeholder",
+    path: path.relative(PROJECT_ROOT, thumbnailPath),
+    publicPath: `/models/avatar/test/thumbnails/${fileName}`,
+    width: 512,
+    height: 512,
+    sha256: await sha256File(thumbnailPath),
+    isPlaceholder: true,
+    description,
+  };
 };
 
 const installFileReaderPolyfill = () => {
@@ -216,36 +286,46 @@ const runBlenderConversion = async ({
   });
 };
 
-const buildCandidate = async (candidate) => {
-  const sourcePath = path.join(ORIGINAL_DIRECTORY, candidate.sourceFileName);
-  const glbPath = path.join(GLB_DIRECTORY, candidate.glbFileName);
+const buildVariant = async ({ asset, variant }) => {
+  const sourcePath = path.join(ORIGINAL_DIRECTORY, variant.sourceFileName);
+  const glbPath = path.join(GLB_DIRECTORY, variant.glbFileName);
   const reportPath = path.join(
     REVIEW_DIRECTORY,
-    candidate.label.toLowerCase(),
+    variant.id,
     "conversion-report.json",
   );
-  const candidateReviewDirectory = path.dirname(reportPath);
+  const variantReviewDirectory = path.dirname(reportPath);
 
-  await mkdir(candidateReviewDirectory, { recursive: true });
+  await mkdir(variantReviewDirectory, { recursive: true });
 
   const sourceStats = await stat(sourcePath);
   const sourceSha256 = await sha256File(sourcePath);
   const output = {
-    id: candidate.id,
-    label: candidate.label,
-    stage: AVATAR_TEST_STAGE,
+    id: variant.id,
+    label: variant.label,
+    description: variant.description,
+    thumbnails: [
+      await writePlaceholderThumbnail({
+        description:
+          "Generated placeholder thumbnail until avatar review renders are available.",
+        fileName: `${asset.id.split(".").at(-1)}-${variant.id}-preview.svg`,
+        id: variant.id,
+        label: variant.label,
+        title: `${asset.label} ${variant.label} preview placeholder`,
+      }),
+    ],
     source: {
       path: path.relative(PROJECT_ROOT, sourcePath),
       sha256: sourceSha256,
       sizeBytes: sourceStats.size,
       originalFormat: "FBX",
-      license: "unknown",
-      source: "unknown",
-      authorVendor: "unknown",
+      license: asset.source.license,
+      source: asset.source.source,
+      authorVendor: asset.source.authorVendor,
     },
     glb: null,
     review: {
-      path: path.relative(PROJECT_ROOT, candidateReviewDirectory),
+      path: path.relative(PROJECT_ROOT, variantReviewDirectory),
       renders: [],
       report: path.relative(PROJECT_ROOT, reportPath),
     },
@@ -253,15 +333,15 @@ const buildCandidate = async (candidate) => {
     validation: {
       status: AVATAR_TEST_VALIDATION_STATUS,
       notes: [
-        "Dev-stage avatar candidate. Not promoted or release-ready.",
+        "Dev-stage avatar variant. Not promoted or release-ready.",
         "License/source metadata is unknown and must be resolved before product use.",
         "Adapter bindings remain provisional until morph or rig controls are verified.",
       ],
     },
   };
   assertKnownFoundryAssetMetadata({
-    stage: output.stage,
-    label: `${output.id}.source`,
+    stage: asset.stage,
+    label: `${asset.id}.${output.id}.source`,
     metadata: {
       authorVendor: output.source.authorVendor,
       license: output.source.license,
@@ -273,7 +353,7 @@ const buildCandidate = async (candidate) => {
     await runBlenderConversion({
       glbPath,
       reportPath,
-      reviewDirectory: candidateReviewDirectory,
+      reviewDirectory: variantReviewDirectory,
       sourcePath,
     });
   } catch (error) {
@@ -294,7 +374,7 @@ const buildCandidate = async (candidate) => {
 
     output.glb = {
       path: path.relative(PROJECT_ROOT, glbPath),
-      publicPath: `/models/avatar/test/${candidate.glbFileName}`,
+      publicPath: `/models/avatar/test/${variant.glbFileName}`,
       sha256: glbSha256,
       sizeBytes: glbStats.size,
     };
@@ -311,21 +391,80 @@ const buildCandidate = async (candidate) => {
   return output;
 };
 
+const getAssetValidationStatus = (variants) => {
+  if (
+    variants.some((variant) => variant.validation.status === "blocked")
+  ) {
+    return "blocked";
+  }
+
+  if (
+    variants.some((variant) => variant.validation.status === "needs-review")
+  ) {
+    return "needs-review";
+  }
+
+  return "passed";
+};
+
+const buildAsset = async (asset) => {
+  assertFoundryAssetStage(asset.stage);
+  assertKnownFoundryAssetMetadata({
+    stage: asset.stage,
+    label: `${asset.id}.source`,
+    metadata: asset.source,
+  });
+
+  const variants = [];
+
+  for (const variant of asset.variants) {
+    variants.push(await buildVariant({ asset, variant }));
+  }
+
+  return {
+    id: asset.id,
+    label: asset.label,
+    description: asset.description,
+    stage: asset.stage,
+    thumbnails: [
+      await writePlaceholderThumbnail({
+        description:
+          "Generated placeholder thumbnail for the avatar asset family until review renders are available.",
+        fileName: `${asset.id.split(".").at(-1)}-preview.svg`,
+        id: asset.id,
+        label: asset.label,
+        title: `${asset.label} asset preview placeholder`,
+      }),
+    ],
+    source: asset.source,
+    validation: {
+      status: getAssetValidationStatus(variants),
+      notes: [
+        "Dev-stage avatar asset family. Not promoted or release-ready.",
+        "Variant labels are generic authored options, not schema-level categories.",
+        "License/source metadata is unknown and must be resolved before product use.",
+        "Adapter bindings remain provisional until morph or rig controls are verified.",
+      ],
+    },
+    variants,
+  };
+};
+
 await mkdir(GLB_DIRECTORY, { recursive: true });
 await mkdir(REVIEW_DIRECTORY, { recursive: true });
 
-const candidates = [];
+const assets = [];
 
-for (const candidate of TEST_CANDIDATES) {
-  candidates.push(await buildCandidate(candidate));
+for (const asset of TEST_AVATAR_ASSETS) {
+  assets.push(await buildAsset(asset));
 }
 
 const manifest = {
-  schemaVersion: "synmere.avatar.test-candidates.v0",
+  schemaVersion: "synmere.avatar.assets.v0",
   generatedAt: new Date().toISOString(),
   stage: AVATAR_TEST_STAGE,
   sourceOfTruth: "synmere-foundry/assets/candidates/avatar/test",
-  candidates,
+  assets,
 };
 
 await writeFile(MANIFEST_PATH, `${JSON.stringify(manifest, null, 2)}\n`);
@@ -334,11 +473,14 @@ console.log(
   JSON.stringify(
     {
       manifest: path.relative(PROJECT_ROOT, MANIFEST_PATH),
-      candidates: candidates.map((candidate) => ({
-        id: candidate.id,
-        stage: candidate.stage,
-        validationStatus: candidate.validation.status,
-        glb: candidate.glb?.path ?? null,
+      assets: assets.map((asset) => ({
+        id: asset.id,
+        stage: asset.stage,
+        validationStatus: asset.validation.status,
+        variants: asset.variants.map((variant) => ({
+          id: variant.id,
+          glb: variant.glb?.path ?? null,
+        })),
       })),
     },
     null,

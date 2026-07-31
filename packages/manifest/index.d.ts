@@ -141,6 +141,7 @@ export type AssetReleaseManifest = {
   readonly version: string;
   readonly releaseTag: string;
   readonly url: string;
+  readonly thumbnails: readonly AssetThumbnail[];
   readonly sha256: string;
   readonly meshName: string;
   readonly materialNames: readonly string[];
@@ -153,6 +154,20 @@ export type AssetReleaseManifest = {
   readonly sourceRevision: string;
   readonly sourceBlendSha256: string;
   readonly promotionRecordId: string;
+};
+
+export type AssetThumbnail = {
+  readonly id: string;
+  readonly label: string;
+  readonly kind: string;
+  readonly source: "blender-render" | "three-render" | "placeholder" | "manual";
+  readonly path: string;
+  readonly publicPath?: string;
+  readonly width: number;
+  readonly height: number;
+  readonly sha256?: string;
+  readonly isPlaceholder?: boolean;
+  readonly description?: string;
 };
 
 export declare const ASSET_RELEASES: readonly AssetReleaseManifest[];

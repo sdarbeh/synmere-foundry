@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Test Head asset preview placeholder">
+  <rect width="512" height="512" rx="96" fill="#f3f2ef"/>
+  <circle cx="256" cy="214" r="112" fill="#4d4fa2" opacity="0.16"/>
+  <path d="M166 331c20-48 52-72 90-72s70 24 90 72" fill="none" stroke="#4d4fa2" stroke-width="32" stroke-linecap="round"/>
+  <path d="M182 206c18-60 55-92 110-92 44 0 80 19 108 56" fill="none" stroke="#4d4fa2" stroke-width="26" stroke-linecap="round"/>
+  <text x="256" y="414" text-anchor="middle" fill="#1b1d23" font-family="Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="32" font-weight="700">Test Head</text>
+</svg>

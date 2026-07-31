@@ -34,6 +34,10 @@ Every app-facing asset record also exposes a Foundry stage:
 Stage is separate from validation status. See
 [asset-stages.md](docs/asset-stages.md).
 
+Avatar assets use the same stage vocabulary at the authored asset-family level.
+Renderable options inside an avatar asset are generic variants; variant labels
+such as `Male` or `Female` are asset-specific data, not schema-level categories.
+
 The product consumes those packages from `node_modules`; it does not create or
 modify asset records, manifests, schemas, or Three.js asset adapters.
 

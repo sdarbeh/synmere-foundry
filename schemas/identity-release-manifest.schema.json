@@ -12,6 +12,7 @@
     "stage",
     "releaseTag",
     "url",
+    "thumbnails",
     "sha256",
     "meshName",
     "materialNames",
@@ -49,6 +50,12 @@
     "url": {
       "type": "string",
       "pattern": "\\.glb$"
+    },
+    "thumbnails": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/thumbnail"
+      }
     },
     "sha256": {
       "type": "string",
@@ -149,6 +156,65 @@
     },
     "releaseMetadata": {
       "type": "object"
+    }
+  },
+  "$defs": {
+    "thumbnail": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "label",
+        "kind",
+        "source",
+        "path",
+        "width",
+        "height"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "kind": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source": {
+          "enum": ["blender-render", "three-render", "placeholder", "manual"]
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "publicPath": {
+          "type": "string",
+          "minLength": 1
+        },
+        "width": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "height": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "isPlaceholder": {
+          "type": "boolean"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
     }
   }
 }

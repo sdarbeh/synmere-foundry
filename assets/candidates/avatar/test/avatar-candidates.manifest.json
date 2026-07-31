@@ -1,159 +1,226 @@
 {
-  "schemaVersion": "synmere.avatar.test-candidates.v0",
-  "generatedAt": "2026-07-30T05:28:47.718Z",
+  "schemaVersion": "synmere.avatar.assets.v0",
+  "generatedAt": "2026-07-31T01:17:47.075Z",
   "stage": "dev",
   "sourceOfTruth": "synmere-foundry/assets/candidates/avatar/test",
-  "candidates": [
+  "assets": [
     {
-      "id": "synmere.avatar.test-head-male",
-      "label": "Male",
+      "id": "synmere.avatar.test-head",
+      "label": "Test Head",
+      "description": "Authored avatar head family for static rendering and adapter readiness checks.",
       "stage": "dev",
+      "thumbnails": [
+        {
+          "id": "preview-placeholder",
+          "label": "Preview placeholder",
+          "kind": "preview",
+          "source": "placeholder",
+          "path": "assets/candidates/avatar/test/review/thumbnails/test-head-preview.svg",
+          "publicPath": "/models/avatar/test/thumbnails/test-head-preview.svg",
+          "width": 512,
+          "height": 512,
+          "sha256": "90894d2db49c326b551f85023ccc07fe0bb8ed30bb6a58bbf5e36d4c97328068",
+          "isPlaceholder": true,
+          "description": "Generated placeholder thumbnail for the avatar asset family until review renders are available."
+        }
+      ],
       "source": {
-        "path": "assets/candidates/avatar/test/original/test-head-male.fbx",
-        "sha256": "25c00ca406301fa7be1b0c8f4aca519c8e5466be4a7b231974e0304f19e3a060",
-        "sizeBytes": 1285424,
-        "originalFormat": "FBX",
         "license": "unknown",
         "source": "unknown",
         "authorVendor": "unknown"
       },
-      "glb": {
-        "path": "assets/candidates/avatar/test/glb/test-head-male.glb",
-        "publicPath": "/models/avatar/test/test-head-male.glb",
-        "sha256": "6799018f6ccf9dc507a7e70b437e5f85bfb3f5497ecfa22998dcc9b245b6c734",
-        "sizeBytes": 6197228
-      },
-      "review": {
-        "path": "assets/candidates/avatar/test/review/male",
-        "renders": [],
-        "report": "assets/candidates/avatar/test/review/male/conversion-report.json"
-      },
-      "inspection": {
-        "armatureNames": [],
-        "bounds": {
-          "maximum": [
-            0.7851585149765015,
-            -2.396925449371338,
-            1.1746200323104858
-          ],
-          "minimum": [
-            -0.7851585149765015,
-            -5.159185409545898,
-            -1.0034648180007935
-          ],
-          "size": [
-            1.570317029953003,
-            2.7622599601745605,
-            2.1780848503112793
-          ]
-        },
-        "materialNames": [
-          "Male_Base",
-          "Male_beanie",
-          "Male_eyeplacement"
-        ],
-        "materialSlotCount": 3,
-        "meshCount": 3,
-        "meshNames": [
-          "Male_Base",
-          "Male_beanie",
-          "Male_eyeplacement"
-        ],
-        "objectNames": [
-          "",
-          "Male_Base",
-          "Male_beanie",
-          "Male_eyeplacement"
-        ],
-        "shapeKeyObjectNames": []
-      },
       "validation": {
         "status": "needs-review",
         "notes": [
-          "Dev-stage avatar candidate. Not promoted or release-ready.",
+          "Dev-stage avatar asset family. Not promoted or release-ready.",
+          "Variant labels are generic authored options, not schema-level categories.",
           "License/source metadata is unknown and must be resolved before product use.",
-          "Adapter bindings remain provisional until morph or rig controls are verified.",
-          "Blender conversion failed: Blender exited with code 139.",
-          "Used Three.js FBXLoader/GLTFExporter fallback for dev-stage GLB visibility."
+          "Adapter bindings remain provisional until morph or rig controls are verified."
         ]
-      }
-    },
-    {
-      "id": "synmere.avatar.test-head-female",
-      "label": "Female",
-      "stage": "dev",
-      "source": {
-        "path": "assets/candidates/avatar/test/original/test-head-female.fbx",
-        "sha256": "8f4946d18de186b10738c61551357e39108a7b8346b7320891af65063682fbf8",
-        "sizeBytes": 1349152,
-        "originalFormat": "FBX",
-        "license": "unknown",
-        "source": "unknown",
-        "authorVendor": "unknown"
       },
-      "glb": {
-        "path": "assets/candidates/avatar/test/glb/test-head-female.glb",
-        "publicPath": "/models/avatar/test/test-head-female.glb",
-        "sha256": "ed0a5cbad66d594d0ae3101eb191a01338f92529374c6df183e2f72e59396169",
-        "sizeBytes": 6314424
-      },
-      "review": {
-        "path": "assets/candidates/avatar/test/review/female",
-        "renders": [],
-        "report": "assets/candidates/avatar/test/review/female/conversion-report.json"
-      },
-      "inspection": {
-        "armatureNames": [],
-        "bounds": {
-          "maximum": [
-            0.7520434856414795,
-            -2.5530154705047607,
-            0.8734591007232666
+      "variants": [
+        {
+          "id": "male",
+          "label": "Male",
+          "description": "Masculine authored headform used to inspect avatar rendering and adapter readiness.",
+          "thumbnails": [
+            {
+              "id": "preview-placeholder",
+              "label": "Preview placeholder",
+              "kind": "preview",
+              "source": "placeholder",
+              "path": "assets/candidates/avatar/test/review/thumbnails/test-head-male-preview.svg",
+              "publicPath": "/models/avatar/test/thumbnails/test-head-male-preview.svg",
+              "width": 512,
+              "height": 512,
+              "sha256": "2cf690aaa9efcd8e22ce07509ff0bdd11d695cfb803200a1f819c16eeef3eee8",
+              "isPlaceholder": true,
+              "description": "Generated placeholder thumbnail until avatar review renders are available."
+            }
           ],
-          "minimum": [
-            -0.7225031852722168,
-            -5.010668754577637,
-            -0.9863856434822083
-          ],
-          "size": [
-            1.4745466709136963,
-            2.457653284072876,
-            1.8598447442054749
-          ]
+          "source": {
+            "path": "assets/candidates/avatar/test/original/test-head-male.fbx",
+            "sha256": "25c00ca406301fa7be1b0c8f4aca519c8e5466be4a7b231974e0304f19e3a060",
+            "sizeBytes": 1285424,
+            "originalFormat": "FBX",
+            "license": "unknown",
+            "source": "unknown",
+            "authorVendor": "unknown"
+          },
+          "glb": {
+            "path": "assets/candidates/avatar/test/glb/test-head-male.glb",
+            "publicPath": "/models/avatar/test/test-head-male.glb",
+            "sha256": "6799018f6ccf9dc507a7e70b437e5f85bfb3f5497ecfa22998dcc9b245b6c734",
+            "sizeBytes": 6197228
+          },
+          "review": {
+            "path": "assets/candidates/avatar/test/review/male",
+            "renders": [],
+            "report": "assets/candidates/avatar/test/review/male/conversion-report.json"
+          },
+          "inspection": {
+            "armatureNames": [],
+            "bounds": {
+              "maximum": [
+                0.7851585149765015,
+                -2.396925449371338,
+                1.1746200323104858
+              ],
+              "minimum": [
+                -0.7851585149765015,
+                -5.159185409545898,
+                -1.0034648180007935
+              ],
+              "size": [
+                1.570317029953003,
+                2.7622599601745605,
+                2.1780848503112793
+              ]
+            },
+            "materialNames": [
+              "Male_Base",
+              "Male_beanie",
+              "Male_eyeplacement"
+            ],
+            "materialSlotCount": 3,
+            "meshCount": 3,
+            "meshNames": [
+              "Male_Base",
+              "Male_beanie",
+              "Male_eyeplacement"
+            ],
+            "objectNames": [
+              "",
+              "Male_Base",
+              "Male_beanie",
+              "Male_eyeplacement"
+            ],
+            "shapeKeyObjectNames": []
+          },
+          "validation": {
+            "status": "needs-review",
+            "notes": [
+              "Dev-stage avatar variant. Not promoted or release-ready.",
+              "License/source metadata is unknown and must be resolved before product use.",
+              "Adapter bindings remain provisional until morph or rig controls are verified.",
+              "Blender conversion failed: Blender exited with code 139.",
+              "Used Three.js FBXLoader/GLTFExporter fallback for dev-stage GLB visibility."
+            ]
+          }
         },
-        "materialNames": [
-          "Female_Base",
-          "Female_beanie",
-          "Female_eyeplacement",
-          "Female_hair_2"
-        ],
-        "materialSlotCount": 4,
-        "meshCount": 4,
-        "meshNames": [
-          "Female_Base",
-          "Female_beanie",
-          "Female_eyeplacement",
-          "Female_hair_2"
-        ],
-        "objectNames": [
-          "",
-          "Female_Base",
-          "Female_beanie",
-          "Female_eyeplacement",
-          "Female_hair_2"
-        ],
-        "shapeKeyObjectNames": []
-      },
-      "validation": {
-        "status": "needs-review",
-        "notes": [
-          "Dev-stage avatar candidate. Not promoted or release-ready.",
-          "License/source metadata is unknown and must be resolved before product use.",
-          "Adapter bindings remain provisional until morph or rig controls are verified.",
-          "Blender conversion failed: Blender exited with code 139.",
-          "Used Three.js FBXLoader/GLTFExporter fallback for dev-stage GLB visibility."
-        ]
-      }
+        {
+          "id": "female",
+          "label": "Female",
+          "description": "Feminine authored headform used to inspect avatar rendering and adapter readiness.",
+          "thumbnails": [
+            {
+              "id": "preview-placeholder",
+              "label": "Preview placeholder",
+              "kind": "preview",
+              "source": "placeholder",
+              "path": "assets/candidates/avatar/test/review/thumbnails/test-head-female-preview.svg",
+              "publicPath": "/models/avatar/test/thumbnails/test-head-female-preview.svg",
+              "width": 512,
+              "height": 512,
+              "sha256": "3ac32f14f6b4e0f43d8cda89e779055c69bf2c522a317cdc3f84b5071e4edfff",
+              "isPlaceholder": true,
+              "description": "Generated placeholder thumbnail until avatar review renders are available."
+            }
+          ],
+          "source": {
+            "path": "assets/candidates/avatar/test/original/test-head-female.fbx",
+            "sha256": "8f4946d18de186b10738c61551357e39108a7b8346b7320891af65063682fbf8",
+            "sizeBytes": 1349152,
+            "originalFormat": "FBX",
+            "license": "unknown",
+            "source": "unknown",
+            "authorVendor": "unknown"
+          },
+          "glb": {
+            "path": "assets/candidates/avatar/test/glb/test-head-female.glb",
+            "publicPath": "/models/avatar/test/test-head-female.glb",
+            "sha256": "ed0a5cbad66d594d0ae3101eb191a01338f92529374c6df183e2f72e59396169",
+            "sizeBytes": 6314424
+          },
+          "review": {
+            "path": "assets/candidates/avatar/test/review/female",
+            "renders": [],
+            "report": "assets/candidates/avatar/test/review/female/conversion-report.json"
+          },
+          "inspection": {
+            "armatureNames": [],
+            "bounds": {
+              "maximum": [
+                0.7520434856414795,
+                -2.5530154705047607,
+                0.8734591007232666
+              ],
+              "minimum": [
+                -0.7225031852722168,
+                -5.010668754577637,
+                -0.9863856434822083
+              ],
+              "size": [
+                1.4745466709136963,
+                2.457653284072876,
+                1.8598447442054749
+              ]
+            },
+            "materialNames": [
+              "Female_Base",
+              "Female_beanie",
+              "Female_eyeplacement",
+              "Female_hair_2"
+            ],
+            "materialSlotCount": 4,
+            "meshCount": 4,
+            "meshNames": [
+              "Female_Base",
+              "Female_beanie",
+              "Female_eyeplacement",
+              "Female_hair_2"
+            ],
+            "objectNames": [
+              "",
+              "Female_Base",
+              "Female_beanie",
+              "Female_eyeplacement",
+              "Female_hair_2"
+            ],
+            "shapeKeyObjectNames": []
+          },
+          "validation": {
+            "status": "needs-review",
+            "notes": [
+              "Dev-stage avatar variant. Not promoted or release-ready.",
+              "License/source metadata is unknown and must be resolved before product use.",
+              "Adapter bindings remain provisional until morph or rig controls are verified.",
+              "Blender conversion failed: Blender exited with code 139.",
+              "Used Three.js FBXLoader/GLTFExporter fallback for dev-stage GLB visibility."
+            ]
+          }
+        }
+      ]
     }
   ]
 }

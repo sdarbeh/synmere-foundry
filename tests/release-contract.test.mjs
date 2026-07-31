@@ -78,6 +78,7 @@ test("the Foundry-owned manifest package matches the current release", async () 
   assert.equal(identityShell.version, currentManifest.version);
   assert.equal(identityShell.stage, currentManifest.stage);
   assert.equal(identityShell.sha256, currentManifest.sha256);
+  assert.deepEqual(identityShell.thumbnails, currentManifest.thumbnails);
   assert.equal(
     identityShellModule.asset.version,
     currentModuleManifest.asset.version,
@@ -122,7 +123,7 @@ test("the Foundry-owned manifest package exposes every loadable shell release", 
   assert.equal(ASSET_RELEASES.length, IDENTITY_SHELL_RELEASES.length);
 });
 
-test("avatar test candidates expose a debug-only asset stage", async () => {
+test("avatar test assets expose a debug-only stage with generic variants", async () => {
   const avatarCandidateManifest = JSON.parse(
     await readFile(
       path.join(
@@ -133,12 +134,54 @@ test("avatar test candidates expose a debug-only asset stage", async () => {
     ),
   );
 
+  assert.equal(avatarCandidateManifest.schemaVersion, "synmere.avatar.assets.v0");
   assert.equal(avatarCandidateManifest.stage, "dev");
   assert.equal("status" in avatarCandidateManifest, false);
-  avatarCandidateManifest.candidates.forEach((candidate) => {
-    assert.equal(candidate.stage, "dev");
-    assert.equal("status" in candidate, false);
-    assert.equal(candidate.validation.status, "needs-review");
+  assert.equal(Array.isArray(avatarCandidateManifest.assets), true);
+  assert.equal(avatarCandidateManifest.assets.length, 1);
+
+  avatarCandidateManifest.assets.forEach((asset) => {
+    assert.equal(asset.stage, "dev");
+    assert.equal(typeof asset.description, "string");
+    assert.equal(asset.description.length > 0, true);
+    assert.equal(Array.isArray(asset.thumbnails), true);
+    assert.equal(asset.thumbnails.length > 0, true);
+    asset.thumbnails.forEach((thumbnail) => {
+      assert.equal(typeof thumbnail.id, "string");
+      assert.equal(typeof thumbnail.source, "string");
+      assert.equal(typeof thumbnail.path, "string");
+      assert.equal(thumbnail.width > 0, true);
+      assert.equal(thumbnail.height > 0, true);
+    });
+    assert.equal("status" in asset, false);
+    assert.equal(asset.validation.status, "needs-review");
+    assert.equal(Array.isArray(asset.variants), true);
+    assert.equal(asset.variants.length > 0, true);
+
+    const variantIds = new Set();
+    asset.variants.forEach((variant) => {
+      assert.equal(typeof variant.id, "string");
+      assert.equal(variant.id.length > 0, true);
+      assert.equal(typeof variant.description, "string");
+      assert.equal(variant.description.length > 0, true);
+      assert.equal(variantIds.has(variant.id), false);
+      variantIds.add(variant.id);
+      assert.equal("stage" in variant, false);
+      assert.equal("status" in variant, false);
+      assert.equal(variant.validation.status, "needs-review");
+      assert.equal(typeof variant.glb.publicPath, "string");
+      assert.equal(Array.isArray(variant.thumbnails), true);
+      assert.equal(variant.thumbnails.length > 0, true);
+      variant.thumbnails.forEach((thumbnail) => {
+        assert.equal(typeof thumbnail.id, "string");
+        assert.equal(typeof thumbnail.source, "string");
+        assert.equal(typeof thumbnail.path, "string");
+        assert.equal(typeof thumbnail.sha256, "string");
+        assert.equal(thumbnail.sha256.length, 64);
+        assert.equal(thumbnail.width > 0, true);
+        assert.equal(thumbnail.height > 0, true);
+      });
+    });
   });
 });
 

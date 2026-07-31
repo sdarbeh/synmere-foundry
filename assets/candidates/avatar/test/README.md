@@ -5,8 +5,9 @@ Stage: `dev`
 Validation status: `needs-review`
 
 This folder is a temporary authored avatar intake area for testing Synmere's
-avatar adapter path. These assets are not promoted or used as IdentityShell
-replacements.
+avatar adapter path. The current test record is one avatar asset family with
+generic authored variants. These assets are not promoted or used as
+IdentityShell replacements.
 
 ## Files
 
@@ -21,14 +22,33 @@ replacements.
 
 | Field | Value |
 | --- | --- |
-| Asset name | Test head male / test head female |
+| Asset name | Test Head |
+| Variants | Male, Female |
 | Source | unknown |
 | Author/vendor | unknown |
 | License | unknown |
 | Download date | 2026-07-30 |
 | Original format | FBX |
+| Thumbnail source | placeholder |
 | Current use | Avatar adapter test candidate |
 | Test manifest | `avatar-candidates.manifest.json` |
+
+## Manifest shape
+
+`avatar-candidates.manifest.json` uses the grouped avatar asset shape:
+
+```text
+AvatarAsset
+└── AvatarAssetVariant[]
+```
+
+`Test Head` owns the Foundry lifecycle `stage`. `Male` and `Female` are generic
+variant labels for this asset only. Future variants may be named for style,
+material, topology, LOD, expression, or other authored options.
+
+Each asset and variant exposes `description` and `thumbnails`. Current
+thumbnails are generated SVG placeholders because Blender review renders are
+blocked locally. Placeholder thumbnails are not visual validation evidence.
 
 ## Intake notes
 
@@ -47,7 +67,7 @@ replacements.
 
 ## Static inspection
 
-| Candidate | Meshes | Materials | Shape keys | Armatures |
+| Variant | Meshes | Materials | Shape keys | Armatures |
 | --- | ---: | ---: | --- | --- |
 | Male | 3 | 3 | none detected | none detected |
 | Female | 4 | 4 | none detected | none detected |
@@ -83,7 +103,7 @@ Likely unsupported until deeper inspection:
 
 1. Verify source and license.
 2. Inspect topology, materials, rig controls, and shape keys in Blender.
-3. Confirm whether male/female variants share topology or require separate
+3. Confirm whether current variants share topology or require separate
    adapters.
 4. Generate neutral front, three-quarter, side, and wireframe review renders.
 5. Decide whether these remain test assets, become demo avatar candidates, or
