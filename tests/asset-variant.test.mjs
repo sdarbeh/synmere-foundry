@@ -7,6 +7,7 @@ import {
   assertAppResolvablePublicPath,
   assertFoundryAssetVariants,
 } from "../scripts/release/asset-variant.mjs";
+import { createShellCandidateManifest } from "../scripts/shell/candidate-manifest.mjs";
 
 const checksum = "a".repeat(64);
 
@@ -158,19 +159,35 @@ test("validates thumbnail source, checksum, and unique ids", () => {
 });
 
 test("the current shell candidate owns its review metadata and variants", async () => {
-  const [candidateManifest, assetModule] = await Promise.all([
-    readFile(
-      path.join(
-        process.cwd(),
-        "assets/candidates/current/identity-shell-v1.manifest.json",
-      ),
-      "utf8",
-    ).then(JSON.parse),
+  const [assetModule, releaseManifest] = await Promise.all([
     readFile(
       path.join(process.cwd(), "manifests/identity-shell.module.json"),
       "utf8",
     ).then(JSON.parse),
+    readFile(
+      path.join(process.cwd(), "manifests/identity-shell.current.json"),
+      "utf8",
+    ).then(JSON.parse),
   ]);
+  const candidateManifest = createShellCandidateManifest({
+    assetModule,
+    blenderVersion: "Blender test",
+    candidateContract: {
+      materialName: "IdentityCeramic",
+      meshName: "IdentityShell",
+      morphTargetNames: releaseManifest.morphTargetNames,
+    },
+    candidatePath: "assets/candidates/current/identity-shell-v1.glb",
+    candidateSha256: checksum,
+    exportedAt: "2026-08-05T00:00:00.000Z",
+    pipelineVersion: "1.0.0",
+    productionExtras: {
+      assetId: releaseManifest.assetId,
+      topologyVersion: releaseManifest.topologyVersion,
+    },
+    sourceBlendPath: "assets/source/identity-shell/identity-shell-v1.blend",
+    sourceBlendSha256: checksum,
+  });
 
   assert.equal(candidateManifest.stage, "candidate");
   assert.equal(candidateManifest.assetId, "synmere-identity-shell-v1");

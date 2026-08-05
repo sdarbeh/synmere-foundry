@@ -29,7 +29,7 @@ import {
   sha256File,
   writeGlb,
 } from "./glb.mjs";
-import { createFoundryParameterPresetVariants } from "../release/asset-variant.mjs";
+import { createShellCandidateManifest } from "./candidate-manifest.mjs";
 
 const runBlender = () => {
   const result = spawnSync(
@@ -115,49 +115,18 @@ const candidateContract = getGlbContract(
   await readGlb(CANDIDATE_GLB_PATH),
   EXPECTED_MESH_NAME,
 );
-const variants = createFoundryParameterPresetVariants(assetModule.presets.shape);
-const defaultVariantId = variants.find((variant) => {
-  return variant.presentation.parameterPresetId === "baseline";
-})?.id;
-if (!defaultVariantId) {
-  throw new Error("Candidate asset module must define the baseline variant.");
-}
-const manifest = {
-  schemaVersion: SHELL_ASSET_PIPELINE_VERSION,
-  assetSchemaVersion: SHELL_ASSET_PIPELINE_VERSION,
-  assetId: productionExtras.assetId,
-  assetName: assetModule.asset.name,
-  displayName: `${assetModule.asset.displayName} Candidate`,
-  version: assetModule.asset.version,
-  topologyVersion: productionExtras.topologyVersion,
-  stage: "candidate",
-  validationStatus: "needs-review",
-  thumbnails: [],
-  defaultVariantId,
-  variants,
-  source: path.relative(process.cwd(), SOURCE_BLEND_PATH),
-  candidate: path.relative(process.cwd(), CANDIDATE_GLB_PATH),
+const manifest = createShellCandidateManifest({
+  assetModule,
   blenderVersion,
-  sourceBlendSha256,
+  candidateContract,
+  candidatePath: path.relative(process.cwd(), CANDIDATE_GLB_PATH),
   candidateSha256: await sha256File(CANDIDATE_GLB_PATH),
   exportedAt: new Date().toISOString(),
-  exportSettings: {
-    format: "GLB",
-    selectionOnly: true,
-    yUp: true,
-    applyTransforms: false,
-    materials: true,
-    morphTargets: true,
-    morphNormals: "recomputed-after-topology-safe-export",
-    sharedAccessors: true,
-    animations: false,
-    skins: false,
-    cameras: false,
-    lights: false,
-    extras: true,
-  },
-  contract: candidateContract,
-};
+  pipelineVersion: SHELL_ASSET_PIPELINE_VERSION,
+  productionExtras,
+  sourceBlendPath: path.relative(process.cwd(), SOURCE_BLEND_PATH),
+  sourceBlendSha256,
+});
 await writeFile(
   CANDIDATE_MANIFEST_PATH,
   `${JSON.stringify(manifest, null, 2)}\n`,
