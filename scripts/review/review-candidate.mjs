@@ -30,7 +30,7 @@ const SCRIPT_DIRECTORY = path.dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = path.resolve(SCRIPT_DIRECTORY, "../..");
 const SYNMERE_ROOT =
   process.env.SYNMERE_PRODUCT_ROOT ?? path.resolve(PROJECT_ROOT, "../synmere");
-const REVIEW_ROUTE = "/labs/shell?asset=candidate";
+const REVIEW_ROUTE = "/labs/shell/candidate";
 const EXPORT_SCRIPT = path.join(
   PROJECT_ROOT,
   "scripts/shell/export-candidate.mjs",
@@ -302,6 +302,17 @@ if (status.export === "passed" && status.productionGuard === "passed") {
     if (status.validation !== "passed" || status.morphValidation !== "passed") {
       errors.push("Candidate validation report contains a failed gate.");
     }
+    candidateManifest = {
+      ...candidateManifest,
+      validationStatus:
+        status.validation === "passed" && status.morphValidation === "passed"
+          ? "passed"
+          : "blocked",
+    };
+    await writeFile(
+      CANDIDATE_MANIFEST_PATH,
+      `${JSON.stringify(candidateManifest, null, 2)}\n`,
+    );
     const morph = validationReport.globalAssetSafetyValidation;
     console.log(
       `      Morph states: ${morph.sampledStates} · inverted: ${morph.invertedStateCount} · degenerate: ${morph.degenerateStateCount}`,
@@ -345,10 +356,15 @@ if (status.validation === "passed" && status.morphValidation === "passed") {
           ...process.env,
           SYNMERE_NEXT_DIST_DIR: PRODUCT_DIST_DIRECTORY_NAME,
           SYNMERE_ASSET_REVIEW_ENABLED: "true",
-          SYNMERE_MODEL_LAB_CANDIDATE_URL: candidateServer.url,
-          SYNMERE_MODEL_LAB_CANDIDATE_MODULE_URL: candidateServer.moduleUrl,
-          SYNMERE_MODEL_LAB_CANDIDATE_SHA256: candidateManifest.candidateSha256,
-          SYNMERE_MODEL_LAB_CANDIDATE_MODULE_SHA256:
+          SYNMERE_SHELL_LAB_CANDIDATE_URL: candidateServer.url,
+          SYNMERE_SHELL_LAB_CANDIDATE_MANIFEST_URL:
+            candidateServer.manifestUrl,
+          SYNMERE_SHELL_LAB_CANDIDATE_MODULE_URL: candidateServer.moduleUrl,
+          SYNMERE_SHELL_LAB_CANDIDATE_SHA256: candidateManifest.candidateSha256,
+          SYNMERE_SHELL_LAB_CANDIDATE_MANIFEST_SHA256: await sha256File(
+            CANDIDATE_MANIFEST_PATH,
+          ),
+          SYNMERE_SHELL_LAB_CANDIDATE_MODULE_SHA256:
             candidateModuleManifestSha256,
         },
         stdio: ["ignore", "pipe", "pipe"],
@@ -371,6 +387,7 @@ if (status.validation === "passed" && status.morphValidation === "passed") {
     console.log("ready");
     console.log(`      Model Lab: ${modelLabUrl}`);
     console.log(`      Candidate asset: ${candidateServer.url}`);
+    console.log(`      Candidate manifest: ${candidateServer.manifestUrl}`);
     console.log(`      Candidate module: ${candidateServer.moduleUrl}`);
 
     const playwrightArguments = [

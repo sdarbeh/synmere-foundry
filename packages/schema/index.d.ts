@@ -11,6 +11,55 @@ export type SynmereStructurePreset =
 
 export type FoundryAssetStage = "dev" | "candidate" | "production";
 
+export declare const FOUNDRY_ASSET_VARIANT_PRESENTATION_TYPE: {
+  readonly GLB: "glb";
+  readonly PARAMETER_PRESET: "parameter-preset";
+};
+
+export type FoundryAssetThumbnail = {
+  id: string;
+  label: string;
+  kind: string;
+  source: "blender-render" | "three-render" | "placeholder" | "manual";
+  path: string;
+  publicPath?: string;
+  width: number;
+  height: number;
+  sha256?: string;
+  isPlaceholder?: boolean;
+  description?: string;
+};
+
+export type FoundryGlbArtifact = {
+  publicPath: string;
+  sha256: string;
+  sizeBytes: number;
+};
+
+export type FoundryAssetVariantPresentation =
+  | {
+      type: "parameter-preset";
+      parameterPresetId: string;
+    }
+  | {
+      type: "glb";
+      glb: FoundryGlbArtifact;
+      modulePublicPath?: string;
+    };
+
+export type FoundryAssetVariant = {
+  id: string;
+  label: string;
+  description: string;
+  thumbnails: FoundryAssetThumbnail[];
+  presentation: FoundryAssetVariantPresentation;
+};
+
+export type FoundryAssetWithVariants = {
+  defaultVariantId: string;
+  variants: FoundryAssetVariant[];
+};
+
 export type FaceShellParameters = {
   faceWidth: number;
   faceLength: number;
@@ -102,7 +151,7 @@ export type CorrectiveMorphBinding = {
   }[];
 };
 
-export type ReleasedAssetManifest = {
+export type ReleasedAssetManifest = FoundryAssetWithVariants & {
   schemaVersion: string;
   assetSchemaVersion: string;
   id: string;

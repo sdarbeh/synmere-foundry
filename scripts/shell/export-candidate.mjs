@@ -9,6 +9,7 @@ import {
   CANDIDATE_DIRECTORY,
   CANDIDATE_GLB_PATH,
   CANDIDATE_MANIFEST_PATH,
+  CURRENT_MODULE_MANIFEST_PATH,
   EXPECTED_MESH_NAME,
   MAXIMUM_MORPH_EDGE_STRAIN,
   MAXIMUM_MORPH_NORMAL_DELTA,
@@ -28,6 +29,7 @@ import {
   sha256File,
   writeGlb,
 } from "./glb.mjs";
+import { createFoundryParameterPresetVariants } from "../release/asset-variant.mjs";
 
 const runBlender = () => {
   const result = spawnSync(
@@ -77,6 +79,9 @@ const getBlenderVersion = () => {
 
 await readFile(SOURCE_BLEND_PATH);
 await readFile(SOURCE_CONTRACT_PATH);
+const assetModule = JSON.parse(
+  await readFile(CURRENT_MODULE_MANIFEST_PATH, "utf8"),
+);
 await mkdir(CANDIDATE_DIRECTORY, { recursive: true });
 runBlender();
 await copyFile(SOURCE_BLEND_PATH, CANDIDATE_BLEND_PATH);
@@ -110,9 +115,26 @@ const candidateContract = getGlbContract(
   await readGlb(CANDIDATE_GLB_PATH),
   EXPECTED_MESH_NAME,
 );
+const variants = createFoundryParameterPresetVariants(assetModule.presets.shape);
+const defaultVariantId = variants.find((variant) => {
+  return variant.presentation.parameterPresetId === "baseline";
+})?.id;
+if (!defaultVariantId) {
+  throw new Error("Candidate asset module must define the baseline variant.");
+}
 const manifest = {
   schemaVersion: SHELL_ASSET_PIPELINE_VERSION,
+  assetSchemaVersion: SHELL_ASSET_PIPELINE_VERSION,
+  assetId: productionExtras.assetId,
+  assetName: assetModule.asset.name,
+  displayName: `${assetModule.asset.displayName} Candidate`,
+  version: assetModule.asset.version,
+  topologyVersion: productionExtras.topologyVersion,
   stage: "candidate",
+  validationStatus: "needs-review",
+  thumbnails: [],
+  defaultVariantId,
+  variants,
   source: path.relative(process.cwd(), SOURCE_BLEND_PATH),
   candidate: path.relative(process.cwd(), CANDIDATE_GLB_PATH),
   blenderVersion,

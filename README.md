@@ -79,7 +79,7 @@ pnpm check
 `identity-shell-v1.glb` from the canonical Blender source, validates the
 contract and all 193 global morph states, serves the candidate from
 `assets/candidates/current/`, launches Synmere Model Lab at
-`/labs/shell?asset=candidate`, runs candidate browser checks, captures
+`/labs/shell/candidate`, runs candidate browser checks, captures
 Preview, Trace, and Topology screenshots, and writes
 `assets/candidates/current/identity-shell-v1.review.json`. The review package
 also snapshots the candidate asset-module settings at
@@ -185,11 +185,13 @@ evidence, and package output all agree.
 Candidate mode is expected to review both:
 
 - the candidate GLB;
+- the candidate metadata manifest;
 - the candidate asset-module manifest.
 
-Foundry serves the module snapshot next to the candidate GLB during review, and
-Synmere exposes it through its dev-only candidate module route. Main may decide
-how to present those settings, but Foundry owns the values.
+Foundry serves both manifest snapshots next to the candidate GLB during review.
+Synmere checksum-verifies and proxies each artifact. Candidate version,
+variants, validation state, and display metadata come from the candidate
+manifest rather than the current production release.
 
 Future tuning apply wizard:
 

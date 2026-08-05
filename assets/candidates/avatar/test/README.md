@@ -39,7 +39,9 @@ IdentityShell replacements.
 
 ```text
 AvatarAsset
+├── defaultVariantId
 └── AvatarAssetVariant[]
+    └── presentation.type = glb
 ```
 
 `Test Head` owns the Foundry lifecycle `stage`. `Male` and `Female` are generic
@@ -49,6 +51,8 @@ material, topology, LOD, expression, or other authored options.
 Each asset and variant exposes `description` and `thumbnails`. Current
 thumbnails are generated SVG placeholders because Blender review renders are
 blocked locally. Placeholder thumbnails are not visual validation evidence.
+Each variant GLB is exposed through an app-resolvable `publicPath`; original
+download/source locations remain separate source metadata.
 
 ## Intake notes
 

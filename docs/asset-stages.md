@@ -102,21 +102,48 @@ field from app-facing shell release records or avatar asset records.
 
 ## Avatar assets and variants
 
-Avatar assets are grouped by authored asset family:
+All reviewable assets expose one parent-owned default variant and a list of
+reviewable authored presentations:
 
 ```json
 {
   "id": "synmere.avatar.test-head",
   "stage": "dev",
   "thumbnails": [],
+  "defaultVariantId": "male",
   "variants": [
-    { "id": "male", "label": "Male", "thumbnails": [] },
-    { "id": "female", "label": "Female", "thumbnails": [] }
+    {
+      "id": "male",
+      "label": "Male",
+      "thumbnails": [],
+      "presentation": {
+        "type": "glb",
+        "glb": {
+          "publicPath": "/models/avatar/test/test-head-male.glb",
+          "sha256": "<sha256>",
+          "sizeBytes": 6197228
+        }
+      }
+    }
   ]
 }
 ```
 
-Variant names are generic authored options. For the current test asset they are
-`Male` and `Female`, but future variants may represent style, material, LOD,
-expression, topology, rig, or other authored choices. Do not hard-code semantic
-meaning from a variant id or label in product code.
+`variant` means a reviewable authored presentation of an asset. Its
+presentation is explicitly one of:
+
+- `parameter-preset`: reuse the parent GLB and apply a referenced parameter
+  preset, as with IdentityShell Oval, Broad, or Round;
+- `glb`: load the variant's authored GLB, as with avatar Male or Female.
+
+Variants never carry a `default` flag. `asset.defaultVariantId` must resolve to
+exactly one variant. Variant IDs are unique within their parent asset.
+
+`FoundryGlbArtifact.publicPath` is always a browser-loadable app path. It must
+start with one `/` and cannot be a remote URL, protocol-relative URL, or parent
+directory traversal. Marketplace URLs, original download URLs, and external
+CDN locations belong in source/license metadata, never the render artifact.
+
+Variant names are generic authored options. Future variants may represent
+style, material, LOD, expression, topology, rig, or other authored choices. Do
+not hard-code semantic meaning from a variant id or label in product code.

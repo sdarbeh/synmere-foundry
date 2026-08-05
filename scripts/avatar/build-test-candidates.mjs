@@ -8,6 +8,7 @@ import {
   assertFoundryAssetValidationStatus,
   assertKnownFoundryAssetMetadata,
 } from "../release/asset-stage.mjs";
+import { assertFoundryAssetVariants } from "../release/asset-variant.mjs";
 
 const PROJECT_ROOT = path.resolve(new URL("../..", import.meta.url).pathname);
 const CANDIDATE_ROOT = path.join(
@@ -44,6 +45,7 @@ const TEST_AVATAR_ASSETS = [
       source: "unknown",
       authorVendor: "unknown",
     },
+    defaultVariantId: "male",
     variants: [
       {
         id: "male",
@@ -323,9 +325,10 @@ const buildVariant = async ({ asset, variant }) => {
       source: asset.source.source,
       authorVendor: asset.source.authorVendor,
     },
-    glb: null,
+    presentation: null,
     review: {
       path: path.relative(PROJECT_ROOT, variantReviewDirectory),
+      glbPath: path.relative(PROJECT_ROOT, glbPath),
       renders: [],
       report: path.relative(PROJECT_ROOT, reportPath),
     },
@@ -372,11 +375,13 @@ const buildVariant = async ({ asset, variant }) => {
       readFile(reportPath, "utf8").then(JSON.parse),
     ]);
 
-    output.glb = {
-      path: path.relative(PROJECT_ROOT, glbPath),
-      publicPath: `/models/avatar/test/${variant.glbFileName}`,
-      sha256: glbSha256,
-      sizeBytes: glbStats.size,
+    output.presentation = {
+      type: "glb",
+      glb: {
+        publicPath: `/models/avatar/test/${variant.glbFileName}`,
+        sha256: glbSha256,
+        sizeBytes: glbStats.size,
+      },
     };
     output.review.renders = conversionReport.renders ?? [];
     output.inspection = conversionReport.inspection ?? null;
@@ -421,11 +426,18 @@ const buildAsset = async (asset) => {
     variants.push(await buildVariant({ asset, variant }));
   }
 
+  const variantContract = {
+    defaultVariantId: asset.defaultVariantId,
+    variants,
+  };
+  assertFoundryAssetVariants(variantContract);
+
   return {
     id: asset.id,
     label: asset.label,
     description: asset.description,
     stage: asset.stage,
+    defaultVariantId: asset.defaultVariantId,
     thumbnails: [
       await writePlaceholderThumbnail({
         description:
@@ -479,7 +491,7 @@ console.log(
         validationStatus: asset.validation.status,
         variants: asset.variants.map((variant) => ({
           id: variant.id,
-          glb: variant.glb?.path ?? null,
+          glb: variant.review.glbPath,
         })),
       })),
     },

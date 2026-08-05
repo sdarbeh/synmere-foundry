@@ -24,6 +24,10 @@ import {
   normalizeIdentityShellModuleManifest,
 } from "./asset-module-manifest.mjs";
 import { writeAssetPromotionRegistry } from "./asset-promotion-registry.mjs";
+import {
+  assertFoundryAssetVariants,
+  createFoundryParameterPresetVariants,
+} from "./asset-variant.mjs";
 import { writeManifestPackage } from "./build-manifest-package.mjs";
 import {
   assertReleaseDoesNotExist,
@@ -89,7 +93,7 @@ const [
     readJson(reviewPath),
     readJson(CANDIDATE_MODULE_MANIFEST_PATH),
     sha256File(CANDIDATE_GLB_PATH),
-  sha256File(CANDIDATE_BLEND_PATH),
+    sha256File(CANDIDATE_BLEND_PATH),
 ]);
 const candidateModuleManifestSha256 = await sha256File(
   CANDIDATE_MODULE_MANIFEST_PATH,
@@ -124,10 +128,20 @@ if (
   );
 }
 
+const variants = createFoundryParameterPresetVariants(
+  candidateModuleManifest.presets.shape,
+);
 const productionManifest = {
   ...manifest,
   stage: "production",
+  defaultVariantId: manifest.defaultVariantId ?? variants[0].id,
+  variants: manifest.variants ?? variants,
 };
+assertFoundryAssetVariants(productionManifest, {
+  parameterPresetIds: candidateModuleManifest.presets.shape.map(
+    (preset) => preset.id,
+  ),
+});
 
 await mkdir(path.join(stagingDirectory, "source"), { recursive: true });
 try {
@@ -143,7 +157,10 @@ try {
     copyFile(validationPath, path.join(stagingDirectory, "validation.json")),
     copyFile(reviewPath, path.join(stagingDirectory, "model-lab-review.json")),
   ]);
-  await writeJson(path.join(stagingDirectory, "manifest.json"), productionManifest);
+  await writeJson(
+    path.join(stagingDirectory, "manifest.json"),
+    productionManifest,
+  );
   await writeJson(path.join(stagingDirectory, "checksums.json"), {
     schemaVersion: "v1",
     algorithm: "sha256",

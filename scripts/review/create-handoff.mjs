@@ -2,6 +2,8 @@ import { readFile, writeFile } from "node:fs/promises";
 
 import {
   CANDIDATE_GLB_PATH,
+  CANDIDATE_MANIFEST_PATH,
+  CANDIDATE_MODULE_MANIFEST_PATH,
   CANDIDATE_REVIEW_PATH,
 } from "../shell/asset-paths.mjs";
 import { sha256File } from "../shell/glb.mjs";
@@ -14,7 +16,13 @@ const readArgument = (name) => {
 
 const candidateUrl =
   readArgument("--candidate-url") ??
-  process.env.SYNMERE_MODEL_LAB_CANDIDATE_URL;
+  process.env.SYNMERE_SHELL_LAB_CANDIDATE_URL;
+const candidateManifestUrl =
+  readArgument("--candidate-manifest-url") ??
+  process.env.SYNMERE_SHELL_LAB_CANDIDATE_MANIFEST_URL;
+const candidateModuleUrl =
+  readArgument("--candidate-module-url") ??
+  process.env.SYNMERE_SHELL_LAB_CANDIDATE_MODULE_URL;
 const reviewEvidencePath = readArgument("--review-evidence");
 const validation = await validateCandidate();
 
@@ -38,16 +46,32 @@ if (reviewEvidencePath) {
 
 if (!candidateUrl) {
   throw new Error(
-    "Provide --candidate-url or SYNMERE_MODEL_LAB_CANDIDATE_URL.",
+    "Provide --candidate-url or SYNMERE_SHELL_LAB_CANDIDATE_URL.",
+  );
+}
+if (!candidateManifestUrl) {
+  throw new Error(
+    "Provide --candidate-manifest-url or SYNMERE_SHELL_LAB_CANDIDATE_MANIFEST_URL.",
+  );
+}
+if (!candidateModuleUrl) {
+  throw new Error(
+    "Provide --candidate-module-url or SYNMERE_SHELL_LAB_CANDIDATE_MODULE_URL.",
   );
 }
 const handoff = {
   schemaVersion: "v1",
   candidateUrl,
+  candidateManifestUrl,
+  candidateModuleUrl,
   candidateSha256: await sha256File(CANDIDATE_GLB_PATH),
+  candidateManifestSha256: await sha256File(CANDIDATE_MANIFEST_PATH),
+  candidateModuleSha256: await sha256File(CANDIDATE_MODULE_MANIFEST_PATH),
   validation: "passed",
   instructions: [
-    "Set SYNMERE_MODEL_LAB_CANDIDATE_URL to candidateUrl in the Synmere repository.",
+    "Set SYNMERE_SHELL_LAB_CANDIDATE_URL to candidateUrl in the Synmere repository.",
+    "Set SYNMERE_SHELL_LAB_CANDIDATE_MANIFEST_URL to candidateManifestUrl in the Synmere repository.",
+    "Set SYNMERE_SHELL_LAB_CANDIDATE_MODULE_URL to candidateModuleUrl in the Synmere repository.",
     "Run the Synmere Model Lab Preview, Trace, Topology, and console checks.",
     "Return signed review evidence containing this candidateSha256.",
   ],

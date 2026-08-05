@@ -79,6 +79,12 @@ test("the Foundry-owned manifest package matches the current release", async () 
   assert.equal(identityShell.stage, currentManifest.stage);
   assert.equal(identityShell.sha256, currentManifest.sha256);
   assert.deepEqual(identityShell.thumbnails, currentManifest.thumbnails);
+  assert.equal(identityShell.defaultVariantId, "baseline");
+  assert.deepEqual(identityShell.variants, currentManifest.variants);
+  assert.deepEqual(
+    identityShell.variants.map((variant) => variant.id),
+    ["baseline", "oval", "broad", "long", "round", "heart", "diamond"],
+  );
   assert.equal(
     identityShellModule.asset.version,
     currentModuleManifest.asset.version,
@@ -155,6 +161,7 @@ test("avatar test assets expose a debug-only stage with generic variants", async
     });
     assert.equal("status" in asset, false);
     assert.equal(asset.validation.status, "needs-review");
+    assert.equal(typeof asset.defaultVariantId, "string");
     assert.equal(Array.isArray(asset.variants), true);
     assert.equal(asset.variants.length > 0, true);
 
@@ -168,8 +175,10 @@ test("avatar test assets expose a debug-only stage with generic variants", async
       variantIds.add(variant.id);
       assert.equal("stage" in variant, false);
       assert.equal("status" in variant, false);
+      assert.equal("default" in variant, false);
       assert.equal(variant.validation.status, "needs-review");
-      assert.equal(typeof variant.glb.publicPath, "string");
+      assert.equal(variant.presentation.type, "glb");
+      assert.equal(typeof variant.presentation.glb.publicPath, "string");
       assert.equal(Array.isArray(variant.thumbnails), true);
       assert.equal(variant.thumbnails.length > 0, true);
       variant.thumbnails.forEach((thumbnail) => {

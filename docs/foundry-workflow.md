@@ -49,6 +49,25 @@ type FoundryAssetValidationStatus = "passed" | "needs-review" | "blocked";
 
 See [asset-stages.md](asset-stages.md) for the full stage contract.
 
+## Asset variant contract
+
+Every app-facing asset declares:
+
+```text
+asset
+  → defaultVariantId
+  → variants[]
+      → presentation.type: parameter-preset | glb
+```
+
+Shell presets are reviewable `parameter-preset` variants that reuse the parent
+GLB. Authored avatar alternatives are `glb` variants that load their own GLB.
+Both use the shared `?variant=<id>` URL contract in the client.
+
+GLB variant `publicPath` values are app-resolvable local or proxy paths. Foundry
+source and license metadata may record an original remote source, but runtime
+render artifacts must never hand arbitrary remote URLs to the browser.
+
 ## Shell asset flow
 
 The current IdentityShell source of truth is:
@@ -120,6 +139,21 @@ The review command:
 - runs candidate browser checks;
 - captures Preview, Trace, and Topology evidence;
 - writes `assets/candidates/current/identity-shell-v1.review.json`.
+
+Foundry review links target the exact candidate asset and may optionally select
+a reviewable variant:
+
+```text
+/labs/shell/<asset-id>?variant=<variant-id>
+```
+
+The review server exposes the candidate GLB, candidate metadata manifest, and
+candidate module separately. Synmere proxies and checksum-verifies all three;
+the metadata manifest remains the source of candidate version, variants,
+validation status, and display metadata.
+
+The client is responsible for applying stage visibility before loading the
+selected presentation.
 
 Review does not promote and does not write into Synmere `public/`.
 

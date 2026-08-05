@@ -31,9 +31,17 @@ const PACKAGE_BUILD_CONFIGS = {
         "Schema package must export the canonical structure presets.",
       );
       assert(
+        entry.FOUNDRY_ASSET_VARIANT_PRESENTATION_TYPE?.GLB === "glb" &&
+          entry.FOUNDRY_ASSET_VARIANT_PRESENTATION_TYPE?.PARAMETER_PRESET ===
+            "parameter-preset",
+        "Schema package must export canonical asset variant presentation types.",
+      );
+      assert(
         declarations.includes("export type FaceShellParameters") &&
-          declarations.includes("export type ReleasedAssetManifest"),
-        "Schema package declarations must expose shell parameter and release manifest types.",
+          declarations.includes("export type ReleasedAssetManifest") &&
+          declarations.includes("export type FoundryAssetVariant") &&
+          declarations.includes("export type FoundryAssetThumbnail"),
+        "Schema package declarations must expose shell, release, variant, and thumbnail types.",
       );
       assert(
         releaseSchema.$schema &&

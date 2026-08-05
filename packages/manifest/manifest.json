@@ -7,6 +7,79 @@
   "releaseTag": "identity-shell-v1.0.0",
   "url": "/models/shell/identity-shell/1.0.0/identity-shell.glb",
   "thumbnails": [],
+  "defaultVariantId": "baseline",
+  "variants": [
+    {
+      "id": "baseline",
+      "label": "Baseline",
+      "description": "Default authored/product shell reference.",
+      "thumbnails": [],
+      "presentation": {
+        "type": "parameter-preset",
+        "parameterPresetId": "baseline"
+      }
+    },
+    {
+      "id": "oval",
+      "label": "Oval",
+      "description": "Longer, softly tapered face.",
+      "thumbnails": [],
+      "presentation": {
+        "type": "parameter-preset",
+        "parameterPresetId": "oval"
+      }
+    },
+    {
+      "id": "broad",
+      "label": "Broad",
+      "description": "Broad forehead, cheeks, and jaw mass.",
+      "thumbnails": [],
+      "presentation": {
+        "type": "parameter-preset",
+        "parameterPresetId": "wide"
+      }
+    },
+    {
+      "id": "long",
+      "label": "Long",
+      "description": "Taller, narrower face.",
+      "thumbnails": [],
+      "presentation": {
+        "type": "parameter-preset",
+        "parameterPresetId": "long"
+      }
+    },
+    {
+      "id": "round",
+      "label": "Round",
+      "description": "Shorter, fuller, softer cheek structure.",
+      "thumbnails": [],
+      "presentation": {
+        "type": "parameter-preset",
+        "parameterPresetId": "soft"
+      }
+    },
+    {
+      "id": "heart",
+      "label": "Heart",
+      "description": "Wider upper face with narrower jaw and chin.",
+      "thumbnails": [],
+      "presentation": {
+        "type": "parameter-preset",
+        "parameterPresetId": "tapered"
+      }
+    },
+    {
+      "id": "diamond",
+      "label": "Diamond",
+      "description": "Pronounced cheek width with narrower forehead and jaw.",
+      "thumbnails": [],
+      "presentation": {
+        "type": "parameter-preset",
+        "parameterPresetId": "angular"
+      }
+    }
+  ],
   "sha256": "2cd5c234565e9f5cf7ff5632f011d8273b94d6ea945124239a4f1d15cbd0cc99",
   "meshName": "IdentityShell",
   "materialNames": [

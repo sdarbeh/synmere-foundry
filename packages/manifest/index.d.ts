@@ -48,6 +48,45 @@ export declare const FOUNDRY_ASSET_STAGES: readonly [
 
 export type FoundryAssetStage = (typeof FOUNDRY_ASSET_STAGES)[number];
 
+export type FoundryAssetThumbnail = {
+  readonly id: string;
+  readonly label: string;
+  readonly kind: string;
+  readonly source: "blender-render" | "three-render" | "placeholder" | "manual";
+  readonly path: string;
+  readonly publicPath?: string;
+  readonly width: number;
+  readonly height: number;
+  readonly sha256?: string;
+  readonly isPlaceholder?: boolean;
+  readonly description?: string;
+};
+
+export type FoundryGlbArtifact = {
+  readonly publicPath: string;
+  readonly sha256: string;
+  readonly sizeBytes: number;
+};
+
+export type FoundryAssetVariantPresentation =
+  | {
+      readonly type: "parameter-preset";
+      readonly parameterPresetId: string;
+    }
+  | {
+      readonly type: "glb";
+      readonly glb: FoundryGlbArtifact;
+      readonly modulePublicPath?: string;
+    };
+
+export type FoundryAssetVariant = {
+  readonly id: string;
+  readonly label: string;
+  readonly description: string;
+  readonly thumbnails: readonly FoundryAssetThumbnail[];
+  readonly presentation: FoundryAssetVariantPresentation;
+};
+
 export type AssetPromotionRecord = {
   id: string;
 
@@ -141,7 +180,9 @@ export type AssetReleaseManifest = {
   readonly version: string;
   readonly releaseTag: string;
   readonly url: string;
-  readonly thumbnails: readonly AssetThumbnail[];
+  readonly thumbnails: readonly FoundryAssetThumbnail[];
+  readonly defaultVariantId: string;
+  readonly variants: readonly FoundryAssetVariant[];
   readonly sha256: string;
   readonly meshName: string;
   readonly materialNames: readonly string[];
@@ -154,20 +195,6 @@ export type AssetReleaseManifest = {
   readonly sourceRevision: string;
   readonly sourceBlendSha256: string;
   readonly promotionRecordId: string;
-};
-
-export type AssetThumbnail = {
-  readonly id: string;
-  readonly label: string;
-  readonly kind: string;
-  readonly source: "blender-render" | "three-render" | "placeholder" | "manual";
-  readonly path: string;
-  readonly publicPath?: string;
-  readonly width: number;
-  readonly height: number;
-  readonly sha256?: string;
-  readonly isPlaceholder?: boolean;
-  readonly description?: string;
 };
 
 export declare const ASSET_RELEASES: readonly AssetReleaseManifest[];

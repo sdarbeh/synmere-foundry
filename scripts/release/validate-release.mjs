@@ -8,6 +8,7 @@ import {
   assertFoundryAssetValidationStatus,
   assertKnownFoundryAssetMetadata,
 } from "./asset-stage.mjs";
+import { assertFoundryAssetVariants } from "./asset-variant.mjs";
 import { getGlbContract, readGlb, sha256File } from "../shell/glb.mjs";
 import { assertSemanticVersion, getReleaseTag } from "./release-policy.mjs";
 
@@ -66,6 +67,10 @@ export const validateReleaseDirectory = async (
     releaseDirectory,
     "promotion-record.json",
   );
+  const moduleManifestPath = path.join(
+    releaseDirectory,
+    "module-manifest.json",
+  );
   const productionValidationPromise =
     options.requireProductionValidation === false
       ? Promise.resolve(undefined)
@@ -83,6 +88,7 @@ export const validateReleaseDirectory = async (
     sourceCandidate,
     productionValidation,
     promotionRecord,
+    moduleManifest,
     glbSha256,
     blendSha256,
   ] = await Promise.all([
@@ -94,10 +100,17 @@ export const validateReleaseDirectory = async (
     readJson(sourceCandidatePath),
     productionValidationPromise,
     promotionRecordPromise,
+    readJson(moduleManifestPath),
     sha256File(glbPath),
     sha256File(blendPath),
   ]);
   const contract = getGlbContract(glb, manifest.meshName);
+
+  assertFoundryAssetVariants(manifest, {
+    parameterPresetIds: moduleManifest.presets.shape.map(
+      (preset) => preset.id,
+    ),
+  });
 
   assertEqual(manifest.version, version, "Manifest release version");
   assertEqual(manifest.releaseTag, getReleaseTag(version), "Release tag");

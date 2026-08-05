@@ -250,7 +250,7 @@ Before replacing the current active asset, the candidate must pass:
 - protected feature review for eyelids, nose, mouth, philtrum, nostrils, and
   central brow;
 - manifest/module package rebuild and tests;
-- Synmere Labs candidate review against `/labs/shell?asset=candidate`;
+- Synmere Labs candidate review against `/labs/shell/candidate`;
 - explicit human approval before promotion.
 
 Do not use the candidate for calibration until the GLB quality pass confirms

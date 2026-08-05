@@ -9,6 +9,7 @@
       "label": "Test Head",
       "description": "Authored avatar head family for static rendering and adapter readiness checks.",
       "stage": "dev",
+      "defaultVariantId": "male",
       "thumbnails": [
         {
           "id": "preview-placeholder",
@@ -67,14 +68,17 @@
             "source": "unknown",
             "authorVendor": "unknown"
           },
-          "glb": {
-            "path": "assets/candidates/avatar/test/glb/test-head-male.glb",
-            "publicPath": "/models/avatar/test/test-head-male.glb",
-            "sha256": "6799018f6ccf9dc507a7e70b437e5f85bfb3f5497ecfa22998dcc9b245b6c734",
-            "sizeBytes": 6197228
+          "presentation": {
+            "type": "glb",
+            "glb": {
+              "publicPath": "/models/avatar/test/test-head-male.glb",
+              "sha256": "6799018f6ccf9dc507a7e70b437e5f85bfb3f5497ecfa22998dcc9b245b6c734",
+              "sizeBytes": 6197228
+            }
           },
           "review": {
             "path": "assets/candidates/avatar/test/review/male",
+            "glbPath": "assets/candidates/avatar/test/glb/test-head-male.glb",
             "renders": [],
             "report": "assets/candidates/avatar/test/review/male/conversion-report.json"
           },
@@ -156,14 +160,17 @@
             "source": "unknown",
             "authorVendor": "unknown"
           },
-          "glb": {
-            "path": "assets/candidates/avatar/test/glb/test-head-female.glb",
-            "publicPath": "/models/avatar/test/test-head-female.glb",
-            "sha256": "ed0a5cbad66d594d0ae3101eb191a01338f92529374c6df183e2f72e59396169",
-            "sizeBytes": 6314424
+          "presentation": {
+            "type": "glb",
+            "glb": {
+              "publicPath": "/models/avatar/test/test-head-female.glb",
+              "sha256": "ed0a5cbad66d594d0ae3101eb191a01338f92529374c6df183e2f72e59396169",
+              "sizeBytes": 6314424
+            }
           },
           "review": {
             "path": "assets/candidates/avatar/test/review/female",
+            "glbPath": "assets/candidates/avatar/test/glb/test-head-female.glb",
             "renders": [],
             "report": "assets/candidates/avatar/test/review/female/conversion-report.json"
           },

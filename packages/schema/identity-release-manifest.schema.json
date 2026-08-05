@@ -13,6 +13,8 @@
     "releaseTag",
     "url",
     "thumbnails",
+    "defaultVariantId",
+    "variants",
     "sha256",
     "meshName",
     "materialNames",
@@ -55,6 +57,17 @@
       "type": "array",
       "items": {
         "$ref": "#/$defs/thumbnail"
+      }
+    },
+    "defaultVariantId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "variants": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/variant"
       }
     },
     "sha256": {
@@ -213,6 +226,97 @@
         "description": {
           "type": "string",
           "minLength": 1
+        }
+      }
+    },
+    "variant": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "label",
+        "description",
+        "thumbnails",
+        "presentation"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "thumbnails": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/thumbnail"
+          }
+        },
+        "presentation": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/parameterPresetPresentation"
+            },
+            {
+              "$ref": "#/$defs/glbPresentation"
+            }
+          ]
+        }
+      }
+    },
+    "parameterPresetPresentation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "parameterPresetId"],
+      "properties": {
+        "type": {
+          "const": "parameter-preset"
+        },
+        "parameterPresetId": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "glbPresentation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "glb"],
+      "properties": {
+        "type": {
+          "const": "glb"
+        },
+        "glb": {
+          "$ref": "#/$defs/glbArtifact"
+        },
+        "modulePublicPath": {
+          "type": "string",
+          "pattern": "^/(?!/)"
+        }
+      }
+    },
+    "glbArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["publicPath", "sha256", "sizeBytes"],
+      "properties": {
+        "publicPath": {
+          "type": "string",
+          "pattern": "^/(?!/)"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "sizeBytes": {
+          "type": "integer",
+          "minimum": 1
         }
       }
     }

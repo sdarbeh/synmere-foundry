@@ -7,6 +7,7 @@ import {
   FOUNDRY_ASSET_STAGES,
   assertFoundryAssetStage,
 } from "./asset-stage.mjs";
+import { assertFoundryAssetVariants } from "./asset-variant.mjs";
 
 const readArgument = (name) => {
   const index = process.argv.indexOf(name);
@@ -115,18 +116,24 @@ export const writeManifestPackage = async (options = {}) => {
   const assetPromotions = Array.isArray(promotionRegistry)
     ? promotionRegistry
     : promotionRegistry.records;
-  const releaseManifests = await Promise.all(
+  const releaseEntries = await Promise.all(
     (await readReleaseVersions()).map(async (releaseVersion) => {
-      return JSON.parse(
-        await readFile(
-          path.join(
-            IDENTITY_SHELL_RELEASE_ROOT,
-            releaseVersion,
-            "manifest.json",
-          ),
-          "utf8",
-        ),
+      const releaseDirectory = path.join(
+        IDENTITY_SHELL_RELEASE_ROOT,
+        releaseVersion,
       );
+      const [releaseManifest, releaseModuleManifest] = await Promise.all([
+        readFile(
+          path.join(releaseDirectory, "manifest.json"),
+          "utf8",
+        ).then(JSON.parse),
+        readFile(
+          path.join(releaseDirectory, "module-manifest.json"),
+          "utf8",
+        ).then(JSON.parse),
+      ]);
+
+      return { releaseManifest, releaseModuleManifest };
     }),
   );
   if (
@@ -151,7 +158,7 @@ export const writeManifestPackage = async (options = {}) => {
   if (!Array.isArray(assetPromotions) || assetPromotions.length === 0) {
     throw new Error("The supplied Foundry promotion registry is incomplete.");
   }
-  if (!Array.isArray(releaseManifests) || releaseManifests.length === 0) {
+  if (!Array.isArray(releaseEntries) || releaseEntries.length === 0) {
     throw new Error("The Foundry release catalog is incomplete.");
   }
   if (
@@ -173,8 +180,13 @@ export const writeManifestPackage = async (options = {}) => {
       numeric: true,
     });
   };
-  const assetReleases = releaseManifests
-    .map((releaseManifest) => {
+  const assetReleases = releaseEntries
+    .map(({ releaseManifest, releaseModuleManifest }) => {
+      assertFoundryAssetVariants(releaseManifest, {
+        parameterPresetIds: releaseModuleManifest.presets.shape.map(
+          (preset) => preset.id,
+        ),
+      });
       const promotionRecord = assetPromotions.find((record) => {
         return (
           record.asset?.name === "identity-shell" &&
@@ -205,6 +217,8 @@ export const writeManifestPackage = async (options = {}) => {
         releaseTag: releaseManifest.releaseTag,
         url: releaseManifest.url,
         thumbnails: releaseManifest.thumbnails,
+        defaultVariantId: releaseManifest.defaultVariantId,
+        variants: releaseManifest.variants,
         sha256: releaseManifest.sha256,
         meshName: releaseManifest.meshName,
         materialNames: releaseManifest.materialNames,
@@ -567,6 +581,45 @@ export declare const FOUNDRY_ASSET_STAGES: readonly [
 
 export type FoundryAssetStage = (typeof FOUNDRY_ASSET_STAGES)[number];
 
+export type FoundryAssetThumbnail = {
+  readonly id: string;
+  readonly label: string;
+  readonly kind: string;
+  readonly source: "blender-render" | "three-render" | "placeholder" | "manual";
+  readonly path: string;
+  readonly publicPath?: string;
+  readonly width: number;
+  readonly height: number;
+  readonly sha256?: string;
+  readonly isPlaceholder?: boolean;
+  readonly description?: string;
+};
+
+export type FoundryGlbArtifact = {
+  readonly publicPath: string;
+  readonly sha256: string;
+  readonly sizeBytes: number;
+};
+
+export type FoundryAssetVariantPresentation =
+  | {
+      readonly type: "parameter-preset";
+      readonly parameterPresetId: string;
+    }
+  | {
+      readonly type: "glb";
+      readonly glb: FoundryGlbArtifact;
+      readonly modulePublicPath?: string;
+    };
+
+export type FoundryAssetVariant = {
+  readonly id: string;
+  readonly label: string;
+  readonly description: string;
+  readonly thumbnails: readonly FoundryAssetThumbnail[];
+  readonly presentation: FoundryAssetVariantPresentation;
+};
+
 export type AssetPromotionRecord = {
   id: string;
 
@@ -660,7 +713,9 @@ export type AssetReleaseManifest = {
   readonly version: string;
   readonly releaseTag: string;
   readonly url: string;
-  readonly thumbnails: readonly AssetThumbnail[];
+  readonly thumbnails: readonly FoundryAssetThumbnail[];
+  readonly defaultVariantId: string;
+  readonly variants: readonly FoundryAssetVariant[];
   readonly sha256: string;
   readonly meshName: string;
   readonly materialNames: readonly string[];
@@ -673,20 +728,6 @@ export type AssetReleaseManifest = {
   readonly sourceRevision: string;
   readonly sourceBlendSha256: string;
   readonly promotionRecordId: string;
-};
-
-export type AssetThumbnail = {
-  readonly id: string;
-  readonly label: string;
-  readonly kind: string;
-  readonly source: "blender-render" | "three-render" | "placeholder" | "manual";
-  readonly path: string;
-  readonly publicPath?: string;
-  readonly width: number;
-  readonly height: number;
-  readonly sha256?: string;
-  readonly isPlaceholder?: boolean;
-  readonly description?: string;
 };
 
 export declare const ASSET_RELEASES: readonly AssetReleaseManifest[];
