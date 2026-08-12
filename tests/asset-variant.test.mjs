@@ -197,7 +197,7 @@ test("a V1 shell candidate inherits the matching V1 module and metadata", async 
 
   assert.equal(candidateManifest.stage, "candidate");
   assert.equal(candidateManifest.assetId, "synmere-identity-shell-v1");
-  assert.equal(candidateManifest.displayName, "Identity Shell Candidate");
+  assert.equal(candidateManifest.displayName, "Veil Candidate");
   assert.equal(candidateManifest.version, assetModule.asset.version);
   assert.equal(candidateManifest.defaultVariantId, "baseline");
   assert.doesNotThrow(() => {

@@ -68,6 +68,15 @@ test("the Foundry-owned manifest package matches the current release", async () 
       "utf8",
     ),
   );
+  const productionReleaseManifest = JSON.parse(
+    await readFile(
+      path.join(
+        PROJECT_ROOT,
+        "assets/releases/identity-shell/2.0.0/manifest.json",
+      ),
+      "utf8",
+    ),
+  );
   const promotionRegistry = JSON.parse(
     await readFile(
       path.join(PROJECT_ROOT, "manifests/asset-promotions.json"),
@@ -76,6 +85,8 @@ test("the Foundry-owned manifest package matches the current release", async () 
   );
 
   assert.equal(identityShell.version, currentManifest.version);
+  assert.equal(identityShell.displayName, "Axiom");
+  assert.deepEqual(currentManifest, productionReleaseManifest);
   assert.equal(identityShell.stage, currentManifest.stage);
   assert.equal(identityShell.sha256, currentManifest.sha256);
   assert.deepEqual(identityShell.thumbnails, currentManifest.thumbnails);
@@ -125,6 +136,10 @@ test("the Foundry-owned manifest package exposes every loadable shell release", 
   assert.equal(
     getAssetRelease("identity-shell", "1.0.0").stage,
     "production",
+  );
+  assert.equal(
+    getAssetRelease("identity-shell", "1.0.0").displayName,
+    "Veil",
   );
   assert.deepEqual(
     ASSET_PROMOTIONS.map((promotion) => promotion.version.stage),

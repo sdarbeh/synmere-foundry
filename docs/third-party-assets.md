@@ -29,8 +29,8 @@ for offline asset inspection.
 
 FLAME 2023 Open was downloaded from the authenticated official source. The
 untouched ZIP and model remain local and gitignored. After the provenance gate
-passed, the model was used to build `identity-shell-v2.0.0`, now the current
-production base shell. `identity-shell-v1.0.0` remains an immutable rollback
+passed, the model was used to build Axiom (`identity-shell-v2.0.0`), now the
+current production base shell. Veil (`identity-shell-v1.0.0`) remains a rollback
 and the explicit Studio scan-personalization target until the V2 runtime fitting
 path is integrated.
 
@@ -53,7 +53,7 @@ filename, release label, internal model filename, source URL, size, checksum,
 license scope, attribution requirements, the original unloaded provenance gate,
 and the later production-derivative handling state. Older, academic, renamed,
 or content-mismatched variants are rejected.
-The production GLB contains the shared neutral topology and module-defined
+The Axiom GLB contains the shared neutral topology and module-defined
 morph targets; its Baseline preset and Balanced structure profile are the
 zero-weight neutral shape.
 

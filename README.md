@@ -43,7 +43,7 @@ modify asset records, manifests, schemas, or Three.js asset adapters.
 
 ## Current release
 
-`identity-shell@2.0.0` is the current production base shell:
+**Axiom** (`identity-shell@2.0.0`) is the current production base shell:
 
 - GLB SHA-256:
   `061d74dab91735f413c81e2c4e6d1726db0db95310cdd6961acc895532e47eb3`
@@ -51,7 +51,7 @@ modify asset records, manifests, schemas, or Three.js asset adapters.
 - 21 shape/profile combinations passed
 - Preview, Trace, Topology, Ceramic, and Obsidian review passed
 
-`identity-shell@1.0.0` remains an immutable rollback and the explicit Studio
+**Veil** (`identity-shell@1.0.0`) remains the rollback and explicit Studio
 scan-personalization target until the V2 runtime fitting path is integrated.
 
 ## Commands

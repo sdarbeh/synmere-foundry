@@ -133,6 +133,7 @@ const variants = createFoundryParameterPresetVariants(
 );
 const productionManifest = {
   ...manifest,
+  displayName: candidateModuleManifest.asset.displayName,
   stage: "production",
   defaultVariantId: manifest.defaultVariantId ?? variants[0].id,
   variants: manifest.variants ?? variants,

@@ -19,13 +19,15 @@ const readGlbTargetNames = async (path) => {
 };
 
 test("registers v2 as production while retaining v1 rollback", async () => {
-  const [release, production, rollback] = await Promise.all([
+  const [release, production, rollback, promotion] = await Promise.all([
     readJson("assets/releases/identity-shell/2.0.0/manifest.json"),
     readJson("manifests/identity-shell.current.json"),
     readJson("assets/releases/identity-shell/1.0.0/manifest.json"),
+    readJson("assets/releases/identity-shell/2.0.0/promotion-record.json"),
   ]);
 
   assert.equal(release.releaseTag, "identity-shell-v2.0.0");
+  assert.equal(release.displayName, "Axiom");
   assert.equal(release.stage, "production");
   assert.equal(release.topologyVersion, "flame-2023-open");
   assert.equal(release.meshName, "FLAME2023Open");
@@ -99,7 +101,25 @@ test("registers v2 as production while retaining v1 rollback", async () => {
   assert.equal(production.releaseTag, "identity-shell-v2.0.0");
   assert.equal(production.stage, "production");
   assert.equal(rollback.releaseTag, "identity-shell-v1.0.0");
+  assert.equal(rollback.displayName, "Veil");
   assert.equal(rollback.stage, "production");
+  assert.equal(promotion.asset.displayName, "Axiom");
+  assert.equal(
+    promotion.releaseNotes.summary,
+    "Axiom establishes Synmere’s new production identity-shell foundation with a complete head topology, neutral structural profiles, authored face shapes, and topology-aware inspection modes.",
+  );
+  assert.deepEqual(promotion.releaseNotes.changes, [
+    "Complete head, ears, cranium, and neck topology.",
+    "Balanced, Structured, and Soft structure profiles.",
+    "Baseline, Oval, Broad, Long, Round, Heart, and Diamond shape presets.",
+    "Preview, Trace, and Topology presentations.",
+    "Ceramic and Obsidian material support.",
+    "Topology-aware facial trace paths and persistent viewer controls.",
+  ]);
+  assert.equal(
+    promotion.releaseNotes.classification,
+    "Major release due to breaking topology, morph-contract, and fitting-contract changes.",
+  );
 });
 
 test("passes every structure and shape combination", async () => {

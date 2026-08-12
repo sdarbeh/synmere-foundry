@@ -2,7 +2,7 @@
   "schemaVersion": "asset-module-v1",
   "asset": {
     "name": "identity-shell",
-    "displayName": "Identity Shell v2",
+    "displayName": "Axiom",
     "module": "identity-shell",
     "version": "2.0.0",
     "releaseTag": "identity-shell-v2.0.0"

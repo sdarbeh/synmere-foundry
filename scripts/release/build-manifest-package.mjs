@@ -204,7 +204,7 @@ export const writeManifestPackage = async (options = {}) => {
 
       return {
         assetName: "identity-shell",
-        displayName: "Identity Shell",
+        displayName: releaseManifest.displayName,
         type: "glb",
         domain: "shell",
         module: "identity-shell",
@@ -472,6 +472,11 @@ export const assertValidAssetPromotionRecord = (record) => {
     isStringArray(record.releaseNotes.approvedViews),
     "Release note approved views are required.",
   );
+  assert(
+    record.releaseNotes.classification === undefined ||
+      isNonEmptyString(record.releaseNotes.classification),
+    "Release-note classification must be non-empty when provided.",
+  );
 
   assert(
     isRecord(record.compatibility),
@@ -717,6 +722,7 @@ export type AssetPromotionRecord = {
   releaseNotes: {
     summary: string;
     changes: string[];
+    classification?: string;
     knownIssues: string[];
     approvedViews: string[];
   };

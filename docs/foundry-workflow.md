@@ -70,14 +70,14 @@ render artifacts must never hand arbitrary remote URLs to the browser.
 
 ## Shell asset flow
 
-The current production base shell is the immutable V2 release:
+The current production base shell is Axiom, the V2 release:
 
 ```text
 assets/releases/identity-shell/2.0.0/
 ```
 
 Its licensed source model remains local and gitignored; provenance and
-attribution are tracked with the release. V1 remains the immutable rollback and
+attribution are tracked with the release. Veil (V1) remains the rollback and
 the explicit Studio scan-personalization target. Its canonical authored source
 is:
 

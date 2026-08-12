@@ -121,8 +121,17 @@ export const validateReleaseDirectory = async (
       (preset) => preset.id,
     ),
   });
+  assertEqual(
+    moduleManifest.asset.displayName,
+    manifest.displayName,
+    "Module display name",
+  );
 
   assertEqual(manifest.version, version, "Manifest release version");
+  assert(
+    typeof manifest.displayName === "string" && manifest.displayName.length > 0,
+    "Manifest display name is required.",
+  );
   assertEqual(manifest.releaseTag, getReleaseTag(version), "Release tag");
   assertFoundryAssetStage(manifest.stage);
   assertEqual(manifest.stage, "production", "Manifest asset stage");
@@ -250,6 +259,11 @@ export const validateReleaseDirectory = async (
       promotionRecord.version.stage,
       manifest.stage,
       "Promotion record asset stage",
+    );
+    assertEqual(
+      promotionRecord.asset.displayName,
+      manifest.displayName,
+      "Promotion record display name",
     );
     assertEqual(
       promotionRecord.files.productionGlbHash,

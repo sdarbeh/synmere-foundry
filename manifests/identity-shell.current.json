@@ -2,6 +2,7 @@
   "schemaVersion": "2.0.0",
   "assetSchemaVersion": "2.0.0",
   "assetId": "synmere-identity-shell-v2",
+  "displayName": "Axiom",
   "version": "2.0.0",
   "stage": "production",
   "releaseTag": "identity-shell-v2.0.0",
@@ -150,11 +151,15 @@
   },
   "releaseMetadata": {
     "classification": "major",
-    "intent": "Promote Identity Shell V2 as the production base shell with a breaking topology and fitting-contract change.",
+    "classificationNote": "Major release due to breaking topology, morph-contract, and fitting-contract changes.",
+    "intent": "Axiom establishes Synmere’s new production identity-shell foundation with a complete head topology, neutral structural profiles, authored face shapes, and topology-aware inspection modes.",
     "changes": [
-      "Shared topology for all seven shape presets and three structure profiles.",
-      "Topology-owned barycentric trace contract with shared Ceramic and Obsidian presentations.",
-      "Frozen production GLB, module, morph targets, presets, profiles, trace paths, materials, and hashes."
+      "Complete head, ears, cranium, and neck topology.",
+      "Balanced, Structured, and Soft structure profiles.",
+      "Baseline, Oval, Broad, Long, Round, Heart, and Diamond shape presets.",
+      "Preview, Trace, and Topology presentations.",
+      "Ceramic and Obsidian material support.",
+      "Topology-aware facial trace paths and persistent viewer controls."
     ],
     "excludedWork": [
       "Studio scan personalization remains explicitly routed through Identity Shell V1 until IdentityMeshFit runtime integration is complete."

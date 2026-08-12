@@ -3,9 +3,9 @@
   "algorithm": "sha256",
   "files": {
     "identity-shell.glb": "061d74dab91735f413c81e2c4e6d1726db0db95310cdd6961acc895532e47eb3",
-    "module-manifest.json": "e27de7abbfc3c0b22f7c5a67841568b1f09916c7c74a60f8f9eb0b3cb518e5cf",
+    "module-manifest.json": "6a637f6c32373a93a0020740cc8349c4a3e77078e28a4f0c18b0f16b7b9b0818",
     "combination-validation.json": "5d3bd83860ac0861c633d52454fba0347c3b16e31482699b747cf95970e2ca86",
     "trace-authoring.json": "33f50e2e687695820c9a525b66717844f99c15bf78b414e87fb1cb0b27477e54",
-    "attribution.json": "ead2ac99d0c02162b90116086dce4b739473db560c812f9f641586f72c3949cf"
+    "attribution.json": "a08348b4976581e73328fad1503a1c76affa32c92f290e0618e38d7eccb02a10"
   }
 }

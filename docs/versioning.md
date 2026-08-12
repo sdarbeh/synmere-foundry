@@ -7,6 +7,6 @@
 - **Major**: removed/renamed morphs, incompatible topology or material
   contracts, renderer contract changes, or manifest schema breaks.
 
-The current production base shell is `2.0.0`. Version `1.0.0` remains an
-immutable rollback and the Studio scan-personalization target until V2 fitting
-is integrated.
+The current production base shell is Axiom (`2.0.0`). Veil (`1.0.0`) remains
+the rollback and Studio scan-personalization target until V2 fitting is
+integrated.

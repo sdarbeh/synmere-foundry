@@ -19,6 +19,7 @@ import {
 const createPromotionFixture = () => {
   const manifest = {
     assetSchemaVersion: "1.0.0",
+    displayName: "Test Shell",
     rendererCompatibilityVersion: "1.0.0",
     releasedAt: "2026-07-24T17:10:54.191Z",
     releaseMetadata: {
@@ -83,6 +84,7 @@ test("builds a promotable identity shell asset promotion record", () => {
   const record = buildIdentityShellPromotionRecord(createPromotionFixture());
 
   assert.equal(record.asset.name, "identity-shell");
+  assert.equal(record.asset.displayName, "Test Shell");
   assert.equal(record.version.stage, "production");
   assert.equal(record.files.candidateGlbHash, "candidate-hash");
   assert.equal(record.files.productionGlbHash, "production-hash");

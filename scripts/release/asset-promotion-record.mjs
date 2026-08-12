@@ -60,18 +60,24 @@ const deriveReleaseNotes = (manifest, review) => {
     changes:
       changesFromArgs.length > 0
         ? changesFromArgs
-        : [
-            manifest.releaseMetadata?.intent,
-            manifest.releaseMetadata?.classification
-              ? `Release classification: ${manifest.releaseMetadata.classification}.`
-              : undefined,
-          ].filter(isNonEmptyString),
+        : Array.isArray(manifest.releaseMetadata?.changes) &&
+            manifest.releaseMetadata.changes.length > 0
+          ? manifest.releaseMetadata.changes
+          : [
+              manifest.releaseMetadata?.intent,
+              manifest.releaseMetadata?.classification
+                ? `Release classification: ${manifest.releaseMetadata.classification}.`
+                : undefined,
+            ].filter(isNonEmptyString),
     knownIssues:
       knownIssuesFromArgs.length > 0
         ? knownIssuesFromArgs
         : (manifest.releaseMetadata?.excludedWork ?? []).map(
             (item) => asSentence(`Excluded from this release: ${item}`),
           ),
+    ...(manifest.releaseMetadata?.classificationNote
+      ? { classification: manifest.releaseMetadata.classificationNote }
+      : {}),
     approvedViews:
       approvedViewsFromArgs.length > 0
         ? approvedViewsFromArgs
@@ -120,7 +126,7 @@ export const buildIdentityShellPromotionRecord = ({
     id: `identity-shell-v${version}-production`,
     asset: {
       name: "identity-shell",
-      displayName: "Identity Shell",
+      displayName: manifest.displayName ?? "Identity Shell",
       type: "glb",
       domain: "shell",
       module: "identity-shell",
@@ -242,6 +248,11 @@ export const assertPromotableAssetPromotionRecord = (record) => {
       record.releaseNotes.approvedViews.length > 0 &&
       record.releaseNotes.approvedViews.every(isNonEmptyString),
     "Promotion requires approved review views.",
+  );
+  assert(
+    record.releaseNotes?.classification === undefined ||
+      isNonEmptyString(record.releaseNotes.classification),
+    "Promotion release-note classification must be non-empty when provided.",
   );
   assert(
     record.compatibility?.schemaVersion === ASSET_PROMOTION_SCHEMA_VERSION,

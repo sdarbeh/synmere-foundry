@@ -2,6 +2,7 @@
   "schemaVersion": "1.0.0",
   "assetSchemaVersion": "1.0.0",
   "assetId": "synmere-identity-shell-v1",
+  "displayName": "Veil",
   "version": "1.0.0",
   "stage": "production",
   "releaseTag": "identity-shell-v1.0.0",

@@ -2,7 +2,7 @@
   "id": "identity-shell-v1.0.0-production",
   "asset": {
     "name": "identity-shell",
-    "displayName": "Identity Shell",
+    "displayName": "Veil",
     "type": "glb",
     "domain": "shell",
     "module": "identity-shell"

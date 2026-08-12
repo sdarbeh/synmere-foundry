@@ -8,6 +8,7 @@
     "schemaVersion",
     "assetSchemaVersion",
     "assetId",
+    "displayName",
     "version",
     "stage",
     "releaseTag",
@@ -35,6 +36,10 @@
       "pattern": "^\\d+\\.\\d+\\.\\d+$"
     },
     "assetId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "displayName": {
       "type": "string",
       "minLength": 1
     },

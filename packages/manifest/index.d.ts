@@ -145,6 +145,7 @@ export type AssetPromotionRecord = {
   releaseNotes: {
     summary: string;
     changes: string[];
+    classification?: string;
     knownIssues: string[];
     approvedViews: string[];
   };
