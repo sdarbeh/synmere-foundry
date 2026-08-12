@@ -1,0 +1,68 @@
+{
+  "schemaVersion": "synmere.third-party-model-provenance.v0",
+  "model": {
+    "name": "FLAME",
+    "release": "FLAME 2023 Open",
+    "containedModelFilename": "flame2023_Open.pkl",
+    "role": "dev-only internal IdentityMeshFit fitting topology"
+  },
+  "artifact": {
+    "filename": "FLAME2023Open.zip",
+    "localPath": "vendor/flame/FLAME2023Open.zip",
+    "sha256": "a6b4c3dc15d569d98136a1e548b6fe532eb2830ca12a4f0d4b3a5dba8ee87a91",
+    "sizeBytes": 47586229
+  },
+  "containedModel": {
+    "filename": "flame2023_Open.pkl",
+    "localPath": "vendor/flame/flame2023_Open.pkl",
+    "sha256": "e75a0990728ba038c7da2a420ae4396f7ddd7781366c13026066c5b24f127623",
+    "sizeBytes": 53023668
+  },
+  "source": {
+    "publisher": "Max-Planck-Gesellschaft / Max Planck Institute for Intelligent Systems",
+    "downloadsPage": "https://flame.is.tue.mpg.de/download.php",
+    "downloadUrl": "https://download.is.tue.mpg.de/download.php?domain=flame&sfile=FLAME2023Open.zip",
+    "downloadedAt": "2026-08-11T22:36:00-05:00"
+  },
+  "license": {
+    "declaredLicense": "CC-BY-4.0",
+    "termsUrl": "https://flame.is.tue.mpg.de/modellicense.html",
+    "scope": "FLAME 2023 Open only",
+    "attributionRequirements": [
+      "Give appropriate credit to Max-Planck.",
+      "Provide a link to the model license.",
+      "Indicate whether changes were made.",
+      "Cite the FLAME paper when reporting results with the model."
+    ],
+    "additionalUseRestrictions": [
+      "Do not use the model for pornographic purposes or to generate pornographic material.",
+      "Do not use the model to create fake, libelous, misleading, or defamatory content except analyses in peer-reviewed scientific research."
+    ],
+    "paper": {
+      "title": "Learning a model of facial shape and expression from 4D scans",
+      "authors": [
+        "Tianye Li",
+        "Timo Bolkart",
+        "Michael J. Black",
+        "Hao Li",
+        "Javier Romero"
+      ],
+      "venue": "ACM Transactions on Graphics (Proc. SIGGRAPH Asia)",
+      "year": 2017,
+      "url": "https://doi.org/10.1145/3130800.3130813"
+    }
+  },
+  "provenanceGate": {
+    "validatedAt": "2026-08-11T22:39:00-05:00",
+    "passed": true,
+    "loadedAtValidation": false,
+    "convertedAtValidation": false
+  },
+  "handling": {
+    "gitignored": true,
+    "loadedForSyntheticRecovery": true,
+    "firstLoadedAt": "2026-08-11T22:43:00-05:00",
+    "converted": false,
+    "productFacing": false
+  }
+}

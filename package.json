@@ -28,6 +28,9 @@
     "packages:publish": "node scripts/release/publish-packages.mjs",
     "asset:promotions": "node scripts/release/asset-promotion-registry.mjs",
     "avatar:test:build": "node scripts/avatar/build-test-candidates.mjs",
+    "identity-shell:flame:validate": "node scripts/identity-shell/validate-flame-provenance.mjs",
+    "identity-shell:trace:build": "node scripts/identity-shell/trace-contracts.mjs",
+    "identity-shell:v2:candidate": "pnpm identity-shell:flame:validate && .venv-identity-shell/bin/python scripts/identity-shell/build-v2-candidate.py && node scripts/identity-shell/trace-contracts.mjs --version 2.0.0",
     "test": "node --test tests/*.test.mjs",
     "check": "node scripts/release/validate-release.mjs 1.0.0 && node --test tests/*.test.mjs"
   }

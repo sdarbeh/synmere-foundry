@@ -1,0 +1,536 @@
+{
+  "schemaVersion": "synmere.identity-shell.trace-authoring.v2",
+  "assetId": "identity-shell-v2.0.0",
+  "referenceMesh": "FLAME2023Open",
+  "referenceStructurePresetId": "balanced",
+  "referenceShapePresetId": "baseline",
+  "surfaceOffset": 0.004,
+  "paths": [
+    {
+      "id": "left-lower-eyelid",
+      "closed": false,
+      "sampleSpacing": 0.004,
+      "corridorRings": 1,
+      "excludedVertexIndices": [3930],
+      "anchors": [
+        { "triangleIndex": 6769, "barycentric": [0, 1, 0] },
+        { "triangleIndex": 6736, "barycentric": [0, 1, 0] },
+        { "triangleIndex": 1653, "barycentric": [1, 0, 0] },
+        { "triangleIndex": 6702, "barycentric": [0, 0, 1] },
+        { "triangleIndex": 8547, "barycentric": [0, 0, 1] },
+        { "triangleIndex": 1623, "barycentric": [0, 1, 0] },
+        { "triangleIndex": 6698, "barycentric": [0, 0, 1] },
+        { "triangleIndex": 1739, "barycentric": [0, 1, 0] },
+        { "triangleIndex": 1725, "barycentric": [0, 1, 0] }
+      ]
+    },
+    {
+      "id": "left-upper-eyelid",
+      "closed": false,
+      "sampleSpacing": 0.004,
+      "corridorRings": 1,
+      "excludedVertexIndices": [3930],
+      "anchors": [
+        { "triangleIndex": 1725, "barycentric": [0, 1, 0] },
+        { "triangleIndex": 1728, "barycentric": [0, 1, 0] },
+        { "triangleIndex": 1729, "barycentric": [0, 0, 1] },
+        { "triangleIndex": 6804, "barycentric": [0, 0, 1] },
+        { "triangleIndex": 6774, "barycentric": [0, 1, 0] },
+        { "triangleIndex": 6770, "barycentric": [0, 1, 0] },
+        { "triangleIndex": 6769, "barycentric": [0, 1, 0] }
+      ]
+    },
+    {
+      "id": "right-lower-eyelid",
+      "closed": false,
+      "sampleSpacing": 0.004,
+      "corridorRings": 1,
+      "excludedVertexIndices": [3929],
+      "anchors": [
+        { "triangleIndex": 297, "barycentric": [1, 0, 0] },
+        { "triangleIndex": 315, "barycentric": [1, 0, 0] },
+        { "triangleIndex": 226, "barycentric": [0, 1, 0] },
+        { "triangleIndex": 1184, "barycentric": [0, 0, 1] },
+        { "triangleIndex": 6265, "barycentric": [0, 0, 1] },
+        { "triangleIndex": 6593, "barycentric": [1, 0, 0] },
+        { "triangleIndex": 3533, "barycentric": [0, 0, 1] },
+        { "triangleIndex": 253, "barycentric": [0, 0, 1] },
+        { "triangleIndex": 5370, "barycentric": [0, 1, 0] }
+      ]
+    },
+    {
+      "id": "right-upper-eyelid",
+      "closed": false,
+      "sampleSpacing": 0.004,
+      "corridorRings": 1,
+      "excludedVertexIndices": [3929],
+      "anchors": [
+        { "triangleIndex": 5370, "barycentric": [0, 1, 0] },
+        { "triangleIndex": 5374, "barycentric": [0, 1, 0] },
+        { "triangleIndex": 992, "barycentric": [0, 0, 1] },
+        { "triangleIndex": 307, "barycentric": [0, 1, 0] },
+        { "triangleIndex": 3799, "barycentric": [1, 0, 0] },
+        { "triangleIndex": 5404, "barycentric": [0, 0, 1] },
+        { "triangleIndex": 297, "barycentric": [1, 0, 0] }
+      ]
+    },
+    {
+      "id": "left-brow-ridge",
+      "closed": false,
+      "emphasis": "secondary",
+      "sampleSpacing": 0.0045,
+      "corridorRings": 2,
+      "regionBounds": {
+        "x": [-0.38, -0.12],
+        "y": [0.455, 0.56],
+        "z": [0.49, 0.64]
+      },
+      "anchors": [
+        {
+          "triangleIndex": 2859,
+          "barycentric": [0.48897049, 0.07613429, 0.43489522]
+        },
+        {
+          "triangleIndex": 7920,
+          "barycentric": [0.26250492, 0.47246236, 0.26503272]
+        },
+        {
+          "triangleIndex": 8786,
+          "barycentric": [0.14452218, 0.07022583, 0.78525199]
+        },
+        {
+          "triangleIndex": 3726,
+          "barycentric": [0.42948932, 0.2796736, 0.29083708]
+        },
+        {
+          "triangleIndex": 7923,
+          "barycentric": [0.71197827, 0.07693913, 0.2110826]
+        },
+        {
+          "triangleIndex": 7923,
+          "barycentric": [0.00421515, 0.6959258, 0.29985905]
+        },
+        {
+          "triangleIndex": 1802,
+          "barycentric": [0.38574118, 0.02039194, 0.59386688]
+        }
+      ]
+    },
+    {
+      "id": "right-brow-ridge",
+      "closed": false,
+      "emphasis": "secondary",
+      "sampleSpacing": 0.0045,
+      "corridorRings": 2,
+      "regionBounds": {
+        "x": [0.13, 0.38],
+        "y": [0.46, 0.56],
+        "z": [0.5, 0.64]
+      },
+      "anchors": [
+        {
+          "triangleIndex": 1318,
+          "barycentric": [0.17150354, 0.46123678, 0.36725968]
+        },
+        {
+          "triangleIndex": 2717,
+          "barycentric": [0.4691605, 0.21417381, 0.31666569]
+        },
+        {
+          "triangleIndex": 8873,
+          "barycentric": [0.92327908, 0.02449225, 0.05222866]
+        },
+        {
+          "triangleIndex": 3813,
+          "barycentric": [0.36403825, 0.32676156, 0.30920019]
+        },
+        {
+          "triangleIndex": 1325,
+          "barycentric": [0.19074254, 0.78893238, 0.02032508]
+        },
+        {
+          "triangleIndex": 6405,
+          "barycentric": [0.39336284, 0.47879507, 0.12784209]
+        },
+        {
+          "triangleIndex": 391,
+          "barycentric": [0.18333573, 0.5131249, 0.30353937]
+        }
+      ]
+    },
+    {
+      "id": "left-cheekbone",
+      "closed": false,
+      "emphasis": "secondary",
+      "sampleSpacing": 0.0045,
+      "corridorRings": 2,
+      "regionBounds": {
+        "x": [-0.49, -0.31],
+        "y": [0.16, 0.3],
+        "z": [0.34, 0.54]
+      },
+      "anchors": [
+        {
+          "triangleIndex": 7863,
+          "barycentric": [0.29523096, 0.50989075, 0.19487828]
+        },
+        {
+          "triangleIndex": 3795,
+          "barycentric": [0.29935611, 0.05415835, 0.64648554]
+        },
+        {
+          "triangleIndex": 2797,
+          "barycentric": [0.2145627, 0.07703712, 0.70840018]
+        },
+        {
+          "triangleIndex": 2757,
+          "barycentric": [0.18315326, 0.32794924, 0.4888975]
+        },
+        {
+          "triangleIndex": 2220,
+          "barycentric": [0.16248479, 0.70665184, 0.13086337]
+        },
+        {
+          "triangleIndex": 7284,
+          "barycentric": [0.79156009, 0.135151, 0.07328892]
+        }
+      ]
+    },
+    {
+      "id": "right-cheekbone",
+      "closed": false,
+      "emphasis": "secondary",
+      "sampleSpacing": 0.0045,
+      "corridorRings": 2,
+      "regionBounds": {
+        "x": [0.32, 0.49],
+        "y": [0.18, 0.31],
+        "z": [0.36, 0.55]
+      },
+      "anchors": [
+        {
+          "triangleIndex": 1275,
+          "barycentric": [0.60345587, 0.25461074, 0.14193338]
+        },
+        {
+          "triangleIndex": 3824,
+          "barycentric": [0.05279196, 0.02968266, 0.91752538]
+        },
+        {
+          "triangleIndex": 8886,
+          "barycentric": [0.0025091, 0.06057378, 0.93691712]
+        },
+        {
+          "triangleIndex": 3434,
+          "barycentric": [0.7151771, 0.04854226, 0.23628065]
+        },
+        {
+          "triangleIndex": 1305,
+          "barycentric": [0.2974171, 0.09447977, 0.60810313]
+        },
+        {
+          "triangleIndex": 5958,
+          "barycentric": [0.55449807, 0.17589924, 0.26960269]
+        }
+      ]
+    },
+    {
+      "id": "left-temple-to-cheek",
+      "closed": false,
+      "emphasis": "secondary",
+      "sampleSpacing": 0.0045,
+      "corridorRings": 3,
+      "regionBounds": {
+        "x": [-0.5, -0.36],
+        "y": [0.27, 0.46],
+        "z": [0.27, 0.52]
+      },
+      "anchors": [
+        {
+          "triangleIndex": 1811,
+          "barycentric": [0.00943502, 0.96172054, 0.02884444]
+        },
+        {
+          "triangleIndex": 3802,
+          "barycentric": [0.4603476, 0.14604068, 0.39361173]
+        },
+        {
+          "triangleIndex": 6365,
+          "barycentric": [0.2373402, 0.09333438, 0.66932541]
+        },
+        {
+          "triangleIndex": 7943,
+          "barycentric": [0.00297948, 0.4067423, 0.59027821]
+        },
+        {
+          "triangleIndex": 2880,
+          "barycentric": [0.07421919, 0.18030141, 0.74547941]
+        },
+        {
+          "triangleIndex": 7942,
+          "barycentric": [0.22551556, 0.36922872, 0.40525573]
+        }
+      ]
+    },
+    {
+      "id": "right-temple-to-cheek",
+      "closed": false,
+      "emphasis": "secondary",
+      "sampleSpacing": 0.0045,
+      "corridorRings": 3,
+      "regionBounds": {
+        "x": [0.37, 0.5],
+        "y": [0.28, 0.46],
+        "z": [0.3, 0.54]
+      },
+      "anchors": [
+        {
+          "triangleIndex": 397,
+          "barycentric": [0.55711792, 0.33529365, 0.10758843]
+        },
+        {
+          "triangleIndex": 6430,
+          "barycentric": [0.02642898, 0.33842766, 0.63514337]
+        },
+        {
+          "triangleIndex": 7089,
+          "barycentric": [0.36680296, 0.42409008, 0.20910696]
+        },
+        {
+          "triangleIndex": 778,
+          "barycentric": [0.85572479, 0.09641252, 0.04786269]
+        },
+        {
+          "triangleIndex": 1360,
+          "barycentric": [0.36507539, 0.5208992, 0.1140254]
+        },
+        {
+          "triangleIndex": 6440,
+          "barycentric": [0.8174133, 0.08379802, 0.09878869]
+        }
+      ]
+    },
+    {
+      "id": "philtrum-centerline",
+      "closed": false,
+      "emphasis": "secondary",
+      "sampleSpacing": 0.003,
+      "corridorRings": 2,
+      "regionBounds": {
+        "x": [-0.03, 0.04],
+        "y": [-0.055, 0.035],
+        "z": [0.69, 0.78]
+      },
+      "anchors": [
+        {
+          "triangleIndex": 3743,
+          "barycentric": [0.02348759, 0.93001166, 0.04650075]
+        },
+        {
+          "triangleIndex": 6017,
+          "barycentric": [0.12554233, 0.86320478, 0.01125289]
+        },
+        {
+          "triangleIndex": 3857,
+          "barycentric": [0.07304083, 0.0239072, 0.90305197]
+        },
+        {
+          "triangleIndex": 8920,
+          "barycentric": [0.48476668, 0.4621013, 0.05313203]
+        }
+      ]
+    },
+    {
+      "id": "chin-centerline",
+      "closed": false,
+      "emphasis": "secondary",
+      "sampleSpacing": 0.0035,
+      "corridorRings": 2,
+      "regionBounds": {
+        "x": [-0.025, 0.03],
+        "y": [-0.37, -0.21],
+        "z": [0.65, 0.74]
+      },
+      "anchors": [
+        {
+          "triangleIndex": 8918,
+          "barycentric": [0.00724165, 0.29825127, 0.69450708]
+        },
+        {
+          "triangleIndex": 8676,
+          "barycentric": [0.69021755, 0.29605454, 0.01372791]
+        },
+        {
+          "triangleIndex": 3423,
+          "barycentric": [0.02718256, 0.91911797, 0.05369946]
+        },
+        {
+          "triangleIndex": 3315,
+          "barycentric": [0.03457297, 0.27913987, 0.68628715]
+        }
+      ]
+    },
+    {
+      "id": "outer-lip",
+      "closed": true,
+      "sampleSpacing": 0.0045,
+      "corridorRings": 1,
+      "anchors": [
+        { "triangleIndex": 7407, "barycentric": [0, 0, 1] },
+        { "triangleIndex": 7390, "barycentric": [0, 0, 1] },
+        { "triangleIndex": 7413, "barycentric": [0, 0, 1] },
+        { "triangleIndex": 2354, "barycentric": [1, 0, 0] },
+        { "triangleIndex": 8627, "barycentric": [1, 0, 0] },
+        { "triangleIndex": 393, "barycentric": [0, 0, 1] },
+        { "triangleIndex": 393, "barycentric": [1, 0, 0] },
+        { "triangleIndex": 5997, "barycentric": [1, 0, 0] },
+        { "triangleIndex": 3433, "barycentric": [0, 1, 0] },
+        { "triangleIndex": 885, "barycentric": [0, 1, 0] },
+        { "triangleIndex": 3432, "barycentric": [0, 1, 0] },
+        { "triangleIndex": 864, "barycentric": [0, 1, 0] },
+        { "triangleIndex": 8591, "barycentric": [0, 0, 1] },
+        { "triangleIndex": 3530, "barycentric": [0, 1, 0] },
+        { "triangleIndex": 6010, "barycentric": [1, 0, 0] },
+        { "triangleIndex": 6008, "barycentric": [1, 0, 0] },
+        { "triangleIndex": 6026, "barycentric": [1, 0, 0] },
+        { "triangleIndex": 6028, "barycentric": [1, 0, 0] },
+        { "triangleIndex": 6069, "barycentric": [1, 0, 0] },
+        { "triangleIndex": 3739, "barycentric": [0, 0, 1] },
+        { "triangleIndex": 8799, "barycentric": [0, 0, 1] },
+        { "triangleIndex": 8671, "barycentric": [0, 1, 0] },
+        { "triangleIndex": 2452, "barycentric": [1, 0, 0] },
+        { "triangleIndex": 7451, "barycentric": [0, 0, 1] },
+        { "triangleIndex": 7446, "barycentric": [0, 0, 1] },
+        { "triangleIndex": 7431, "barycentric": [0, 0, 1] },
+        { "triangleIndex": 7430, "barycentric": [0, 0, 1] },
+        { "triangleIndex": 2304, "barycentric": [1, 0, 0] },
+        { "triangleIndex": 2306, "barycentric": [0, 1, 0] },
+        { "triangleIndex": 7373, "barycentric": [0, 0, 1] }
+      ]
+    },
+    {
+      "id": "nose-bridge",
+      "closed": false,
+      "sampleSpacing": 0.004,
+      "corridorRings": 2,
+      "anchors": [
+        { "triangleIndex": 211, "barycentric": [0, 0, 1] },
+        { "triangleIndex": 1180, "barycentric": [1, 0, 0] },
+        { "triangleIndex": 584, "barycentric": [0, 1, 0] },
+        { "triangleIndex": 471, "barycentric": [0, 1, 0] },
+        { "triangleIndex": 2057, "barycentric": [0, 0, 1] },
+        { "triangleIndex": 1026, "barycentric": [1, 0, 0] }
+      ]
+    },
+    {
+      "id": "left-nose-wing",
+      "closed": false,
+      "sampleSpacing": 0.003,
+      "corridorRings": 2,
+      "anchors": [
+        { "triangleIndex": 2284, "barycentric": [0, 0, 1] },
+        { "triangleIndex": 2281, "barycentric": [1, 0, 0] },
+        { "triangleIndex": 2242, "barycentric": [1, 0, 0] },
+        { "triangleIndex": 2242, "barycentric": [0, 0, 1] },
+        { "triangleIndex": 2243, "barycentric": [1, 0, 0] }
+      ]
+    },
+    {
+      "id": "right-nose-wing",
+      "closed": false,
+      "sampleSpacing": 0.003,
+      "corridorRings": 2,
+      "anchors": [
+        { "triangleIndex": 489, "barycentric": [0, 1, 0] },
+        { "triangleIndex": 1064, "barycentric": [1, 0, 0] },
+        { "triangleIndex": 774, "barycentric": [0, 1, 0] },
+        { "triangleIndex": 774, "barycentric": [0, 0, 1] }
+      ]
+    },
+    {
+      "id": "jaw",
+      "closed": false,
+      "sampleSpacing": 0.006,
+      "corridorRings": 3,
+      "anchors": [
+        { "triangleIndex": 3380, "barycentric": [1, 0, 0] },
+        { "triangleIndex": 3391, "barycentric": [0, 0, 1] },
+        { "triangleIndex": 3324, "barycentric": [0, 1, 0] },
+        { "triangleIndex": 3357, "barycentric": [1, 0, 0] },
+        { "triangleIndex": 1238, "barycentric": [1, 0, 0] },
+        { "triangleIndex": 799, "barycentric": [0, 1, 0] },
+        { "triangleIndex": 256, "barycentric": [0, 1, 0] },
+        { "triangleIndex": 3101, "barycentric": [1, 0, 0] },
+        { "triangleIndex": 3082, "barycentric": [1, 0, 0] },
+        { "triangleIndex": 3188, "barycentric": [0, 0, 1] },
+        { "triangleIndex": 3117, "barycentric": [0, 0, 1] }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "id": "left-inner-eye-corner",
+      "role": "normal",
+      "sample": { "triangleIndex": 1725, "barycentric": [0, 1, 0] }
+    },
+    {
+      "id": "left-outer-eye-corner",
+      "role": "accent",
+      "sample": { "triangleIndex": 6769, "barycentric": [0, 1, 0] }
+    },
+    {
+      "id": "right-inner-eye-corner",
+      "role": "normal",
+      "sample": { "triangleIndex": 297, "barycentric": [1, 0, 0] }
+    },
+    {
+      "id": "right-outer-eye-corner",
+      "role": "accent",
+      "sample": { "triangleIndex": 5370, "barycentric": [0, 1, 0] }
+    },
+    {
+      "id": "left-nose-wing",
+      "role": "accent",
+      "sample": { "triangleIndex": 2243, "barycentric": [1, 0, 0] }
+    },
+    {
+      "id": "right-nose-wing",
+      "role": "accent",
+      "sample": { "triangleIndex": 774, "barycentric": [0, 0, 1] }
+    },
+    {
+      "id": "left-mouth-corner",
+      "role": "normal",
+      "sample": {
+        "triangleIndex": 2306,
+        "barycentric": [0.0549098, 0.58925547, 0.35583473]
+      }
+    },
+    {
+      "id": "right-mouth-corner",
+      "role": "normal",
+      "sample": {
+        "triangleIndex": 8591,
+        "barycentric": [0.01943658, 0.09542148, 0.88514194]
+      }
+    },
+    {
+      "id": "left-jaw-angle",
+      "role": "accent",
+      "sample": { "triangleIndex": 3380, "barycentric": [1, 0, 0] }
+    },
+    {
+      "id": "right-jaw-angle",
+      "role": "accent",
+      "sample": { "triangleIndex": 3117, "barycentric": [0, 0, 1] }
+    },
+    {
+      "id": "chin",
+      "role": "normal",
+      "sample": {
+        "triangleIndex": 5887,
+        "barycentric": [0.00395778, 0.0279506, 0.96809162]
+      }
+    }
+  ]
+}

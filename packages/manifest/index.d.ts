@@ -246,6 +246,78 @@ export type AssetModuleMaterialId = "ceramic" | "obsidian";
 
 export type AssetModuleDisplayModeId = "preview" | "trace" | "topology";
 
+export type AssetModuleTraceRegionId =
+  "brows" | "lids" | "nose" | "lips" | "cheeks" | "jaw";
+
+export type AssetModuleLegacySemanticTracePath = {
+  id: string;
+  region: AssetModuleTraceRegionId;
+  palette: "cyan" | "violet";
+  emphasis: "primary" | "secondary";
+  closed: boolean;
+  controlVertexIndices: readonly number[];
+  nodeVertexIndices: readonly number[];
+  vertexIndices: readonly number[];
+};
+
+export type AssetModuleProjectedSemanticTraceSegment = {
+  controlVertexIndices: readonly number[];
+  guideVertexIndices: readonly number[];
+};
+
+export type AssetModuleProjectedSemanticTracePath = {
+  id: string;
+  region: AssetModuleTraceRegionId;
+  role: "primary" | "secondary";
+  closed: boolean;
+  controlVertexIndices: readonly number[];
+  nodeVertexIndices: readonly number[];
+  accentNodeVertexIndices: readonly number[];
+  accentSegments: readonly AssetModuleProjectedSemanticTraceSegment[];
+  guideVertexIndices: readonly number[];
+};
+
+export type AssetModuleTraceSurfaceSample = {
+  triangleIndex: number;
+  barycentric: readonly [number, number, number];
+};
+
+export type AssetModuleBarycentricSemanticTracePath = {
+  id: string;
+  closed: boolean;
+  emphasis?: "primary" | "secondary";
+  samples: readonly AssetModuleTraceSurfaceSample[];
+};
+
+export type AssetModuleBarycentricSemanticTraceNode = {
+  id: string;
+  role: "normal" | "accent";
+  sample: AssetModuleTraceSurfaceSample;
+};
+
+export type AssetModuleSemanticTracePath =
+  | AssetModuleLegacySemanticTracePath
+  | AssetModuleProjectedSemanticTracePath
+  | AssetModuleBarycentricSemanticTracePath;
+
+export type AssetModuleSemanticTrace =
+  | {
+      schemaVersion: "semantic-trace-v1";
+      normalOffset: number;
+      paths: readonly AssetModuleLegacySemanticTracePath[];
+    }
+  | {
+      schemaVersion: "semantic-trace-v2";
+      normalOffset: number;
+      paths: readonly AssetModuleProjectedSemanticTracePath[];
+    }
+  | {
+      schemaVersion: "semantic-trace-v4";
+      surfaceOffset: number;
+      paths: readonly AssetModuleBarycentricSemanticTracePath[];
+      nodes?: readonly AssetModuleBarycentricSemanticTraceNode[];
+    };
+
 export type AssetModuleParameterRange = {
   min: number;
   max: number;
@@ -270,13 +342,7 @@ export type AssetModuleCapability<Id extends string> = {
 
 export type IdentityShellShapePresetIntent = {
   archetype:
-    | "baseline"
-    | "oval"
-    | "broad"
-    | "long"
-    | "round"
-    | "heart"
-    | "diamond";
+    "baseline" | "oval" | "broad" | "long" | "round" | "heart" | "diamond";
   strength: "subtle" | "moderate" | "strong";
   emphasis: readonly (
     | "width"
@@ -302,20 +368,23 @@ export type AssetModuleManifest = {
     version: string;
     releaseTag: string;
   };
+  viewer?: {
+    cameraFramingContract: string;
+  };
   parameters: {
     version: string;
     neutral: FaceShellParameters;
     productBaseline: FaceShellParameters;
-    safeRanges: Record<
-      FaceShellParameterKey,
-      AssetModuleParameterRange
-    >;
+    safeRanges: Record<FaceShellParameterKey, AssetModuleParameterRange>;
     authoringRanges: Record<FaceShellParameterKey, AssetModuleParameterRange>;
   };
   parameterGroups: readonly AssetModuleParameterGroup[];
   capabilities: {
     materials: readonly AssetModuleCapability<AssetModuleMaterialId>[];
     displayModes: readonly AssetModuleCapability<AssetModuleDisplayModeId>[];
+  };
+  overlays: {
+    trace: AssetModuleSemanticTrace;
   };
   morphs: {
     targetNames: readonly string[];

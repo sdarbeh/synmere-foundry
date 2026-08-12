@@ -7,6 +7,9 @@
     "version": "1.0.0",
     "releaseTag": "identity-shell-v1.0.0"
   },
+  "viewer": {
+    "cameraFramingContract": "synmere.identity-shell.camera-framing.v1"
+  },
   "parameters": {
     "version": "1.0.0",
     "neutral": {
@@ -294,6 +297,161 @@
         "required": false
       }
     ]
+  },
+  "overlays": {
+    "trace": {
+      "schemaVersion": "semantic-trace-v1",
+      "normalOffset": 0.004,
+      "paths": [
+        {
+          "id": "jaw",
+          "region": "jaw",
+          "palette": "violet",
+          "emphasis": "primary",
+          "closed": false,
+          "controlVertexIndices": [
+            162, 1460, 1452, 1373, 4360, 4367, 5796, 2808, 2883, 2891, 1662
+          ],
+          "nodeVertexIndices": [162, 1452, 4360, 5796, 2883, 1662],
+          "vertexIndices": [
+            162, 734, 739, 729, 1460, 1458, 1485, 1484, 1452, 1450, 1364, 1366,
+            1373, 1430, 1374, 1376, 1431, 813, 743, 5984, 3725, 3795, 4369,
+            4361, 4360, 4351, 4353, 4367, 5782, 5788, 5796, 5797, 5802, 5239,
+            5178, 5992, 2196, 2257, 2863, 2812, 2810, 2862, 2808, 2803, 2801,
+            2881, 2883, 2915, 2916, 2889, 2891, 2184, 2192, 2188, 1662
+          ]
+        },
+        {
+          "id": "left-brow",
+          "region": "brows",
+          "palette": "cyan",
+          "emphasis": "primary",
+          "closed": false,
+          "controlVertexIndices": [3198, 3221, 4247, 3220, 3211],
+          "nodeVertexIndices": [3198, 4247, 3211],
+          "vertexIndices": [
+            3198, 3208, 3215, 3221, 4247, 4249, 3226, 3220, 3217, 3211
+          ]
+        },
+        {
+          "id": "right-brow",
+          "region": "brows",
+          "palette": "violet",
+          "emphasis": "primary",
+          "closed": false,
+          "controlVertexIndices": [1730, 1736, 1742, 1738, 1727],
+          "nodeVertexIndices": [1730, 1742, 1727],
+          "vertexIndices": [1730, 1737, 1736, 1742, 1739, 1738, 1733, 1727]
+        },
+        {
+          "id": "left-eye",
+          "region": "lids",
+          "palette": "cyan",
+          "emphasis": "primary",
+          "closed": true,
+          "controlVertexIndices": [2990, 2989, 3943, 3112, 4291, 3025],
+          "nodeVertexIndices": [2990, 3943, 4291, 3025],
+          "vertexIndices": [
+            2990, 2987, 2988, 2989, 3037, 3039, 3040, 3041, 3042, 3836, 3867,
+            3866, 3911, 3943, 3911, 3866, 3876, 3877, 3886, 3887, 3824, 3058,
+            3055, 3054, 3051, 3092, 3101, 3102, 3112, 3102, 3103, 3094, 4291,
+            3034, 3033, 3030, 3026, 3025, 4453, 3839, 3837, 3890, 3889, 3882,
+            3872, 3861, 3860, 3892, 3807, 3808, 3812, 3814, 2990
+          ]
+        },
+        {
+          "id": "right-eye",
+          "region": "lids",
+          "palette": "violet",
+          "emphasis": "primary",
+          "closed": true,
+          "controlVertexIndices": [4622, 5387, 4495, 4498, 4533, 5730],
+          "nodeVertexIndices": [4622, 4495, 4533, 5730],
+          "vertexIndices": [
+            4622, 4609, 4610, 4600, 4559, 4560, 4563, 4564, 5268, 5331, 5330,
+            5320, 5321, 5310, 5355, 5387, 5355, 5310, 5313, 5280, 4550, 4549,
+            4548, 4547, 4545, 4495, 4496, 4497, 4498, 5258, 5256, 5254, 5251,
+            5337, 5306, 5305, 5317, 5327, 5335, 5334, 5281, 5283, 5884, 4533,
+            4532, 4538, 4541, 4542, 5730, 4602, 4612, 4609, 4622
+          ]
+        },
+        {
+          "id": "nose-bridge",
+          "region": "nose",
+          "palette": "cyan",
+          "emphasis": "primary",
+          "closed": false,
+          "controlVertexIndices": [3218, 3130, 3131, 3276],
+          "nodeVertexIndices": [3218, 3131, 3276],
+          "vertexIndices": [
+            3218, 3212, 3172, 3129, 3130, 3133, 3134, 3132, 3131, 4272, 4271,
+            3276
+          ]
+        },
+        {
+          "id": "nose-contour",
+          "region": "nose",
+          "palette": "violet",
+          "emphasis": "primary",
+          "closed": false,
+          "controlVertexIndices": [1393, 285, 305, 353, 1796, 1780, 2826],
+          "nodeVertexIndices": [1393, 305, 1796, 2826],
+          "vertexIndices": [
+            1393, 1447, 288, 286, 285, 359, 1247, 1322, 349, 354, 305, 310, 313,
+            353, 1804, 1803, 1796, 1841, 1838, 2761, 2691, 1844, 1780, 1781,
+            1783, 2878, 2826
+          ]
+        },
+        {
+          "id": "upper-lip",
+          "region": "lips",
+          "palette": "cyan",
+          "emphasis": "primary",
+          "closed": false,
+          "controlVertexIndices": [4468, 4283, 3587, 5722, 5899],
+          "nodeVertexIndices": [4468, 3587, 5899],
+          "vertexIndices": [
+            4468, 4285, 4283, 3469, 3455, 3454, 3457, 3484, 3485, 3482, 3483,
+            3497, 3527, 3545, 3552, 3568, 3587, 5042, 5024, 5020, 5004, 4975,
+            4965, 4964, 4967, 4966, 4937, 4936, 4939, 4949, 5722, 5724, 5899
+          ]
+        },
+        {
+          "id": "lower-lip",
+          "region": "lips",
+          "palette": "violet",
+          "emphasis": "primary",
+          "closed": false,
+          "controlVertexIndices": [3594, 3475, 3550, 4959, 5066],
+          "nodeVertexIndices": [3594, 3550, 5066],
+          "vertexIndices": [
+            3594, 3576, 3578, 3560, 4477, 3554, 3547, 3528, 3494, 3476, 3475,
+            3476, 3495, 3526, 3545, 3535, 3550, 5019, 5020, 5002, 4973, 4958,
+            4959, 4958, 4972, 5005, 5022, 5029, 5908, 5034, 5051, 5049, 5066
+          ]
+        },
+        {
+          "id": "left-cheek",
+          "region": "cheeks",
+          "palette": "cyan",
+          "emphasis": "secondary",
+          "closed": false,
+          "controlVertexIndices": [3981, 4457, 4457, 3988],
+          "nodeVertexIndices": [3981, 4457, 3988],
+          "vertexIndices": [3981, 3991, 4457, 3988]
+        },
+        {
+          "id": "right-cheek",
+          "region": "cheeks",
+          "palette": "violet",
+          "emphasis": "secondary",
+          "closed": false,
+          "controlVertexIndices": [5425, 5888, 5888, 5432],
+          "nodeVertexIndices": [5425, 5888, 5432],
+          "vertexIndices": [5425, 5435, 5888, 5432]
+        }
+      ]
+    }
   },
   "morphs": {
     "targetNames": [
@@ -627,8 +785,10 @@
           "chinLength": 0.25,
           "eyeSpacing": 0.36,
           "eyeWidth": 0.1,
-          "noseWidth": 0.26,
-          "mouthWidth": 0.46
+          "noseWidth": 0.28,
+          "noseLength": 0.29,
+          "noseProjection": 0.41,
+          "mouthWidth": 0.43
         }
       },
       {
@@ -678,10 +838,10 @@
           "cheekWidth": 1.08,
           "jawWidth": 0.83,
           "jawTaper": 0.82,
-          "chinLength": 0.21,
+          "chinLength": 0.23,
           "eyeWidth": 0.12,
-          "noseProjection": 0.44,
-          "mouthWidth": 0.41
+          "noseProjection": 0.38,
+          "mouthWidth": 0.36
         }
       },
       {

@@ -10,8 +10,17 @@ __pycache__/
 !/assets/candidates/README.md
 !/assets/candidates/avatar/
 !/assets/candidates/avatar/**
+!/assets/candidates/identity-shell/
+!/assets/candidates/identity-shell/2.0.0/
+!/assets/candidates/identity-shell/2.0.0/**
 /reports/history/
 /reports/tmp/
 
 # Release staging is disposable; immutable releases are tracked.
 /assets/release-staging/
+
+# Licensed fitting-model artifacts stay local and must never enter git.
+/vendor/flame/*.zip
+/vendor/flame/*.pkl
+/vendor/flame/*.npz
+/.venv-identity-shell/

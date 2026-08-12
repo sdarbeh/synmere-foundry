@@ -38,3 +38,32 @@ The checklist preserves the product boundary: IdentityShell is a neutral fitted
 structure, not an avatar. A third-party base must be license-cleared,
 neutralized into one continuous closed-lid shell, and validated against the
 existing `FaceShellParameters` contract before it can replace the current GLB.
+
+## FLAME 2023 Open candidate topology
+
+FLAME 2023 Open was downloaded from the authenticated official source. The
+untouched ZIP and model remain local and gitignored. After the provenance gate
+passed, the model was used to build the `identity-shell-v2.0.0` candidate. The
+candidate is not production and `identity-shell-v1.0.0` remains the production
+release and fallback.
+
+- Release: `FLAME 2023 Open`
+- Official filename: `FLAME2023Open.zip`
+- Contained model name documented by the publisher: `flame2023_Open.pkl`
+- Official downloads page: `https://flame.is.tue.mpg.de/download.php`
+- Official download URL: `https://download.is.tue.mpg.de/download.php?domain=flame&sfile=FLAME2023Open.zip`
+- Downloaded: `2026-08-11T22:36:00-05:00`
+- Size: `47,586,229` bytes
+- SHA-256: `a6b4c3dc15d569d98136a1e548b6fe532eb2830ca12a4f0d4b3a5dba8ee87a91`
+- Declared license: `CC-BY-4.0`, limited to FLAME 2023 Open and subject to the
+  official model terms
+- License: `https://flame.is.tue.mpg.de/modellicense.html`
+
+The tracked machine-readable record is
+`vendor/flame/FLAME2023Open.provenance.json`. Validate the local artifact with
+`pnpm identity-shell:flame:validate`. Validation pins the exact official
+filename, release label, internal model filename, source URL, size, checksum,
+license scope, attribution requirements, and unloaded/unconverted handling
+state. Older, academic, renamed, or content-mismatched variants are rejected.
+The candidate GLB contains the shared neutral topology and module-defined
+morph targets; its Baseline preset is the zero-weight neutral shape.

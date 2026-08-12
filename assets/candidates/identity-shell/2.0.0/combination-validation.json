@@ -1,0 +1,663 @@
+{
+  "schemaVersion": "identity-shell-combination-validation-v1",
+  "asset": "identity-shell-v2.0.0",
+  "status": "passed",
+  "combinationCount": 21,
+  "shapePresetCount": 7,
+  "structurePresetCount": 3,
+  "maximumAllowedMorphEdgeStrain": 0.72,
+  "failedCombinationIds": [],
+  "combinations": [
+    {
+      "id": "balanced:baseline",
+      "structurePresetId": "balanced",
+      "shapePresetId": "baseline",
+      "status": "passed",
+      "invertedTriangleCount": 0,
+      "degenerateTriangleCount": 0,
+      "maximumEdgeStrain": 0.0,
+      "regions": {
+        "jaw": {
+          "vertexCount": 751,
+          "maximumContinuityGradient": 0.0
+        },
+        "cheeks": {
+          "vertexCount": 1503,
+          "maximumContinuityGradient": 0.0
+        },
+        "ears": {
+          "vertexCount": 1227,
+          "maximumContinuityGradient": 0.0
+        },
+        "neck": {
+          "vertexCount": 257,
+          "maximumContinuityGradient": 0.0
+        },
+        "eyelids": {
+          "vertexCount": 1582,
+          "maximumContinuityGradient": 0.0
+        }
+      }
+    },
+    {
+      "id": "balanced:oval",
+      "structurePresetId": "balanced",
+      "shapePresetId": "oval",
+      "status": "passed",
+      "invertedTriangleCount": 0,
+      "degenerateTriangleCount": 0,
+      "maximumEdgeStrain": 0.20826303,
+      "regions": {
+        "jaw": {
+          "vertexCount": 751,
+          "maximumContinuityGradient": 0.21518332
+        },
+        "cheeks": {
+          "vertexCount": 1503,
+          "maximumContinuityGradient": 0.19637045
+        },
+        "ears": {
+          "vertexCount": 1227,
+          "maximumContinuityGradient": 0.11363257
+        },
+        "neck": {
+          "vertexCount": 257,
+          "maximumContinuityGradient": 0.17685984
+        },
+        "eyelids": {
+          "vertexCount": 1582,
+          "maximumContinuityGradient": 0.0688008
+        }
+      }
+    },
+    {
+      "id": "balanced:broad",
+      "structurePresetId": "balanced",
+      "shapePresetId": "broad",
+      "status": "passed",
+      "invertedTriangleCount": 0,
+      "degenerateTriangleCount": 0,
+      "maximumEdgeStrain": 0.31831037,
+      "regions": {
+        "jaw": {
+          "vertexCount": 751,
+          "maximumContinuityGradient": 0.31974617
+        },
+        "cheeks": {
+          "vertexCount": 1503,
+          "maximumContinuityGradient": 0.24007731
+        },
+        "ears": {
+          "vertexCount": 1227,
+          "maximumContinuityGradient": 0.17406873
+        },
+        "neck": {
+          "vertexCount": 257,
+          "maximumContinuityGradient": 0.28119478
+        },
+        "eyelids": {
+          "vertexCount": 1582,
+          "maximumContinuityGradient": 0.17207312
+        }
+      }
+    },
+    {
+      "id": "balanced:long",
+      "structurePresetId": "balanced",
+      "shapePresetId": "long",
+      "status": "passed",
+      "invertedTriangleCount": 0,
+      "degenerateTriangleCount": 0,
+      "maximumEdgeStrain": 0.29332595,
+      "regions": {
+        "jaw": {
+          "vertexCount": 751,
+          "maximumContinuityGradient": 0.29765216
+        },
+        "cheeks": {
+          "vertexCount": 1503,
+          "maximumContinuityGradient": 0.26576894
+        },
+        "ears": {
+          "vertexCount": 1227,
+          "maximumContinuityGradient": 0.14637981
+        },
+        "neck": {
+          "vertexCount": 257,
+          "maximumContinuityGradient": 0.21100935
+        },
+        "eyelids": {
+          "vertexCount": 1582,
+          "maximumContinuityGradient": 0.09356145
+        }
+      }
+    },
+    {
+      "id": "balanced:round",
+      "structurePresetId": "balanced",
+      "shapePresetId": "round",
+      "status": "passed",
+      "invertedTriangleCount": 0,
+      "degenerateTriangleCount": 0,
+      "maximumEdgeStrain": 0.21377877,
+      "regions": {
+        "jaw": {
+          "vertexCount": 751,
+          "maximumContinuityGradient": 0.21706256
+        },
+        "cheeks": {
+          "vertexCount": 1503,
+          "maximumContinuityGradient": 0.19137131
+        },
+        "ears": {
+          "vertexCount": 1227,
+          "maximumContinuityGradient": 0.13146737
+        },
+        "neck": {
+          "vertexCount": 257,
+          "maximumContinuityGradient": 0.19460576
+        },
+        "eyelids": {
+          "vertexCount": 1582,
+          "maximumContinuityGradient": 0.15191677
+        }
+      }
+    },
+    {
+      "id": "balanced:heart",
+      "structurePresetId": "balanced",
+      "shapePresetId": "heart",
+      "status": "passed",
+      "invertedTriangleCount": 0,
+      "degenerateTriangleCount": 0,
+      "maximumEdgeStrain": 0.23882406,
+      "regions": {
+        "jaw": {
+          "vertexCount": 751,
+          "maximumContinuityGradient": 0.24322597
+        },
+        "cheeks": {
+          "vertexCount": 1503,
+          "maximumContinuityGradient": 0.21181378
+        },
+        "ears": {
+          "vertexCount": 1227,
+          "maximumContinuityGradient": 0.15376279
+        },
+        "neck": {
+          "vertexCount": 257,
+          "maximumContinuityGradient": 0.21436299
+        },
+        "eyelids": {
+          "vertexCount": 1582,
+          "maximumContinuityGradient": 0.09960972
+        }
+      }
+    },
+    {
+      "id": "balanced:diamond",
+      "structurePresetId": "balanced",
+      "shapePresetId": "diamond",
+      "status": "passed",
+      "invertedTriangleCount": 0,
+      "degenerateTriangleCount": 0,
+      "maximumEdgeStrain": 0.16684808,
+      "regions": {
+        "jaw": {
+          "vertexCount": 751,
+          "maximumContinuityGradient": 0.19242386
+        },
+        "cheeks": {
+          "vertexCount": 1503,
+          "maximumContinuityGradient": 0.19056097
+        },
+        "ears": {
+          "vertexCount": 1227,
+          "maximumContinuityGradient": 0.12937467
+        },
+        "neck": {
+          "vertexCount": 257,
+          "maximumContinuityGradient": 0.15142681
+        },
+        "eyelids": {
+          "vertexCount": 1582,
+          "maximumContinuityGradient": 0.10954026
+        }
+      }
+    },
+    {
+      "id": "structured:baseline",
+      "structurePresetId": "structured",
+      "shapePresetId": "baseline",
+      "status": "passed",
+      "invertedTriangleCount": 0,
+      "degenerateTriangleCount": 0,
+      "maximumEdgeStrain": 0.14248177,
+      "regions": {
+        "jaw": {
+          "vertexCount": 751,
+          "maximumContinuityGradient": 0.11215206
+        },
+        "cheeks": {
+          "vertexCount": 1503,
+          "maximumContinuityGradient": 0.25282944
+        },
+        "ears": {
+          "vertexCount": 1227,
+          "maximumContinuityGradient": 0.06319922
+        },
+        "neck": {
+          "vertexCount": 257,
+          "maximumContinuityGradient": 0.09684292
+        },
+        "eyelids": {
+          "vertexCount": 1582,
+          "maximumContinuityGradient": 0.25282944
+        }
+      }
+    },
+    {
+      "id": "structured:oval",
+      "structurePresetId": "structured",
+      "shapePresetId": "oval",
+      "status": "passed",
+      "invertedTriangleCount": 0,
+      "degenerateTriangleCount": 0,
+      "maximumEdgeStrain": 0.29232008,
+      "regions": {
+        "jaw": {
+          "vertexCount": 751,
+          "maximumContinuityGradient": 0.29409339
+        },
+        "cheeks": {
+          "vertexCount": 1503,
+          "maximumContinuityGradient": 0.25932865
+        },
+        "ears": {
+          "vertexCount": 1227,
+          "maximumContinuityGradient": 0.09976846
+        },
+        "neck": {
+          "vertexCount": 257,
+          "maximumContinuityGradient": 0.19557892
+        },
+        "eyelids": {
+          "vertexCount": 1582,
+          "maximumContinuityGradient": 0.25932865
+        }
+      }
+    },
+    {
+      "id": "structured:broad",
+      "structurePresetId": "structured",
+      "shapePresetId": "broad",
+      "status": "passed",
+      "invertedTriangleCount": 0,
+      "degenerateTriangleCount": 0,
+      "maximumEdgeStrain": 0.41906998,
+      "regions": {
+        "jaw": {
+          "vertexCount": 751,
+          "maximumContinuityGradient": 0.42270455
+        },
+        "cheeks": {
+          "vertexCount": 1503,
+          "maximumContinuityGradient": 0.29618021
+        },
+        "ears": {
+          "vertexCount": 1227,
+          "maximumContinuityGradient": 0.19850385
+        },
+        "neck": {
+          "vertexCount": 257,
+          "maximumContinuityGradient": 0.37803341
+        },
+        "eyelids": {
+          "vertexCount": 1582,
+          "maximumContinuityGradient": 0.27083396
+        }
+      }
+    },
+    {
+      "id": "structured:long",
+      "structurePresetId": "structured",
+      "shapePresetId": "long",
+      "status": "passed",
+      "invertedTriangleCount": 0,
+      "degenerateTriangleCount": 0,
+      "maximumEdgeStrain": 0.37668135,
+      "regions": {
+        "jaw": {
+          "vertexCount": 751,
+          "maximumContinuityGradient": 0.37862176
+        },
+        "cheeks": {
+          "vertexCount": 1503,
+          "maximumContinuityGradient": 0.31576292
+        },
+        "ears": {
+          "vertexCount": 1227,
+          "maximumContinuityGradient": 0.13861451
+        },
+        "neck": {
+          "vertexCount": 257,
+          "maximumContinuityGradient": 0.2469278
+        },
+        "eyelids": {
+          "vertexCount": 1582,
+          "maximumContinuityGradient": 0.2704271
+        }
+      }
+    },
+    {
+      "id": "structured:round",
+      "structurePresetId": "structured",
+      "shapePresetId": "round",
+      "status": "passed",
+      "invertedTriangleCount": 0,
+      "degenerateTriangleCount": 0,
+      "maximumEdgeStrain": 0.31217542,
+      "regions": {
+        "jaw": {
+          "vertexCount": 751,
+          "maximumContinuityGradient": 0.31560302
+        },
+        "cheeks": {
+          "vertexCount": 1503,
+          "maximumContinuityGradient": 0.26184701
+        },
+        "ears": {
+          "vertexCount": 1227,
+          "maximumContinuityGradient": 0.15171527
+        },
+        "neck": {
+          "vertexCount": 257,
+          "maximumContinuityGradient": 0.28206232
+        },
+        "eyelids": {
+          "vertexCount": 1582,
+          "maximumContinuityGradient": 0.26184701
+        }
+      }
+    },
+    {
+      "id": "structured:heart",
+      "structurePresetId": "structured",
+      "shapePresetId": "heart",
+      "status": "passed",
+      "invertedTriangleCount": 0,
+      "degenerateTriangleCount": 0,
+      "maximumEdgeStrain": 0.18006531,
+      "regions": {
+        "jaw": {
+          "vertexCount": 751,
+          "maximumContinuityGradient": 0.1872111
+        },
+        "cheeks": {
+          "vertexCount": 1503,
+          "maximumContinuityGradient": 0.25591557
+        },
+        "ears": {
+          "vertexCount": 1227,
+          "maximumContinuityGradient": 0.1160585
+        },
+        "neck": {
+          "vertexCount": 257,
+          "maximumContinuityGradient": 0.14875708
+        },
+        "eyelids": {
+          "vertexCount": 1582,
+          "maximumContinuityGradient": 0.25591557
+        }
+      }
+    },
+    {
+      "id": "structured:diamond",
+      "structurePresetId": "structured",
+      "shapePresetId": "diamond",
+      "status": "passed",
+      "invertedTriangleCount": 0,
+      "degenerateTriangleCount": 0,
+      "maximumEdgeStrain": 0.18576161,
+      "regions": {
+        "jaw": {
+          "vertexCount": 751,
+          "maximumContinuityGradient": 0.18847784
+        },
+        "cheeks": {
+          "vertexCount": 1503,
+          "maximumContinuityGradient": 0.25525607
+        },
+        "ears": {
+          "vertexCount": 1227,
+          "maximumContinuityGradient": 0.10248871
+        },
+        "neck": {
+          "vertexCount": 257,
+          "maximumContinuityGradient": 0.13849132
+        },
+        "eyelids": {
+          "vertexCount": 1582,
+          "maximumContinuityGradient": 0.25525607
+        }
+      }
+    },
+    {
+      "id": "soft:baseline",
+      "structurePresetId": "soft",
+      "shapePresetId": "baseline",
+      "status": "passed",
+      "invertedTriangleCount": 0,
+      "degenerateTriangleCount": 0,
+      "maximumEdgeStrain": 0.13773986,
+      "regions": {
+        "jaw": {
+          "vertexCount": 751,
+          "maximumContinuityGradient": 0.11215206
+        },
+        "cheeks": {
+          "vertexCount": 1503,
+          "maximumContinuityGradient": 0.25282944
+        },
+        "ears": {
+          "vertexCount": 1227,
+          "maximumContinuityGradient": 0.06319922
+        },
+        "neck": {
+          "vertexCount": 257,
+          "maximumContinuityGradient": 0.09684292
+        },
+        "eyelids": {
+          "vertexCount": 1582,
+          "maximumContinuityGradient": 0.25282944
+        }
+      }
+    },
+    {
+      "id": "soft:oval",
+      "structurePresetId": "soft",
+      "shapePresetId": "oval",
+      "status": "passed",
+      "invertedTriangleCount": 0,
+      "degenerateTriangleCount": 0,
+      "maximumEdgeStrain": 0.28477441,
+      "regions": {
+        "jaw": {
+          "vertexCount": 751,
+          "maximumContinuityGradient": 0.29238646
+        },
+        "cheeks": {
+          "vertexCount": 1503,
+          "maximumContinuityGradient": 0.25829912
+        },
+        "ears": {
+          "vertexCount": 1227,
+          "maximumContinuityGradient": 0.13806906
+        },
+        "neck": {
+          "vertexCount": 257,
+          "maximumContinuityGradient": 0.26132945
+        },
+        "eyelids": {
+          "vertexCount": 1582,
+          "maximumContinuityGradient": 0.25829912
+        }
+      }
+    },
+    {
+      "id": "soft:broad",
+      "structurePresetId": "soft",
+      "shapePresetId": "broad",
+      "status": "passed",
+      "invertedTriangleCount": 0,
+      "degenerateTriangleCount": 0,
+      "maximumEdgeStrain": 0.2237741,
+      "regions": {
+        "jaw": {
+          "vertexCount": 751,
+          "maximumContinuityGradient": 0.22504411
+        },
+        "cheeks": {
+          "vertexCount": 1503,
+          "maximumContinuityGradient": 0.25955728
+        },
+        "ears": {
+          "vertexCount": 1227,
+          "maximumContinuityGradient": 0.15845975
+        },
+        "neck": {
+          "vertexCount": 257,
+          "maximumContinuityGradient": 0.18436066
+        },
+        "eyelids": {
+          "vertexCount": 1582,
+          "maximumContinuityGradient": 0.25955728
+        }
+      }
+    },
+    {
+      "id": "soft:long",
+      "structurePresetId": "soft",
+      "shapePresetId": "long",
+      "status": "passed",
+      "invertedTriangleCount": 0,
+      "degenerateTriangleCount": 0,
+      "maximumEdgeStrain": 0.30207091,
+      "regions": {
+        "jaw": {
+          "vertexCount": 751,
+          "maximumContinuityGradient": 0.31098253
+        },
+        "cheeks": {
+          "vertexCount": 1503,
+          "maximumContinuityGradient": 0.26360466
+        },
+        "ears": {
+          "vertexCount": 1227,
+          "maximumContinuityGradient": 0.16380539
+        },
+        "neck": {
+          "vertexCount": 257,
+          "maximumContinuityGradient": 0.27759196
+        },
+        "eyelids": {
+          "vertexCount": 1582,
+          "maximumContinuityGradient": 0.26360466
+        }
+      }
+    },
+    {
+      "id": "soft:round",
+      "structurePresetId": "soft",
+      "shapePresetId": "round",
+      "status": "passed",
+      "invertedTriangleCount": 0,
+      "degenerateTriangleCount": 0,
+      "maximumEdgeStrain": 0.2984504,
+      "regions": {
+        "jaw": {
+          "vertexCount": 751,
+          "maximumContinuityGradient": 0.30021401
+        },
+        "cheeks": {
+          "vertexCount": 1503,
+          "maximumContinuityGradient": 0.26837741
+        },
+        "ears": {
+          "vertexCount": 1227,
+          "maximumContinuityGradient": 0.13932305
+        },
+        "neck": {
+          "vertexCount": 257,
+          "maximumContinuityGradient": 0.19855076
+        },
+        "eyelids": {
+          "vertexCount": 1582,
+          "maximumContinuityGradient": 0.26837741
+        }
+      }
+    },
+    {
+      "id": "soft:heart",
+      "structurePresetId": "soft",
+      "shapePresetId": "heart",
+      "status": "passed",
+      "invertedTriangleCount": 0,
+      "degenerateTriangleCount": 0,
+      "maximumEdgeStrain": 0.34082608,
+      "regions": {
+        "jaw": {
+          "vertexCount": 751,
+          "maximumContinuityGradient": 0.35074243
+        },
+        "cheeks": {
+          "vertexCount": 1503,
+          "maximumContinuityGradient": 0.2808446
+        },
+        "ears": {
+          "vertexCount": 1227,
+          "maximumContinuityGradient": 0.19357788
+        },
+        "neck": {
+          "vertexCount": 257,
+          "maximumContinuityGradient": 0.31120322
+        },
+        "eyelids": {
+          "vertexCount": 1582,
+          "maximumContinuityGradient": 0.25370263
+        }
+      }
+    },
+    {
+      "id": "soft:diamond",
+      "structurePresetId": "soft",
+      "shapePresetId": "diamond",
+      "status": "passed",
+      "invertedTriangleCount": 0,
+      "degenerateTriangleCount": 0,
+      "maximumEdgeStrain": 0.27120502,
+      "regions": {
+        "jaw": {
+          "vertexCount": 751,
+          "maximumContinuityGradient": 0.27830956
+        },
+        "cheeks": {
+          "vertexCount": 1503,
+          "maximumContinuityGradient": 0.25889837
+        },
+        "ears": {
+          "vertexCount": 1227,
+          "maximumContinuityGradient": 0.16847047
+        },
+        "neck": {
+          "vertexCount": 257,
+          "maximumContinuityGradient": 0.24826637
+        },
+        "eyelids": {
+          "vertexCount": 1582,
+          "maximumContinuityGradient": 0.25889837
+        }
+      }
+    }
+  ]
+}

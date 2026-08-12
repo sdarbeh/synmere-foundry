@@ -42,6 +42,14 @@ export const SHAPE_PRESET_EMPHASIS = [
   "mouth",
   "depth",
 ];
+export const ASSET_MODULE_TRACE_REGION_IDS = [
+  "brows",
+  "lids",
+  "nose",
+  "lips",
+  "cheeks",
+  "jaw",
+];
 
 const SCRIPT_DIRECTORY = path.dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = path.resolve(SCRIPT_DIRECTORY, "../..");
@@ -256,6 +264,316 @@ export const assertIdentityShellModuleManifest = (
     );
   }
 
+  assertRecord(moduleManifest.overlays, "Asset module overlays");
+  assertRecord(moduleManifest.overlays.trace, "Semantic trace overlay");
+  const trace = moduleManifest.overlays.trace;
+  if (
+    trace.schemaVersion !== "semantic-trace-v1" &&
+    trace.schemaVersion !== "semantic-trace-v2" &&
+    trace.schemaVersion !== "semantic-trace-v4"
+  ) {
+    throw new Error(
+      "Semantic trace schemaVersion must be semantic-trace-v1, semantic-trace-v2, or semantic-trace-v4.",
+    );
+  }
+  assertArray(trace.paths, "Semantic trace paths");
+  const tracePathIds = new Set();
+  if (trace.schemaVersion === "semantic-trace-v4") {
+    assertNumber(trace.surfaceOffset, "Semantic trace surfaceOffset");
+    if (trace.surfaceOffset < 0 || trace.surfaceOffset > 0.02) {
+      throw new Error(
+        "Semantic trace surfaceOffset must be between 0 and 0.02.",
+      );
+    }
+    trace.paths.forEach((tracePath) => {
+      assertRecord(tracePath, "Barycentric semantic trace path");
+      assertNonEmptyString(tracePath.id, "Semantic trace path id");
+      if (tracePathIds.has(tracePath.id)) {
+        throw new Error(
+          `Semantic trace path id ${tracePath.id} must be unique.`,
+        );
+      }
+      tracePathIds.add(tracePath.id);
+      if (typeof tracePath.closed !== "boolean") {
+        throw new Error(
+          `Semantic trace path ${tracePath.id} closed must be boolean.`,
+        );
+      }
+      if (
+        tracePath.emphasis !== undefined &&
+        tracePath.emphasis !== "primary" &&
+        tracePath.emphasis !== "secondary"
+      ) {
+        throw new Error(
+          `Semantic trace path ${tracePath.id} emphasis must be primary or secondary.`,
+        );
+      }
+      assertArray(
+        tracePath.samples,
+        `Semantic trace path ${tracePath.id} samples`,
+      );
+      if (tracePath.samples.length < 2) {
+        throw new Error(
+          `Semantic trace path ${tracePath.id} needs two samples.`,
+        );
+      }
+      tracePath.samples.forEach((sample, sampleIndex) => {
+        assertRecord(sample, `Semantic trace path ${tracePath.id} sample`);
+        if (
+          !Number.isSafeInteger(sample.triangleIndex) ||
+          sample.triangleIndex < 0
+        ) {
+          throw new Error(
+            `Semantic trace path ${tracePath.id} has an invalid triangle index.`,
+          );
+        }
+        assertArray(
+          sample.barycentric,
+          `Semantic trace path ${tracePath.id} barycentric weights`,
+        );
+        if (sample.barycentric.length !== 3) {
+          throw new Error(
+            `Semantic trace path ${tracePath.id} needs three barycentric weights.`,
+          );
+        }
+        sample.barycentric.forEach((weight) => {
+          assertNumber(
+            weight,
+            `Semantic trace path ${tracePath.id} barycentric weight`,
+          );
+          if (weight < -1e-6 || weight > 1 + 1e-6) {
+            throw new Error(
+              `Semantic trace path ${tracePath.id} has an invalid barycentric weight.`,
+            );
+          }
+        });
+        const totalWeight = sample.barycentric.reduce(
+          (total, weight) => total + weight,
+          0,
+        );
+        if (Math.abs(totalWeight - 1) > 1e-6) {
+          throw new Error(
+            `Semantic trace path ${tracePath.id} barycentric weights must sum to one.`,
+          );
+        }
+        const previous = tracePath.samples[sampleIndex - 1];
+        if (previous && JSON.stringify(previous) === JSON.stringify(sample)) {
+          throw new Error(
+            `Semantic trace path ${tracePath.id} has consecutive duplicate samples.`,
+          );
+        }
+      });
+    });
+    if (trace.nodes !== undefined) {
+      assertArray(trace.nodes, "Semantic trace nodes");
+      const traceNodeIds = new Set();
+      trace.nodes.forEach((traceNode) => {
+        assertRecord(traceNode, "Barycentric semantic trace node");
+        assertNonEmptyString(traceNode.id, "Semantic trace node id");
+        if (traceNodeIds.has(traceNode.id)) {
+          throw new Error(
+            `Semantic trace node id ${traceNode.id} must be unique.`,
+          );
+        }
+        traceNodeIds.add(traceNode.id);
+        if (traceNode.role !== "normal" && traceNode.role !== "accent") {
+          throw new Error(
+            `Semantic trace node ${traceNode.id} role must be normal or accent.`,
+          );
+        }
+        assertRecord(traceNode.sample, `Semantic trace node ${traceNode.id}`);
+        if (
+          !Number.isSafeInteger(traceNode.sample.triangleIndex) ||
+          traceNode.sample.triangleIndex < 0
+        ) {
+          throw new Error(
+            `Semantic trace node ${traceNode.id} has an invalid triangle index.`,
+          );
+        }
+        assertArray(
+          traceNode.sample.barycentric,
+          `Semantic trace node ${traceNode.id} barycentric weights`,
+        );
+        if (traceNode.sample.barycentric.length !== 3) {
+          throw new Error(
+            `Semantic trace node ${traceNode.id} needs three barycentric weights.`,
+          );
+        }
+        traceNode.sample.barycentric.forEach((weight) => {
+          assertNumber(
+            weight,
+            `Semantic trace node ${traceNode.id} barycentric weight`,
+          );
+          if (weight < -1e-6 || weight > 1 + 1e-6) {
+            throw new Error(
+              `Semantic trace node ${traceNode.id} has an invalid barycentric weight.`,
+            );
+          }
+        });
+        const totalWeight = traceNode.sample.barycentric.reduce(
+          (total, weight) => total + weight,
+          0,
+        );
+        if (Math.abs(totalWeight - 1) > 1e-6) {
+          throw new Error(
+            `Semantic trace node ${traceNode.id} barycentric weights must sum to one.`,
+          );
+        }
+      });
+    }
+  } else {
+    assertNumber(trace.normalOffset, "Semantic trace normalOffset");
+    if (trace.normalOffset < 0 || trace.normalOffset > 0.02) {
+      throw new Error(
+        "Semantic trace normalOffset must be between 0 and 0.02.",
+      );
+    }
+    trace.paths.forEach((tracePath) => {
+      assertRecord(tracePath, "Semantic trace path");
+      assertNonEmptyString(tracePath.id, "Semantic trace path id");
+      if (tracePathIds.has(tracePath.id)) {
+        throw new Error(
+          `Semantic trace path id ${tracePath.id} must be unique.`,
+        );
+      }
+      tracePathIds.add(tracePath.id);
+      if (!ASSET_MODULE_TRACE_REGION_IDS.includes(tracePath.region)) {
+        throw new Error(
+          `Semantic trace path ${tracePath.id} has unknown region ${tracePath.region}.`,
+        );
+      }
+      const isProjectedTrace = trace.schemaVersion === "semantic-trace-v2";
+      if (isProjectedTrace) {
+        if (!["primary", "secondary"].includes(tracePath.role)) {
+          throw new Error(
+            `Semantic trace path ${tracePath.id} has unknown role ${tracePath.role}.`,
+          );
+        }
+      } else {
+        if (!["cyan", "violet"].includes(tracePath.palette)) {
+          throw new Error(
+            `Semantic trace path ${tracePath.id} has unknown palette ${tracePath.palette}.`,
+          );
+        }
+        if (!["primary", "secondary"].includes(tracePath.emphasis)) {
+          throw new Error(
+            `Semantic trace path ${tracePath.id} has unknown emphasis ${tracePath.emphasis}.`,
+          );
+        }
+      }
+      if (typeof tracePath.closed !== "boolean") {
+        throw new Error(
+          `Semantic trace path ${tracePath.id} closed must be boolean.`,
+        );
+      }
+      const guideVertexIndices = isProjectedTrace
+        ? tracePath.guideVertexIndices
+        : tracePath.vertexIndices;
+      assertArray(
+        guideVertexIndices,
+        `Semantic trace path ${tracePath.id} guide vertices`,
+      );
+      assertArray(
+        tracePath.controlVertexIndices,
+        `Semantic trace path ${tracePath.id} controlVertexIndices`,
+      );
+      assertArray(
+        tracePath.nodeVertexIndices,
+        `Semantic trace path ${tracePath.id} nodeVertexIndices`,
+      );
+      if (tracePath.controlVertexIndices.length < 2) {
+        throw new Error(
+          `Semantic trace path ${tracePath.id} needs two semantic controls.`,
+        );
+      }
+      if (guideVertexIndices.length < 2) {
+        throw new Error(
+          `Semantic trace path ${tracePath.id} needs two vertices.`,
+        );
+      }
+      guideVertexIndices.forEach((vertexIndex, index) => {
+        if (!Number.isSafeInteger(vertexIndex) || vertexIndex < 0) {
+          throw new Error(
+            `Semantic trace path ${tracePath.id} has an invalid vertex index.`,
+          );
+        }
+        if (index > 0 && vertexIndex === guideVertexIndices[index - 1]) {
+          throw new Error(
+            `Semantic trace path ${tracePath.id} has consecutive duplicate vertices.`,
+          );
+        }
+      });
+      tracePath.controlVertexIndices.forEach((vertexIndex) => {
+        if (
+          !Number.isSafeInteger(vertexIndex) ||
+          !guideVertexIndices.includes(vertexIndex)
+        ) {
+          throw new Error(
+            `Semantic trace path ${tracePath.id} has a control outside its frozen path.`,
+          );
+        }
+      });
+      tracePath.nodeVertexIndices.forEach((vertexIndex) => {
+        if (!tracePath.controlVertexIndices.includes(vertexIndex)) {
+          throw new Error(
+            `Semantic trace path ${tracePath.id} has a node outside its controls.`,
+          );
+        }
+      });
+      if (isProjectedTrace) {
+        assertArray(
+          tracePath.accentNodeVertexIndices,
+          `Semantic trace path ${tracePath.id} accentNodeVertexIndices`,
+        );
+        tracePath.accentNodeVertexIndices.forEach((vertexIndex) => {
+          if (!tracePath.nodeVertexIndices.includes(vertexIndex)) {
+            throw new Error(
+              `Semantic trace path ${tracePath.id} has an accent node outside its nodes.`,
+            );
+          }
+        });
+        assertArray(
+          tracePath.accentSegments,
+          `Semantic trace path ${tracePath.id} accentSegments`,
+        );
+        tracePath.accentSegments.forEach((segment) => {
+          assertRecord(segment, "Semantic trace accent segment");
+          assertArray(
+            segment.controlVertexIndices,
+            `Semantic trace path ${tracePath.id} accent control vertices`,
+          );
+          assertArray(
+            segment.guideVertexIndices,
+            `Semantic trace path ${tracePath.id} accent guide vertices`,
+          );
+          if (
+            segment.controlVertexIndices.length < 2 ||
+            segment.guideVertexIndices.length < 2
+          ) {
+            throw new Error(
+              `Semantic trace path ${tracePath.id} accent segment needs two vertices.`,
+            );
+          }
+          segment.controlVertexIndices.forEach((vertexIndex) => {
+            if (!segment.guideVertexIndices.includes(vertexIndex)) {
+              throw new Error(
+                `Semantic trace path ${tracePath.id} has an accent control outside its guide.`,
+              );
+            }
+          });
+        });
+      }
+      if (
+        tracePath.closed &&
+        guideVertexIndices[0] !== guideVertexIndices.at(-1)
+      ) {
+        throw new Error(
+          `Closed semantic trace path ${tracePath.id} must close.`,
+        );
+      }
+    });
+  }
+
   assertRecord(moduleManifest.morphs, "Asset module morphs");
   assertArray(
     moduleManifest.morphs.identityBindings,
@@ -409,6 +727,7 @@ export const normalizeIdentityShellModuleManifest = (
     },
     parameterGroups: moduleManifest.parameterGroups,
     capabilities: moduleManifest.capabilities,
+    overlays: moduleManifest.overlays,
     morphs: {
       targetNames: releaseManifest.morphTargetNames,
       identityBindings: moduleManifest.morphs.identityBindings,
