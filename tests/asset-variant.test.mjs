@@ -158,14 +158,20 @@ test("validates thumbnail source, checksum, and unique ids", () => {
   );
 });
 
-test("the current shell candidate owns its review metadata and variants", async () => {
+test("a V1 shell candidate inherits the matching V1 module and metadata", async () => {
   const [assetModule, releaseManifest] = await Promise.all([
     readFile(
-      path.join(process.cwd(), "manifests/identity-shell.module.json"),
+      path.join(
+        process.cwd(),
+        "assets/releases/identity-shell/1.0.0/module-manifest.json",
+      ),
       "utf8",
     ).then(JSON.parse),
     readFile(
-      path.join(process.cwd(), "manifests/identity-shell.current.json"),
+      path.join(
+        process.cwd(),
+        "assets/releases/identity-shell/1.0.0/manifest.json",
+      ),
       "utf8",
     ).then(JSON.parse),
   ]);

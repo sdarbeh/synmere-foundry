@@ -70,13 +70,22 @@ render artifacts must never hand arbitrary remote URLs to the browser.
 
 ## Shell asset flow
 
-The current IdentityShell source of truth is:
+The current production base shell is the immutable V2 release:
+
+```text
+assets/releases/identity-shell/2.0.0/
+```
+
+Its licensed source model remains local and gitignored; provenance and
+attribution are tracked with the release. V1 remains the immutable rollback and
+the explicit Studio scan-personalization target. Its canonical authored source
+is:
 
 ```text
 assets/source/identity-shell/identity-shell-v1.blend
 ```
 
-The normal shell release path is:
+The legacy Blender-authored shell release path is:
 
 ```text
 Blender source

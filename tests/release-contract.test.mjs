@@ -100,11 +100,11 @@ test("the Foundry-owned manifest package matches the current release", async () 
 test("the Foundry-owned manifest package exposes every loadable shell release", () => {
   assert.deepEqual(
     IDENTITY_SHELL_RELEASES.map((release) => release.version),
-    ["1.0.0"],
+    ["2.0.0", "1.0.0"],
   );
   assert.deepEqual(
     getAssetReleaseHistory("identity-shell").map((release) => release.version),
-    ["1.0.0"],
+    ["2.0.0", "1.0.0"],
   );
   assert.equal(
     getLatestProductionAssetRelease("identity-shell").version,
@@ -114,8 +114,12 @@ test("the Foundry-owned manifest package exposes every loadable shell release", 
     getAssetRelease("identity-shell", "1.0.0").url,
     "/models/shell/identity-shell/1.0.0/identity-shell.glb",
   );
-  assert.equal(
+  assert.notEqual(
     getAssetRelease("identity-shell", "1.0.0").sha256,
+    identityShell.sha256,
+  );
+  assert.equal(
+    getAssetRelease("identity-shell", "2.0.0").sha256,
     identityShell.sha256,
   );
   assert.equal(
@@ -124,7 +128,7 @@ test("the Foundry-owned manifest package exposes every loadable shell release", 
   );
   assert.deepEqual(
     ASSET_PROMOTIONS.map((promotion) => promotion.version.stage),
-    ["production"],
+    ["production", "production"],
   );
   assert.equal(ASSET_RELEASES.length, IDENTITY_SHELL_RELEASES.length);
 });
@@ -210,11 +214,17 @@ test("the identity shell asset module cannot drift from its GLB contract", () =>
     parameterKeys.sort(),
   );
   assert.deepEqual(
-    Object.keys(identityShellModule.parameters.safeRanges).sort(),
+    Object.keys(
+      identityShellModule.parameters.safeRanges ??
+        identityShellModule.parameters.assetBounds,
+    ).sort(),
     parameterKeys.sort(),
   );
   assert.deepEqual(
-    Object.keys(identityShellModule.parameters.authoringRanges).sort(),
+    Object.keys(
+      identityShellModule.parameters.authoringRanges ??
+        identityShellModule.parameters.designBounds,
+    ).sort(),
     parameterKeys.sort(),
   );
   assert.deepEqual(
@@ -321,7 +331,7 @@ test("the identity shell asset module cannot drift from its GLB contract", () =>
   );
 });
 
-test("identity shell presets are candidate-scoped module values", () => {
+test("identity shell presets are release-scoped module values", () => {
   const parameterKeys = Object.keys(identityShellModule.parameters.neutral);
   const morphTargets = new Set(identityShellModule.morphs.targetNames);
   const expectedShapePresetCopy = new Map([
@@ -332,7 +342,7 @@ test("identity shell presets are candidate-scoped module values", () => {
         defaultLabel: "Baseline",
         descriptionKey: "shell.presets.shape.baseline.description",
         defaultDescription: "default authored/product shell reference",
-        baseParameters: "productBaseline",
+        baseParameters: "neutral",
         intent: { archetype: "baseline", strength: "subtle", emphasis: [] },
       },
     ],
@@ -343,7 +353,7 @@ test("identity shell presets are candidate-scoped module values", () => {
         defaultLabel: "Oval",
         descriptionKey: "shell.presets.shape.oval.description",
         defaultDescription: "longer, softly tapered face",
-        baseParameters: "productBaseline",
+        baseParameters: "neutral",
         intent: {
           archetype: "oval",
           strength: "moderate",
@@ -352,13 +362,13 @@ test("identity shell presets are candidate-scoped module values", () => {
       },
     ],
     [
-      "wide",
+      "broad",
       {
         labelKey: "shell.presets.shape.broad",
         defaultLabel: "Broad",
         descriptionKey: "shell.presets.shape.broad.description",
         defaultDescription: "broad forehead, cheeks, and jaw mass",
-        baseParameters: "productBaseline",
+        baseParameters: "neutral",
         intent: {
           archetype: "broad",
           strength: "moderate",
@@ -382,7 +392,7 @@ test("identity shell presets are candidate-scoped module values", () => {
         defaultLabel: "Long",
         descriptionKey: "shell.presets.shape.long.description",
         defaultDescription: "taller, narrower face",
-        baseParameters: "productBaseline",
+        baseParameters: "neutral",
         intent: {
           archetype: "long",
           strength: "moderate",
@@ -391,13 +401,13 @@ test("identity shell presets are candidate-scoped module values", () => {
       },
     ],
     [
-      "soft",
+      "round",
       {
         labelKey: "shell.presets.shape.round",
         defaultLabel: "Round",
         descriptionKey: "shell.presets.shape.round.description",
         defaultDescription: "shorter, fuller, softer cheek structure",
-        baseParameters: "productBaseline",
+        baseParameters: "neutral",
         intent: {
           archetype: "round",
           strength: "moderate",
@@ -406,13 +416,13 @@ test("identity shell presets are candidate-scoped module values", () => {
       },
     ],
     [
-      "tapered",
+      "heart",
       {
         labelKey: "shell.presets.shape.heart",
         defaultLabel: "Heart",
         descriptionKey: "shell.presets.shape.heart.description",
         defaultDescription: "wider upper face with narrower jaw and chin",
-        baseParameters: "productBaseline",
+        baseParameters: "neutral",
         intent: {
           archetype: "heart",
           strength: "moderate",
@@ -421,14 +431,14 @@ test("identity shell presets are candidate-scoped module values", () => {
       },
     ],
     [
-      "angular",
+      "diamond",
       {
         labelKey: "shell.presets.shape.diamond",
         defaultLabel: "Diamond",
         descriptionKey: "shell.presets.shape.diamond.description",
         defaultDescription:
           "pronounced cheek width with narrower forehead and jaw",
-        baseParameters: "productBaseline",
+        baseParameters: "neutral",
         intent: {
           archetype: "diamond",
           strength: "moderate",
@@ -474,7 +484,8 @@ test("identity shell presets are candidate-scoped module values", () => {
         true,
         `Shape preset ${preset.id} references unknown parameter ${parameter}.`,
       );
-      const range = identityShellModule.parameters.safeRanges[parameter];
+      const range = (identityShellModule.parameters.safeRanges ??
+        identityShellModule.parameters.assetBounds)[parameter];
       assert.equal(
         value >= range.min && value <= range.max,
         true,
@@ -484,11 +495,9 @@ test("identity shell presets are candidate-scoped module values", () => {
   });
 
   identityShellModule.presets.structure.forEach((preset) => {
-    assert.equal(
-      Object.keys(preset.morphWeights).length > 0,
-      true,
-      `Structure preset ${preset.id} must define at least one morph weight.`,
-    );
+    if (preset.id === "balanced") {
+      assert.deepEqual(preset.morphWeights, {});
+    }
     Object.entries(preset.morphWeights).forEach(([target, value]) => {
       assert.equal(
         morphTargets.has(target),

@@ -160,9 +160,11 @@ export const validateFlameProvenanceRecord = (record) => {
   );
   assert(
     record.handling?.gitignored === true &&
-      record.handling?.converted === false &&
-      record.handling?.productFacing === false,
-    "FLAME handling must remain local, unconverted, and dev-only.",
+      record.handling?.converted === true &&
+      record.handling?.convertedForRelease === "identity-shell-v2.0.0" &&
+      record.handling?.sourceArtifactDistributed === false &&
+      record.handling?.derivedAssetProductFacing === true,
+    "FLAME handling must identify the V2 derivative while keeping the source artifact local and undistributed.",
   );
 
   return record;

@@ -12,6 +12,8 @@ const isNonEmptyString = (value) => {
   return typeof value === "string" && value.trim().length > 0;
 };
 
+const asSentence = (value) => `${value.replace(/[.!?]+$/u, "")}.`;
+
 const readArguments = (name) => {
   const values = [];
   process.argv.forEach((argument, index) => {
@@ -68,7 +70,7 @@ const deriveReleaseNotes = (manifest, review) => {
       knownIssuesFromArgs.length > 0
         ? knownIssuesFromArgs
         : (manifest.releaseMetadata?.excludedWork ?? []).map(
-            (item) => `Excluded from this release: ${item}.`,
+            (item) => asSentence(`Excluded from this release: ${item}`),
           ),
     approvedViews:
       approvedViewsFromArgs.length > 0
@@ -85,6 +87,7 @@ export const buildIdentityShellPromotionRecord = ({
   productionValidation,
   glbSha256,
   blendSha256,
+  sourceArtifact,
   productionGlbSha256,
   candidateGlbPath = "assets/candidates/current/identity-shell-v1.glb",
   promotedBy = process.env.USER ?? "Synmere Foundry",
@@ -129,10 +132,15 @@ export const buildIdentityShellPromotionRecord = ({
       promotedBy,
     },
     files: {
-      sourceBlendPath: `assets/releases/identity-shell/${version}/source/identity-shell.blend`,
+      ...(blendSha256
+        ? {
+            sourceBlendPath: `assets/releases/identity-shell/${version}/source/identity-shell.blend`,
+            sourceBlendHash: blendSha256,
+          }
+        : {}),
+      ...(sourceArtifact ? { sourceArtifact } : {}),
       productionGlbPath: `assets/releases/identity-shell/${version}/identity-shell.glb`,
       candidateGlbPath,
-      sourceBlendHash: blendSha256,
       candidateGlbHash: glbSha256,
       productionGlbHash: productionGlbSha256,
     },
@@ -184,6 +192,14 @@ export const assertPromotableAssetPromotionRecord = (record) => {
   assert(
     isNonEmptyString(record.files?.productionGlbHash),
     "Promotion requires a production GLB hash computed after promotion.",
+  );
+  assert(
+    (isNonEmptyString(record.files?.sourceBlendPath) &&
+      isNonEmptyString(record.files?.sourceBlendHash)) ||
+      (isNonEmptyString(record.files?.sourceArtifact?.kind) &&
+        isNonEmptyString(record.files?.sourceArtifact?.filename) &&
+        isNonEmptyString(record.files?.sourceArtifact?.sha256)),
+    "Promotion requires Blender or licensed source-artifact provenance.",
   );
   assert(
     record.validation?.contractPassed === true,

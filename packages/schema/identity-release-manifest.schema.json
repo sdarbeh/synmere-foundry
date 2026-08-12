@@ -151,7 +151,11 @@
     "source": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["revision", "candidate", "blendSha256"],
+      "required": ["revision", "candidate"],
+      "oneOf": [
+        { "required": ["blendSha256"] },
+        { "required": ["artifact"] }
+      ],
       "properties": {
         "revision": {
           "type": "string",
@@ -164,6 +168,22 @@
         "blendSha256": {
           "type": "string",
           "pattern": "^[a-f0-9]{64}$"
+        },
+        "artifact": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "filename", "sha256", "tracked"],
+          "properties": {
+            "kind": { "type": "string", "minLength": 1 },
+            "filename": { "type": "string", "minLength": 1 },
+            "localPath": { "type": "string", "minLength": 1 },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "sizeBytes": { "type": "integer", "minimum": 1 },
+            "tracked": { "type": "boolean" }
+          }
         }
       }
     },

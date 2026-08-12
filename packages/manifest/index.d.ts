@@ -35,7 +35,6 @@ export declare const IDENTITY_MORPH_TARGET: {
   readonly JAW_TAPER_NARROW: "identity_jaw_taper_narrow";
   readonly STRUCTURE_STRUCTURED: "presentation_structure_structured";
   readonly STRUCTURE_SOFT: "presentation_structure_soft";
-  readonly JAW_WIDE_CHIN_LONG_CORRECTIVE: "corrective_jaw_wide_chin_long";
 };
 
 export declare const ASSET_PROMOTION_SCHEMA_VERSION: "asset-promotion-v1";
@@ -106,10 +105,18 @@ export type AssetPromotionRecord = {
   };
 
   files: {
-    sourceBlendPath: string;
+    sourceBlendPath?: string;
     productionGlbPath: string;
     candidateGlbPath?: string;
-    sourceBlendHash: string;
+    sourceBlendHash?: string;
+    sourceArtifact?: {
+      kind: string;
+      filename: string;
+      localPath?: string;
+      sha256: string;
+      sizeBytes?: number;
+      tracked: boolean;
+    };
     candidateGlbHash?: string;
     productionGlbHash: string;
   };
@@ -193,7 +200,17 @@ export type AssetReleaseManifest = {
   readonly validationStatus: string;
   readonly releasedAt: string;
   readonly sourceRevision: string;
-  readonly sourceBlendSha256: string;
+  readonly sourceBlendSha256?: string;
+  readonly sourceArtifact?: {
+    readonly kind: string;
+    readonly filename: string;
+    readonly localPath?: string;
+    readonly sha256: string;
+    readonly sizeBytes?: number;
+    readonly tracked: boolean;
+  };
+  readonly modulePublicPath: string;
+  readonly moduleManifest: AssetModuleManifest;
   readonly promotionRecordId: string;
 };
 
@@ -213,6 +230,11 @@ export declare const getAssetRelease: (
   assetName: string,
   version: string,
 ) => AssetReleaseManifest | undefined;
+
+export declare const getAssetReleaseModule: (
+  assetName: string,
+  version: string,
+) => AssetModuleManifest | undefined;
 
 export type FaceShellParameters = {
   faceWidth: number;
@@ -247,7 +269,12 @@ export type AssetModuleMaterialId = "ceramic" | "obsidian";
 export type AssetModuleDisplayModeId = "preview" | "trace" | "topology";
 
 export type AssetModuleTraceRegionId =
-  "brows" | "lids" | "nose" | "lips" | "cheeks" | "jaw";
+  | "brows"
+  | "lids"
+  | "nose"
+  | "lips"
+  | "cheeks"
+  | "jaw";
 
 export type AssetModuleLegacySemanticTracePath = {
   id: string;
@@ -342,7 +369,13 @@ export type AssetModuleCapability<Id extends string> = {
 
 export type IdentityShellShapePresetIntent = {
   archetype:
-    "baseline" | "oval" | "broad" | "long" | "round" | "heart" | "diamond";
+    | "baseline"
+    | "oval"
+    | "broad"
+    | "long"
+    | "round"
+    | "heart"
+    | "diamond";
   strength: "subtle" | "moderate" | "strong";
   emphasis: readonly (
     | "width"
@@ -375,7 +408,10 @@ export type AssetModuleManifest = {
     version: string;
     neutral: FaceShellParameters;
     productBaseline: FaceShellParameters;
-    safeRanges: Record<FaceShellParameterKey, AssetModuleParameterRange>;
+    safeRanges: Record<
+      FaceShellParameterKey,
+      AssetModuleParameterRange
+    >;
     authoringRanges: Record<FaceShellParameterKey, AssetModuleParameterRange>;
   };
   parameterGroups: readonly AssetModuleParameterGroup[];

@@ -18,58 +18,47 @@ const readGlbTargetNames = async (path) => {
   return document.meshes[0].extras.targetNames;
 };
 
-test("registers v2 as a neutral FLAME candidate without replacing v1 production", async () => {
-  const [candidate, production] = await Promise.all([
-    readJson("assets/candidates/identity-shell/2.0.0/candidate-manifest.json"),
+test("registers v2 as production while retaining v1 rollback", async () => {
+  const [release, production, rollback] = await Promise.all([
+    readJson("assets/releases/identity-shell/2.0.0/manifest.json"),
     readJson("manifests/identity-shell.current.json"),
+    readJson("assets/releases/identity-shell/1.0.0/manifest.json"),
   ]);
 
-  assert.equal(candidate.releaseTag, "identity-shell-v2.0.0");
-  assert.equal(candidate.stage, "candidate");
-  assert.equal(candidate.topologyVersion, "flame-2023-open");
-  assert.equal(candidate.contract.vertexCount, 5_023);
-  assert.equal(candidate.contract.triangleCount, 9_976);
-  assert.equal(candidate.contract.materialName, "IdentityShellClay");
-  assert.match(candidate.contract.topologySha256, /^[a-f0-9]{64}$/);
+  assert.equal(release.releaseTag, "identity-shell-v2.0.0");
+  assert.equal(release.stage, "production");
+  assert.equal(release.topologyVersion, "flame-2023-open");
+  assert.equal(release.meshName, "FLAME2023Open");
+  assert.deepEqual(release.materialNames, ["IdentityShellClay"]);
   assert.deepEqual(
-    candidate.variants.map((variant) => variant.id),
+    release.variants.map((variant) => variant.id),
     ["baseline", "oval", "broad", "long", "round", "heart", "diamond"],
   );
   assert.ok(
-    candidate.variants.every(
+    release.variants.every(
       (variant) => variant.presentation.type === "parameter-preset",
     ),
   );
   assert.deepEqual(
-    candidate.variants.map((variant) => variant.presentation.parameterPresetId),
+    release.variants.map((variant) => variant.presentation.parameterPresetId),
     ["baseline", "oval", "broad", "long", "round", "heart", "diamond"],
   );
   assert.equal(
-    candidate.glb.publicPath,
+    release.url,
     "/models/shell/identity-shell/2.0.0/identity-shell.glb",
   );
-  assert.equal(
-    candidate.modulePublicPath,
-    "/models/shell/identity-shell/2.0.0/module-manifest.json",
-  );
-  assert.equal(candidate.contract.morphTargetNames.length, 36);
-  assert.deepEqual(candidate.contract.morphTargetNames.slice(-2), [
+  assert.equal(release.morphTargetNames.length, 36);
+  assert.deepEqual(release.morphTargetNames.slice(-2), [
     "presentation_structure_structured",
     "presentation_structure_soft",
   ]);
-  assert.equal(candidate.contract.identityMorphTargetCount, 34);
-  assert.equal(candidate.contract.structureMorphTargetCount, 2);
-  assert.equal(
-    candidate.contract.identityMorphDeltaSha256,
-    "12ceec23bf852ed53ff3d88ffb08690a32c32b4a0db9fc41ff11ec16677b20ba",
-  );
-  assert.equal(candidate.validation.status, "passed");
-  assert.equal(candidate.validation.combinationCount, 21);
-  assert.match(candidate.validation.reportSha256, /^[a-f0-9]{64}$/);
-  assert.equal(candidate.provenance.license.declaredLicense, "CC-BY-4.0");
+  assert.equal(release.validation.status, "passed");
+  assert.equal(release.validation.sampledMorphStates, 21);
+  assert.equal(release.source.artifact.kind, "flame-2023-open");
+  assert.equal(release.source.artifact.tracked, false);
 
   const module = await readJson(
-    "assets/candidates/identity-shell/2.0.0/module-manifest.json",
+    "assets/releases/identity-shell/2.0.0/module-manifest.json",
   );
   assert.deepEqual(module.presets.shape[0].parameters, {});
   assert.equal(module.presets.shape[0].baseParameters, "neutral");
@@ -107,13 +96,15 @@ test("registers v2 as a neutral FLAME candidate without replacing v1 production"
   assert.equal(module.assetBounds.maximumCombinedStructureWeight, 1);
   assert.equal(module.designBounds.maximumCombinedStructureWeight, 1);
 
-  assert.equal(production.releaseTag, "identity-shell-v1.0.0");
+  assert.equal(production.releaseTag, "identity-shell-v2.0.0");
   assert.equal(production.stage, "production");
+  assert.equal(rollback.releaseTag, "identity-shell-v1.0.0");
+  assert.equal(rollback.stage, "production");
 });
 
 test("passes every structure and shape combination", async () => {
   const report = await readJson(
-    "assets/candidates/identity-shell/2.0.0/combination-validation.json",
+    "assets/releases/identity-shell/2.0.0/combination-validation.json",
   );
 
   assert.equal(report.status, "passed");
@@ -137,12 +128,12 @@ test("passes every structure and shape combination", async () => {
 test("pairs each shell GLB with its own module contract", async () => {
   const [v1Module, v2Module, v1Targets, v2Targets] = await Promise.all([
     readJson("assets/releases/identity-shell/1.0.0/module-manifest.json"),
-    readJson("assets/candidates/identity-shell/2.0.0/module-manifest.json"),
+    readJson("assets/releases/identity-shell/2.0.0/module-manifest.json"),
     readGlbTargetNames(
       "assets/releases/identity-shell/1.0.0/identity-shell.glb",
     ),
     readGlbTargetNames(
-      "assets/candidates/identity-shell/2.0.0/identity-shell.glb",
+      "assets/releases/identity-shell/2.0.0/identity-shell.glb",
     ),
   ]);
 
@@ -164,9 +155,9 @@ test("owns valid frozen semantic trace paths for both shell topologies", async (
       modulePath: "assets/releases/identity-shell/1.0.0/module-manifest.json",
     },
     {
-      glbPath: "assets/candidates/identity-shell/2.0.0/identity-shell.glb",
+      glbPath: "assets/releases/identity-shell/2.0.0/identity-shell.glb",
       meshName: "FLAME2023Open",
-      modulePath: "assets/candidates/identity-shell/2.0.0/module-manifest.json",
+      modulePath: "assets/releases/identity-shell/2.0.0/module-manifest.json",
     },
   ];
   const expectedRegions = new Set([

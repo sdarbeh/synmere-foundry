@@ -9,7 +9,6 @@ import {
   CANDIDATE_DIRECTORY,
   CANDIDATE_GLB_PATH,
   CANDIDATE_MANIFEST_PATH,
-  CURRENT_MODULE_MANIFEST_PATH,
   EXPECTED_MESH_NAME,
   MAXIMUM_MORPH_EDGE_STRAIN,
   MAXIMUM_MORPH_NORMAL_DELTA,
@@ -18,6 +17,7 @@ import {
   SHELL_ASSET_PIPELINE_VERSION,
   SOURCE_BLEND_PATH,
   SOURCE_CONTRACT_PATH,
+  V1_MODULE_MANIFEST_PATH,
 } from "./asset-paths.mjs";
 import {
   appendMorphNormals,
@@ -80,7 +80,7 @@ const getBlenderVersion = () => {
 await readFile(SOURCE_BLEND_PATH);
 await readFile(SOURCE_CONTRACT_PATH);
 const assetModule = JSON.parse(
-  await readFile(CURRENT_MODULE_MANIFEST_PATH, "utf8"),
+  await readFile(V1_MODULE_MANIFEST_PATH, "utf8"),
 );
 await mkdir(CANDIDATE_DIRECTORY, { recursive: true });
 runBlender();

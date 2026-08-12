@@ -52,6 +52,8 @@ export const validateReleaseDirectory = async (
   const glbPath = path.join(releaseDirectory, "identity-shell.glb");
   const blendPath = path.join(releaseDirectory, "source/identity-shell.blend");
   const manifestPath = path.join(releaseDirectory, "manifest.json");
+  const manifest = await readJson(manifestPath);
+  const usesBlenderSource = Boolean(manifest.source?.blendSha256);
   const checksumsPath = path.join(releaseDirectory, "checksums.json");
   const validationPath = path.join(releaseDirectory, "validation.json");
   const reviewPath = path.join(releaseDirectory, "model-lab-review.json");
@@ -81,7 +83,6 @@ export const validateReleaseDirectory = async (
       : readJson(promotionRecordPath);
   const [
     glb,
-    manifest,
     checksums,
     validation,
     review,
@@ -93,7 +94,6 @@ export const validateReleaseDirectory = async (
     blendSha256,
   ] = await Promise.all([
     readGlb(glbPath),
-    readJson(manifestPath),
     readJson(checksumsPath),
     readJson(validationPath),
     readJson(reviewPath),
@@ -102,9 +102,19 @@ export const validateReleaseDirectory = async (
     promotionRecordPromise,
     readJson(moduleManifestPath),
     sha256File(glbPath),
-    sha256File(blendPath),
+    usesBlenderSource ? sha256File(blendPath) : Promise.resolve(undefined),
   ]);
   const contract = getGlbContract(glb, manifest.meshName);
+
+  for (const [relativePath, expectedSha256] of Object.entries(
+    checksums.files,
+  )) {
+    assertEqual(
+      await sha256File(path.join(releaseDirectory, relativePath)),
+      expectedSha256,
+      `Checksums entry ${relativePath}`,
+    );
+  }
 
   assertFoundryAssetVariants(manifest, {
     parameterPresetIds: moduleManifest.presets.shape.map(
@@ -121,27 +131,38 @@ export const validateReleaseDirectory = async (
     stage: manifest.stage,
     label: "Release manifest source",
     metadata: {
-      blendSha256: manifest.source?.blendSha256,
+      sourceSha256:
+        manifest.source?.blendSha256 ?? manifest.source?.artifact?.sha256,
       candidate: manifest.source?.candidate,
       revision: manifest.source?.revision,
     },
   });
   assertEqual(manifest.sha256, glbSha256, "Manifest GLB checksum");
-  assertEqual(
-    manifest.source.blendSha256,
-    blendSha256,
-    "Manifest Blender checksum",
-  );
+  if (usesBlenderSource) {
+    assertEqual(
+      manifest.source.blendSha256,
+      blendSha256,
+      "Manifest Blender checksum",
+    );
+  } else {
+    assert(manifest.source?.artifact, "Release source artifact is required.");
+    assert(
+      manifest.source.artifact.tracked === false,
+      "Licensed source artifacts must remain local and untracked.",
+    );
+  }
   assertEqual(
     checksums.files["identity-shell.glb"],
     glbSha256,
     "Checksums GLB entry",
   );
-  assertEqual(
-    checksums.files["source/identity-shell.blend"],
-    blendSha256,
-    "Checksums Blender entry",
-  );
+  if (usesBlenderSource) {
+    assertEqual(
+      checksums.files["source/identity-shell.blend"],
+      blendSha256,
+      "Checksums Blender entry",
+    );
+  }
   assertEqual(contract.meshName, manifest.meshName, "Mesh name");
   assertEqual(
     [contract.materialName],
@@ -186,11 +207,19 @@ export const validateReleaseDirectory = async (
     glbSha256,
     "Source candidate GLB checksum",
   );
-  assertEqual(
-    sourceCandidate.blendSha256,
-    blendSha256,
-    "Source candidate Blender checksum",
-  );
+  if (usesBlenderSource) {
+    assertEqual(
+      sourceCandidate.blendSha256,
+      blendSha256,
+      "Source candidate Blender checksum",
+    );
+  } else {
+    assertEqual(
+      sourceCandidate.sourceArtifactSha256,
+      manifest.source.artifact.sha256,
+      "Source candidate artifact checksum",
+    );
+  }
   if (productionValidation) {
     assert(
       productionValidation.passed && productionValidation.runs === 1,
@@ -201,11 +230,19 @@ export const validateReleaseDirectory = async (
       glbSha256,
       "Production validation GLB checksum",
     );
-    assertEqual(
-      productionValidation.blendSha256,
-      blendSha256,
-      "Production validation Blender checksum",
-    );
+    if (usesBlenderSource) {
+      assertEqual(
+        productionValidation.blendSha256,
+        blendSha256,
+        "Production validation Blender checksum",
+      );
+    } else {
+      assertEqual(
+        productionValidation.sourceArtifactSha256,
+        manifest.source.artifact.sha256,
+        "Production validation source artifact checksum",
+      );
+    }
   }
   if (promotionRecord) {
     assertPromotableAssetPromotionRecord(promotionRecord);
@@ -219,11 +256,19 @@ export const validateReleaseDirectory = async (
       glbSha256,
       "Promotion record production GLB checksum",
     );
-    assertEqual(
-      promotionRecord.files.sourceBlendHash,
-      blendSha256,
-      "Promotion record source Blender checksum",
-    );
+    if (usesBlenderSource) {
+      assertEqual(
+        promotionRecord.files.sourceBlendHash,
+        blendSha256,
+        "Promotion record source Blender checksum",
+      );
+    } else {
+      assertEqual(
+        promotionRecord.files.sourceArtifact,
+        manifest.source.artifact,
+        "Promotion record source artifact",
+      );
+    }
     assertEqual(
       promotionRecord.contract.topologyHash,
       contract.topologyHash,
@@ -237,6 +282,7 @@ export const validateReleaseDirectory = async (
     releaseTag: manifest.releaseTag,
     glbSha256,
     blendSha256,
+    sourceArtifact: manifest.source.artifact,
     contract,
     localRegressionValidation: "passed",
     globalAssetSafetyValidation: {

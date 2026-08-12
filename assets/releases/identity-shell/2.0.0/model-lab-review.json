@@ -1,0 +1,39 @@
+{
+  "schemaVersion": "2.0.0",
+  "candidateFilename": "identity-shell.glb",
+  "candidateSha256": "061d74dab91735f413c81e2c4e6d1726db0db95310cdd6961acc895532e47eb3",
+  "reviewedAt": "2026-08-12T17:23:00.000Z",
+  "validationStatus": "passed",
+  "morphValidationStatus": "passed",
+  "browserCheckStatus": "passed",
+  "productionGuardStatus": "passed",
+  "shellLabRoute": "/labs/shell/identity-shell-v2.0.0?variant=baseline",
+  "reviewScope": {
+    "combinations": 21,
+    "displayModes": [
+      "preview",
+      "trace",
+      "topology"
+    ],
+    "materials": [
+      "ceramic",
+      "obsidian"
+    ],
+    "cameraViews": [
+      "front",
+      "three-quarter",
+      "profile"
+    ],
+    "interaction": [
+      "camera-persistence",
+      "overlay-fade"
+    ]
+  },
+  "results": {
+    "passed": true,
+    "screenshotCount": 0
+  },
+  "errors": [],
+  "promotionApproved": true,
+  "approvedAt": "2026-08-12T17:23:00.000Z"
+}

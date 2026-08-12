@@ -1,6 +1,6 @@
 {
   "name": "@synmere/manifest",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Generated immutable Synmere asset release manifest.",
   "type": "module",
   "sideEffects": false,

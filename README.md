@@ -43,18 +43,16 @@ modify asset records, manifests, schemas, or Three.js asset adapters.
 
 ## Current release
 
-`identity-shell@1.0.0` is the current pre-live production baseline:
+`identity-shell@2.0.0` is the current production base shell:
 
 - GLB SHA-256:
-  `2cd5c234565e9f5cf7ff5632f011d8273b94d6ea945124239a4f1d15cbd0cc99`
-- Blender SHA-256:
-  `a60e2ce05a1417b28a5d0749e9e65a48f2695e0da44822b54081090d793e7cd7`
-- 197 evidence checks passed
-- contract and morph safety passed
+  `061d74dab91735f413c81e2c4e6d1726db0db95310cdd6961acc895532e47eb3`
+- FLAME 2023 Open topology with a local, gitignored source artifact
+- 21 shape/profile combinations passed
+- Preview, Trace, Topology, Ceramic, and Obsidian review passed
 
-The lower lip, mouth seam, mouth corners, and labiomental transition were
-softened while preserving the approved shell silhouette. The lower-edge notch
-geometry correction remains excluded and tracked independently.
+`identity-shell@1.0.0` remains an immutable rollback and the explicit Studio
+scan-personalization target until the V2 runtime fitting path is integrated.
 
 ## Commands
 
@@ -63,15 +61,15 @@ pnpm asset:export
 pnpm asset:validate
 pnpm asset:serve
 pnpm shell:review
-pnpm shell:tuning:apply -- --patch assets/candidates/current/tuning-patch.json
 pnpm shell:approve -- --confirm
-pnpm asset:promote -- --version 1.0.0 --confirm
+pnpm asset:promote -- --version <x.y.z> --confirm
 pnpm schema:build
 pnpm three:build
 pnpm manifest:build
 pnpm packages:build
 pnpm packages:publish
-pnpm asset:release:validate -- 1.0.0
+pnpm asset:release:validate -- 2.0.0
+pnpm identity-shell:flame:validate
 pnpm check
 ```
 
@@ -105,7 +103,7 @@ The lifecycle commands have deliberately separate responsibilities:
 - **promote** requires passed, approved evidence and creates a new immutable
   versioned release. It refuses to overwrite an existing release.
 
-## Candidate tuning workflow
+## Release-owned modules
 
 Foundry owns asset meaning. Synmere Labs is the tuning interface. Package builds
 must stay deterministic outputs of Foundry-owned source files.
@@ -122,89 +120,10 @@ limits. `manifests/identity-shell.module.json` and the `@synmere/manifest`
 package are generated outputs. Do not edit those generated files as the source
 of tuning truth.
 
-The preferred tuning loop is:
-
-```text
-review GLB → tune in Labs → export tuning patch → apply in Foundry →
-rebuild packages → re-review → approve → promote
-```
-
-Run a candidate review first:
-
-```sh
-pnpm shell:review
-```
-
-Tune the candidate in Synmere Labs. Labs may let you copy settings for quick
-inspection, but clipboard text is not the source of truth. The durable handoff
-should be a tuning patch file, normally:
-
-```text
-assets/candidates/current/tuning-patch.json
-```
-
-The tuning patch should include the candidate and source hashes it was authored
-against, plus the intended asset-module changes:
-
-```json
-{
-  "asset": "identity-shell",
-  "basedOnVersion": "1.0.0",
-  "candidateSha": "...",
-  "sourceBlendHash": "...",
-  "productBaseline": {},
-  "shapePresets": [],
-  "structurePresets": [],
-  "morphCalibration": {},
-  "notes": "why these settings changed"
-}
-```
-
-Apply the patch in Foundry:
-
-```sh
-pnpm shell:tuning:apply -- --patch assets/candidates/current/tuning-patch.json
-```
-
-That command should verify the reviewed candidate SHA, verify the Blender source
-hash, reject product-facing values outside conservative `safeRanges`, keep
-Foundry-only authoring experiments inside wider `authoringRanges`, update the
-canonical asset-module source, and regenerate the package outputs. Until that
-command exists, the manual fallback is to copy the Labs settings into the
-canonical asset-module manifest for the target GLB version, then run:
-
-```sh
-pnpm asset:module
-pnpm packages:build
-```
-
-After changing tuning values, run `pnpm shell:review` again before approving or
-promoting. Promotion should only happen after the GLB, asset module, validation
-evidence, and package output all agree.
-
-Candidate mode is expected to review both:
-
-- the candidate GLB;
-- the candidate metadata manifest;
-- the candidate asset-module manifest.
-
-Foundry serves both manifest snapshots next to the candidate GLB during review.
-Synmere checksum-verifies and proxies each artifact. Candidate version,
-variants, validation state, and display metadata come from the candidate
-manifest rather than the current production release.
-
-Future tuning apply wizard:
-
-```sh
-pnpm shell:tuning
-```
-
-The wizard should accept pasted Labs tuning JSON, ask for the candidate name,
-target version, release notes, and intended changed sections, then validate the
-candidate SHA, Blender source hash, and safe ranges before writing canonical
-asset-module source. It should rebuild package outputs and print the next review,
-approve, and promote commands. Until this exists, applying Labs tuning remains a
-manual edit followed by `pnpm asset:module` and `pnpm packages:build`.
+Candidate review must load the candidate GLB, metadata manifest, and matching
+asset module together. Promotion only proceeds after their hashes and review
+evidence agree. Release modules are immutable after promotion; subsequent
+tuning requires a new candidate and version.
 
 The package build commands expose each Foundry-owned package boundary:
 
@@ -229,4 +148,7 @@ See [foundry-workflow.md](docs/foundry-workflow.md),
 [asset-stages.md](docs/asset-stages.md),
 [release-process.md](docs/release-process.md),
 [rollback-process.md](docs/rollback-process.md), and
-[retention-policy.md](docs/retention-policy.md).
+[retention-policy.md](docs/retention-policy.md). Asset-specific references live
+in [third-party-assets.md](docs/third-party-assets.md) and
+[versioning.md](docs/versioning.md). Structure-profile policy is defined in
+[identity-shell-authoring-intent.md](docs/identity-shell-authoring-intent.md).

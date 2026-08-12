@@ -1,18 +1,18 @@
 {
-  "schemaVersion": "1.0.0",
-  "assetSchemaVersion": "1.0.0",
-  "assetId": "synmere-identity-shell-v1",
-  "version": "1.0.0",
+  "schemaVersion": "2.0.0",
+  "assetSchemaVersion": "2.0.0",
+  "assetId": "synmere-identity-shell-v2",
+  "version": "2.0.0",
   "stage": "production",
-  "releaseTag": "identity-shell-v1.0.0",
-  "url": "/models/shell/identity-shell/1.0.0/identity-shell.glb",
+  "releaseTag": "identity-shell-v2.0.0",
+  "url": "/models/shell/identity-shell/2.0.0/identity-shell.glb",
   "thumbnails": [],
   "defaultVariantId": "baseline",
   "variants": [
     {
       "id": "baseline",
       "label": "Baseline",
-      "description": "Default authored/product shell reference.",
+      "description": "default authored/product shell reference",
       "thumbnails": [],
       "presentation": {
         "type": "parameter-preset",
@@ -22,7 +22,7 @@
     {
       "id": "oval",
       "label": "Oval",
-      "description": "Longer, softly tapered face.",
+      "description": "longer, softly tapered face",
       "thumbnails": [],
       "presentation": {
         "type": "parameter-preset",
@@ -32,17 +32,17 @@
     {
       "id": "broad",
       "label": "Broad",
-      "description": "Broad forehead, cheeks, and jaw mass.",
+      "description": "broad forehead, cheeks, and jaw mass",
       "thumbnails": [],
       "presentation": {
         "type": "parameter-preset",
-        "parameterPresetId": "wide"
+        "parameterPresetId": "broad"
       }
     },
     {
       "id": "long",
       "label": "Long",
-      "description": "Taller, narrower face.",
+      "description": "taller, narrower face",
       "thumbnails": [],
       "presentation": {
         "type": "parameter-preset",
@@ -52,38 +52,38 @@
     {
       "id": "round",
       "label": "Round",
-      "description": "Shorter, fuller, softer cheek structure.",
+      "description": "shorter, fuller, softer cheek structure",
       "thumbnails": [],
       "presentation": {
         "type": "parameter-preset",
-        "parameterPresetId": "soft"
+        "parameterPresetId": "round"
       }
     },
     {
       "id": "heart",
       "label": "Heart",
-      "description": "Wider upper face with narrower jaw and chin.",
+      "description": "wider upper face with narrower jaw and chin",
       "thumbnails": [],
       "presentation": {
         "type": "parameter-preset",
-        "parameterPresetId": "tapered"
+        "parameterPresetId": "heart"
       }
     },
     {
       "id": "diamond",
       "label": "Diamond",
-      "description": "Pronounced cheek width with narrower forehead and jaw.",
+      "description": "pronounced cheek width with narrower forehead and jaw",
       "thumbnails": [],
       "presentation": {
         "type": "parameter-preset",
-        "parameterPresetId": "angular"
+        "parameterPresetId": "diamond"
       }
     }
   ],
-  "sha256": "2cd5c234565e9f5cf7ff5632f011d8273b94d6ea945124239a4f1d15cbd0cc99",
-  "meshName": "IdentityShell",
+  "sha256": "061d74dab91735f413c81e2c4e6d1726db0db95310cdd6961acc895532e47eb3",
+  "meshName": "FLAME2023Open",
   "materialNames": [
-    "IdentityCeramic"
+    "IdentityShellClay"
   ],
   "morphTargetNames": [
     "identity_face_wide",
@@ -121,10 +121,9 @@
     "identity_jaw_taper_square",
     "identity_jaw_taper_narrow",
     "presentation_structure_structured",
-    "presentation_structure_soft",
-    "corrective_jaw_wide_chin_long"
+    "presentation_structure_soft"
   ],
-  "topologyVersion": "synmere-authored-shell-v2",
+  "topologyVersion": "flame-2023-open",
   "rendererCompatibilityVersion": "1.0.0",
   "minimumApplicationVersion": "0.1.0",
   "validation": {
@@ -132,31 +131,36 @@
     "localRegression": true,
     "globalAssetSafety": true,
     "productionPath": true,
-    "sampledMorphStates": 193,
+    "sampledMorphStates": 21,
     "invertedStates": 0,
     "degenerateStates": 0
   },
-  "releasedAt": "2026-07-25T00:14:03.122Z",
+  "releasedAt": "2026-08-12T17:23:00.000Z",
   "source": {
-    "revision": "f8861e0",
-    "candidate": "final-pre-promotion-mouth",
-    "blendSha256": "a60e2ce05a1417b28a5d0749e9e65a48f2695e0da44822b54081090d793e7cd7"
+    "revision": "1cc339f",
+    "candidate": "identity-shell/2.0.0/identity-shell.glb",
+    "artifact": {
+      "kind": "flame-2023-open",
+      "filename": "flame2023_Open.pkl",
+      "localPath": "vendor/flame/flame2023_Open.pkl",
+      "sha256": "e75a0990728ba038c7da2a420ae4396f7ddd7781366c13026066c5b24f127623",
+      "sizeBytes": 53023668,
+      "tracked": false
+    }
   },
   "releaseMetadata": {
-    "classification": "patch",
-    "intent": "Final mouth refinement: soften the labiomental fold, mouth seam, and corners while preserving lip volume, mouth width, and approved shell silhouette.",
+    "classification": "major",
+    "intent": "Promote Identity Shell V2 as the production base shell with a breaking topology and fitting-contract change.",
+    "changes": [
+      "Shared topology for all seven shape presets and three structure profiles.",
+      "Topology-owned barycentric trace contract with shared Ceramic and Obsidian presentations.",
+      "Frozen production GLB, module, morph targets, presets, profiles, trace paths, materials, and hashes."
+    ],
     "excludedWork": [
-      "eyes",
-      "nose",
-      "cheeks",
-      "jaw",
-      "chin silhouette",
-      "head shape",
-      "parameters",
-      "presets",
-      "renderer",
-      "lower-edge notch geometry correction"
-    ]
+      "Studio scan personalization remains explicitly routed through Identity Shell V1 until IdentityMeshFit runtime integration is complete."
+    ],
+    "rollbackVersion": "1.0.0",
+    "fittingContract": "IdentityMeshFit"
   },
-  "promotionRecordId": "identity-shell-v1.0.0-production"
+  "promotionRecordId": "identity-shell-v2.0.0-production"
 }

@@ -229,7 +229,14 @@ export const writeManifestPackage = async (options = {}) => {
         validationStatus: releaseManifest.validation.status,
         releasedAt: releaseManifest.releasedAt,
         sourceRevision: releaseManifest.source.revision,
-        sourceBlendSha256: releaseManifest.source.blendSha256,
+        ...(releaseManifest.source.blendSha256
+          ? { sourceBlendSha256: releaseManifest.source.blendSha256 }
+          : {}),
+        ...(releaseManifest.source.artifact
+          ? { sourceArtifact: releaseManifest.source.artifact }
+          : {}),
+        modulePublicPath: `/models/shell/identity-shell/${releaseManifest.version}/module-manifest.json`,
+        moduleManifest: releaseModuleManifest,
         promotionRecordId: promotionRecord.id,
       };
     })
@@ -272,6 +279,29 @@ const deepFreeze = (value) => {
   Object.freeze(value);
   Object.values(value).forEach(deepFreeze);
   return value;
+};
+
+const normalizeAssetModuleManifest = (assetModule) => {
+  const safeRanges =
+    assetModule.parameters.safeRanges ?? assetModule.parameters.assetBounds;
+  const authoringRanges =
+    assetModule.parameters.authoringRanges ??
+    assetModule.parameters.designBounds;
+
+  return deepFreeze({
+    ...assetModule,
+    parameters: {
+      ...assetModule.parameters,
+      safeRanges,
+      authoringRanges,
+    },
+    validationLimits: assetModule.validationLimits ?? {
+      maximumMorphEdgeStrain:
+        assetModule.assetBounds.maximumMorphEdgeStrain,
+      floatingPointTolerance:
+        assetModule.designBounds.floatingPointTolerance,
+    },
+  });
 };
 
 const isRecord = (value) => {
@@ -335,9 +365,17 @@ export const assertValidAssetPromotionRecord = (record) => {
   );
 
   assert(isRecord(record.files), "Promotion file provenance is required.");
+  const hasBlenderSource =
+    isNonEmptyString(record.files.sourceBlendPath) &&
+    isNonEmptyString(record.files.sourceBlendHash);
+  const hasArtifactSource =
+    isRecord(record.files.sourceArtifact) &&
+    isNonEmptyString(record.files.sourceArtifact.kind) &&
+    isNonEmptyString(record.files.sourceArtifact.filename) &&
+    isNonEmptyString(record.files.sourceArtifact.sha256);
   assert(
-    isNonEmptyString(record.files.sourceBlendPath),
-    "Source Blender path is required.",
+    hasBlenderSource || hasArtifactSource,
+    "Blender or licensed source-artifact provenance is required.",
   );
   assert(
     isNonEmptyString(record.files.productionGlbPath),
@@ -347,10 +385,6 @@ export const assertValidAssetPromotionRecord = (record) => {
     record.files.candidateGlbPath === undefined ||
       isNonEmptyString(record.files.candidateGlbPath),
     "Candidate GLB path must be non-empty when provided.",
-  );
-  assert(
-    isNonEmptyString(record.files.sourceBlendHash),
-    "Source Blender hash is required.",
   );
   assert(
     record.files.candidateGlbHash === undefined ||
@@ -501,7 +535,7 @@ export const assertPromotableAssetPromotionRecord = (record) => {
 
 export const ASSET_PROMOTIONS = deepFreeze(${JSON.stringify(assetPromotions)});
 
-export const identityShellModule = deepFreeze(${JSON.stringify(moduleManifest)});
+export const identityShellModule = normalizeAssetModuleManifest(${JSON.stringify(moduleManifest)});
 
 ASSET_PROMOTIONS.forEach(assertPromotableAssetPromotionRecord);
 
@@ -547,6 +581,11 @@ export const getAssetRelease = (assetName, version) => {
   return getAssetReleaseHistory(assetName).find((release) => {
     return release.version === version;
   });
+};
+
+export const getAssetReleaseModule = (assetName, version) => {
+  const assetModule = getAssetRelease(assetName, version)?.moduleManifest;
+  return assetModule ? normalizeAssetModuleManifest(assetModule) : undefined;
 };
 
 export const IDENTITY_SHELL_RELEASES = Object.freeze(
@@ -638,10 +677,18 @@ export type AssetPromotionRecord = {
   };
 
   files: {
-    sourceBlendPath: string;
+    sourceBlendPath?: string;
     productionGlbPath: string;
     candidateGlbPath?: string;
-    sourceBlendHash: string;
+    sourceBlendHash?: string;
+    sourceArtifact?: {
+      kind: string;
+      filename: string;
+      localPath?: string;
+      sha256: string;
+      sizeBytes?: number;
+      tracked: boolean;
+    };
     candidateGlbHash?: string;
     productionGlbHash: string;
   };
@@ -725,7 +772,17 @@ export type AssetReleaseManifest = {
   readonly validationStatus: string;
   readonly releasedAt: string;
   readonly sourceRevision: string;
-  readonly sourceBlendSha256: string;
+  readonly sourceBlendSha256?: string;
+  readonly sourceArtifact?: {
+    readonly kind: string;
+    readonly filename: string;
+    readonly localPath?: string;
+    readonly sha256: string;
+    readonly sizeBytes?: number;
+    readonly tracked: boolean;
+  };
+  readonly modulePublicPath: string;
+  readonly moduleManifest: AssetModuleManifest;
   readonly promotionRecordId: string;
 };
 
@@ -745,6 +802,11 @@ export declare const getAssetRelease: (
   assetName: string,
   version: string,
 ) => AssetReleaseManifest | undefined;
+
+export declare const getAssetReleaseModule: (
+  assetName: string,
+  version: string,
+) => AssetModuleManifest | undefined;
 
 export type FaceShellParameters = {
   faceWidth: number;

@@ -1,5 +1,116 @@
 [
   {
+    "id": "identity-shell-v2.0.0-production",
+    "asset": {
+      "name": "identity-shell",
+      "displayName": "Identity Shell",
+      "type": "glb",
+      "domain": "shell",
+      "module": "identity-shell"
+    },
+    "version": {
+      "version": "2.0.0",
+      "stage": "production",
+      "promotedAt": "2026-08-12T17:23:00.000Z",
+      "promotedBy": "Synmere Foundry"
+    },
+    "files": {
+      "sourceArtifact": {
+        "kind": "flame-2023-open",
+        "filename": "flame2023_Open.pkl",
+        "localPath": "vendor/flame/flame2023_Open.pkl",
+        "sha256": "e75a0990728ba038c7da2a420ae4396f7ddd7781366c13026066c5b24f127623",
+        "sizeBytes": 53023668,
+        "tracked": false
+      },
+      "productionGlbPath": "assets/releases/identity-shell/2.0.0/identity-shell.glb",
+      "candidateGlbPath": "assets/candidates/identity-shell/2.0.0/identity-shell.glb",
+      "candidateGlbHash": "061d74dab91735f413c81e2c4e6d1726db0db95310cdd6961acc895532e47eb3",
+      "productionGlbHash": "061d74dab91735f413c81e2c4e6d1726db0db95310cdd6961acc895532e47eb3"
+    },
+    "contract": {
+      "meshName": "FLAME2023Open",
+      "materialSlot": "IdentityShellClay",
+      "vertexCount": 5023,
+      "indexCount": 29928,
+      "topologyHash": "0e1dc70f945eb944daea3a3c23e5700f2b782e0ec302cd3cfb056c677345475f",
+      "morphTargetCount": 36,
+      "morphTargetNames": [
+        "identity_face_wide",
+        "identity_face_narrow",
+        "identity_face_long",
+        "identity_face_short",
+        "identity_cheekbones_wide",
+        "identity_cheekbones_narrow",
+        "identity_eye_spacing_wide",
+        "identity_eye_spacing_narrow",
+        "identity_eye_width_wide",
+        "identity_eye_width_narrow",
+        "identity_brow_arch_high",
+        "identity_brow_arch_low",
+        "identity_brow_prominence_high",
+        "identity_brow_prominence_low",
+        "identity_nose_wide",
+        "identity_nose_narrow",
+        "identity_nose_long",
+        "identity_nose_short",
+        "identity_nose_projection_high",
+        "identity_nose_projection_low",
+        "identity_mouth_wide",
+        "identity_mouth_narrow",
+        "identity_chin_long",
+        "identity_chin_short",
+        "identity_head_depth_high",
+        "identity_head_depth_low",
+        "identity_forehead_wide",
+        "identity_forehead_narrow",
+        "identity_upper_face_tall",
+        "identity_upper_face_short",
+        "identity_jaw_wide",
+        "identity_jaw_narrow",
+        "identity_jaw_taper_square",
+        "identity_jaw_taper_narrow",
+        "presentation_structure_structured",
+        "presentation_structure_soft"
+      ]
+    },
+    "validation": {
+      "contractPassed": true,
+      "morphValidationPassed": true,
+      "maxMorphEdgeStrain": 0.41906998,
+      "maxAllowedMorphEdgeStrain": 0.72,
+      "testsPassed": 22,
+      "testsFailed": 0,
+      "validationReportPath": "assets/releases/identity-shell/2.0.0/validation.json",
+      "reviewManifestPath": "assets/releases/identity-shell/2.0.0/model-lab-review.json"
+    },
+    "releaseNotes": {
+      "summary": "Promote Identity Shell V2 as the production base shell with a breaking topology and fitting-contract change.",
+      "changes": [
+        "Promote Identity Shell V2 as the production base shell with a breaking topology and fitting-contract change.",
+        "Release classification: major."
+      ],
+      "knownIssues": [
+        "Excluded from this release: Studio scan personalization remains explicitly routed through Identity Shell V1 until IdentityMeshFit runtime integration is complete."
+      ],
+      "approvedViews": [
+        "preview",
+        "trace",
+        "topology",
+        "ceramic",
+        "obsidian",
+        "front",
+        "three-quarter",
+        "profile"
+      ]
+    },
+    "compatibility": {
+      "faceShellParameterVersion": "2.0.0",
+      "rendererVersion": "1.0.0",
+      "schemaVersion": "asset-promotion-v1"
+    }
+  },
+  {
     "id": "identity-shell-v1.0.0-production",
     "asset": {
       "name": "identity-shell",
@@ -97,7 +208,11 @@
         "Excluded from this release: renderer.",
         "Excluded from this release: lower-edge notch geometry correction."
       ],
-      "approvedViews": ["preview", "trace", "topology"]
+      "approvedViews": [
+        "preview",
+        "trace",
+        "topology"
+      ]
     },
     "compatibility": {
       "faceShellParameterVersion": "1.0.0",

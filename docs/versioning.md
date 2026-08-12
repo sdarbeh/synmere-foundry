@@ -7,4 +7,6 @@
 - **Major**: removed/renamed morphs, incompatible topology or material
   contracts, renderer contract changes, or manifest schema breaks.
 
-The current pre-live production baseline is `1.0.0`.
+The current production base shell is `2.0.0`. Version `1.0.0` remains an
+immutable rollback and the Studio scan-personalization target until V2 fitting
+is integrated.

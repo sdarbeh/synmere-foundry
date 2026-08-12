@@ -17,6 +17,9 @@ test("accepts the exact FLAME 2023 Open provenance record", async () => {
   const provenance = await getProvenance();
 
   assert.equal(validateFlameProvenanceRecord(provenance), provenance);
+  assert.equal(provenance.handling.convertedForRelease, "identity-shell-v2.0.0");
+  assert.equal(provenance.handling.sourceArtifactDistributed, false);
+  assert.equal(provenance.handling.derivedAssetProductFacing, true);
   assert.doesNotThrow(() => {
     validateFlameArtifactMetadata({
       filename: FLAME_2023_OPEN_EXPECTED.artifactFilename,

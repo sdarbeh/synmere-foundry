@@ -19,13 +19,9 @@ export const SOURCE_CONTRACT_PATH = path.join(
   PROJECT_ROOT,
   "assets/source/identity-shell/identity-shell-v1.contract.json",
 );
-export const RELEASE_MANIFEST_PATH = path.join(
+export const V1_MODULE_MANIFEST_PATH = path.join(
   PROJECT_ROOT,
-  "manifests/identity-shell.current.json",
-);
-export const CURRENT_MODULE_MANIFEST_PATH = path.join(
-  PROJECT_ROOT,
-  "manifests/identity-shell.module.json",
+  "assets/releases/identity-shell/1.0.0/module-manifest.json",
 );
 export const CANDIDATE_DIRECTORY = path.join(
   PROJECT_ROOT,
